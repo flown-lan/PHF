@@ -1,7 +1,7 @@
 # Project Review Status Summary
 
 **Last Updated**: 2025-12-29
-**Coverage**: T0 - T12
+**Coverage**: T0 - T13
 
 ## 🟢 Approved Features (Highlights)
 - **Security Core**: AES-256-GCM encryption (T5), secure key management (T4), and random IV/path management (T6).
@@ -10,8 +10,10 @@
 - **Environment**: Secure sandbox directories (T7).
 - **Image Handling**: Basic processing (T10) and Gallery/Camera integration (T11).
 - **Domain Modeling**: Robust entities (T2) and clean business interfaces (T3).
+- **State Management**: Riverpod scaffold (T13) with Ingestion and Timeline controllers.
 
 ## 🟡 Pending Issues / Technical Debt
+- **T13: Thumbnail Encryption**: Reusing main image key due to entity schema limitations (Phase 1 Workaround).
 - **T10: PNG Fallback**: Currently using PNG instead of WebP. (High Priority for P2)
 - **T8: Database Configuration**: Explicitly set `PRAGMA cipher_page_size = 4096`.
 - **T10: Physical Wiping**: Reliance on OS file deletion.

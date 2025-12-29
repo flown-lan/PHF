@@ -122,12 +122,12 @@
 ## 5. UI Layer & State Management (P4)
 **Goal**: 完整 MVP 界面闭环。
 
-### T13: Riverpod 状态脚手架搭建 [低]
-- [ ] **Implement**: 创建 `TimelineProvider`, `IngestionProvider` 基本结构。完成 Repository 注入。
-- [ ] **Document**: 绘制状态流动示意图。
-- [ ] **Test**: 验证 Provider 的 `ref.watch` 监听逻辑正确。
-- [ ] **Review**: 是否符合 `constitution.md#II. Architecture (MVVM)`。
-- [ ] **Commit**: `feat(logic): bootstrap riverpod providers for core state management`
+### T13: Riverpod 状态脚手架搭建 [x]
+- [x] **Implement**: 创建 `TimelineProvider`, `IngestionProvider` 基本结构。完成 Repository 注入。
+- [x] **Document**: 绘制状态流动示意图。
+- [x] **Test**: 验证 Provider 的 `ref.watch` 监听逻辑正确。
+- [x] **Review**: 是否符合 `constitution.md#II. Architecture (MVVM)`。
+- [x] **Commit**: `feat(logic): bootstrap riverpod providers for core state management`
 
 ### T13.1 UI Kit Base: 原子组件与主题 [低]
 - [ ] **Implement**: 配置全局 `ThemeData` (Teal/White Palette) 与 Typography (Inconsolata)。实现 `ActiveButton`, `SecurityIndicator`。 (Ref: Constitution#X. UI/UX)
