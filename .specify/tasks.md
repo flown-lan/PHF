@@ -129,12 +129,12 @@
 - [x] **Review**: 是否符合 `constitution.md#II. Architecture (MVVM)`。
 - [x] **Commit**: `feat(logic): bootstrap riverpod providers for core state management`
 
-### T13.1 UI Kit Base: 原子组件与主题 [低]
-- [ ] **Implement**: 配置全局 `ThemeData` (Teal/White Palette) 与 Typography (Inconsolata)。实现 `ActiveButton`, `SecurityIndicator`。 (Ref: Constitution#X. UI/UX)
-- [ ] **Document**: 建立 `atoms/` 组件预览文档。
-- [ ] **Test**: 模拟器查验色彩对比度与字体清晰度。
-- [ ] **Review**: 确认文字排版是否严格遵循等宽字体规范。
-- [ ] **Commit**: `feat(ui): implement base UI atoms and brand theme`
+### T13.1 UI Kit Base: 原子组件与主题 [x]
+- [x] **Implement**: 配置全局 `ThemeData` (Teal/White Palette) 与 Typography (Inconsolata)。实现 `ActiveButton`, `SecurityIndicator`。 (Ref: Constitution#X. UI/UX)
+- [x] **Document**: 建立 `atoms/` 组件预览文档。
+- [x] **Test**: 模拟器查验色彩对比度与字体清晰度。
+- [x] **Review**: 确认文字排版是否严格遵循等宽字体规范。
+- [x] **Commit**: `feat(ui): implement base UI atoms and brand theme`
 
 ### T13.2 UI Kit Structure: 导航与全局组件 [低]
 - [ ] **Implement**: 实现 `CustomTopBar` (含返回与加密状态展示), `MainFab` (核心操作按钮)。
