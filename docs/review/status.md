@@ -1,7 +1,7 @@
 # Project Review Status Summary
 
 **Last Updated**: 2025-12-29
-**Coverage**: T0 - T13
+**Coverage**: T0 - T13.2
 
 ## 🟢 Approved Features (Highlights)
 - **Security Core**: AES-256-GCM encryption (T5), secure key management (T4), and random IV/path management (T6).
@@ -11,6 +11,9 @@
 - **Image Handling**: Basic processing (T10) and Gallery/Camera integration (T11).
 - **Domain Modeling**: Robust entities (T2) and clean business interfaces (T3).
 - **State Management**: Riverpod scaffold (T13) with Ingestion and Timeline controllers.
+- **UI Kit**: 
+  - Foundation: `AppTheme` (Teal/Monospace) and atomic security components (T13.1).
+  - Structure: Global `CustomTopBar` and `MainFab` (T13.2) with integrated security indicators.
 
 ## 🟡 Pending Issues / Technical Debt
 - **T13: Thumbnail Encryption**: Reusing main image key due to entity schema limitations (Phase 1 Workaround).

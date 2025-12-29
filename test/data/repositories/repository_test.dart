@@ -109,7 +109,7 @@ void main() {
       final fetchedRecord = await recordRepo.getRecordById('r1');
       expect(fetchedRecord?.tagsCache, isNotNull);
       
-      final List<dynamic> tags = jsonDecode(fetchedRecord!.tagsCache!);
+      final List<dynamic> tags = jsonDecode(fetchedRecord!.tagsCache!) as List<dynamic>;
       expect(tags, containsAll(['Blood', 'XRay']));
     });
     
@@ -138,7 +138,7 @@ void main() {
          
          // Verify: Record tags_cache cleared (since only image was deleted)
          final fetchedRecord = await recordRepo.getRecordById('r2');
-         final List<dynamic> tags = jsonDecode(fetchedRecord!.tagsCache!);
+         final List<dynamic> tags = jsonDecode(fetchedRecord!.tagsCache!) as List<dynamic>;
          expect(tags, isEmpty);
     });
   });

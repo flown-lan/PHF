@@ -136,12 +136,12 @@
 - [x] **Review**: 确认文字排版是否严格遵循等宽字体规范。
 - [x] **Commit**: `feat(ui): implement base UI atoms and brand theme`
 
-### T13.2 UI Kit Structure: 导航与全局组件 [低]
-- [ ] **Implement**: 实现 `CustomTopBar` (含返回与加密状态展示), `MainFab` (核心操作按钮)。
-- [ ] **Document**: 备注这些组件在不同页面间的通用逻辑。
-- [ ] **Test**: 验证 `Fab` 在不同屏幕尺寸下的位置与内边距。
-- [ ] **Review**: 走查组件点击反馈是否优雅。
-- [ ] **Commit**: `feat(ui): develop structural UI components (topbar, fab)`
+### T13.2 UI Kit Structure: 导航与全局组件 [x]
+- [x] **Implement**: 实现 `CustomTopBar` (含返回与加密状态展示), `MainFab` (核心操作按钮)。
+- [x] **Document**: 备注这些组件在不同页面间的通用逻辑。
+- [x] **Test**: 验证 `Fab` 在不同屏幕尺寸下的位置与内边距。
+- [x] **Review**: 走查组件点击反馈是否优雅。
+- [x] **Commit**: `feat(ui): develop structural UI components (topbar, fab)`
 
 ### T13.3 UI Kit Complex: EventCard 开发 [中]
 - [ ] **Implement**: 封装 `SecureImage` 异步解密展示组件。实现 `EventCard` 并集成 `SecureImage` 展示 Record 的首张缩略图，显示去重后的标签列表。 (Ref: Spec#4.1)
