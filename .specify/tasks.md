@@ -108,7 +108,7 @@
 - [ ] **Commit**: `feat(logic): integrate gallery import with native permission config`
 
 ### T12: Repository 基础实现与 Tags 同步 [中]
-- [ ] **Implement**: 实现通用 Repository 基类及 `Record/ImageRepository`。核心逻辑：维护 `image_tags` 到 `records.tags_cache` 的自动同步。 (Ref: Spec#4.1)
+- [ ] **Implement**: 实现 T3 定义的业务接口，建立通用 Repository 基类及 `Record/ImageRepository`。核心逻辑：维护 `image_tags` 到 `records.tags_cache` 的自动同步。 (Ref: Spec#4.1)
 - [ ] **Document**: 记录 tags_cache 的 JSON 聚合逻辑。
 - [ ] **Test**: 执行录入测试，验证 Record 表缓存字段被自动更新。
 - [ ] **Review**: 审查 SQL 事务在处理多对多关系时的完整性。
@@ -141,7 +141,7 @@
 - [ ] **Commit**: `feat(ui): develop structural UI components (topbar, fab)`
 
 ### T13.3 UI Kit Complex: EventCard 开发 [中]
-- [ ] **Implement**: 实现 `EventCard`。逻辑：解密显示 Record 的首张缩略图，显示去重后的标签列表。 (Ref: Spec#4.1)
+- [ ] **Implement**: 封装 `SecureImage` 异步解密展示组件。实现 `EventCard` 并集成 `SecureImage` 展示 Record 的首张缩略图，显示去重后的标签列表。 (Ref: Spec#4.1)
 - [ ] **Document**: 记录 `tags_cache` 在 UI 层的解析示例。
 - [ ] **Test**: 验证长标签列表下的布局稳定性。
 - [ ] **Review**: 走查解密过程中的 UI 占位图效果。
