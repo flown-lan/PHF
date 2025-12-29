@@ -96,12 +96,12 @@
 ## 4. Business Logic & Services (P3)
 **Goal**: 处理媒体存取与隐私擦除。
 
-### T10: 图片处理引擎与 Secure Wipe (T3.1) [高]
-- [ ] **Implement**: 实现 `ImageProcessingService`。WebP 压缩 + 200px 缩略图。**强制：** 处理完位图或中间临时文件后，立即调用 `File.delete()`。 (Ref: Constitution#I. Privacy#IV. Security)
-- [ ] **Document**: `review_image_wipe.md` - 说明如何在异步流中确保清理逻辑 100% 被执行。
-- [ ] **Test**: `wipe_verification_test.dart` 检查磁盘残留 (DoD-T3.1)。
-- [ ] **Review**: 审查异常抛出后，临时文件是否依然能被清理。
-- [ ] **Commit**: `feat(logic): implement image optimizer with reliable secure wipe`
+### T10: 图片处理引擎与 Secure Wipe (T3.1) [x]
+- [x] **Implement**: 实现 `ImageProcessingService`。PNG 压缩 fallback + 200px 缩略图。**强制：** 处理完位图或中间临时文件后，立即调用 `File.delete()`。 (Ref: Constitution#I. Privacy#IV. Security)
+- [x] **Document**: `review_image_wipe.md` -> `review_T10_image_processing.md` - 说明如何在异步流中确保清理逻辑 100% 被执行。
+- [x] **Test**: `image_processing_service_test.dart` 检查磁盘残留 (DoD-T3.1)。
+- [x] **Review**: 审查异常抛出后，临时文件是否依然能被清理。
+- [x] **Commit**: `feat(logic): implement image optimizer with reliable secure wipe`
 
 ### T11: 相册导入与跨平台权限 (T3.4) [中]
 - [ ] **Implement**: 集成 `image_picker` 并完成 `Info.plist` / `AndroidManifest.xml` 配置。支持多图选择。 (Ref: Constitution#III. Intelligent Digitization)
