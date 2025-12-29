@@ -84,12 +84,12 @@
 - [x] **Review**: `review_sqlcipher_config.md` - 审查 Page Size 和 KDF 参数配置。
 - [x] **Commit**: `feat(data): deploy encrypted SQLCipher storage and core schema`
 
-### T9: 种子数据初始化与默认档案 [低]
-- [ ] **Implement**: 执行首次启动种子脚本。创建 `def_me` 档案与 4 个内置分类标签。 (Ref: Spec#FR-001)
-- [ ] **Document**: 备注各标签默认颜色（Teal 调色板）。
-- [ ] **Test**: 验证 `persons` 表初始行数为 1，且 `id` 命中外键。
-- [ ] **Review**: 审查档案昵称是否符合中性化/隐私化命名。
-- [ ] **Commit**: `feat(data): seed default user profile and system tags`
+### T9: 种子数据初始化与默认档案 [x]
+- [x] **Implement**: 执行首次启动种子脚本。创建 `def_me` 档案与 4 个内置分类标签。 (Ref: Spec#FR-001)
+- [x] **Document**: 备注各标签默认颜色（Teal 调色板）。
+- [x] **Test**: 验证 `persons` 表初始行数为 1，且 `id` 命中外键。
+- [x] **Review**: 审查档案昵称是否符合中性化/隐私化命名。
+- [x] **Commit**: `feat(data): seed default user profile and system tags`
 
 ---
 

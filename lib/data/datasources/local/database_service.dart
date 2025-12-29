@@ -27,6 +27,7 @@ import 'package:sqflite_sqlcipher/sqflite.dart';
 import 'package:path/path.dart' as p;
 import '../../../core/security/master_key_manager.dart';
 import '../../../core/services/path_provider_service.dart';
+import 'seeds/database_seeder.dart';
 
 class SQLCipherDatabaseService {
   static const String _dbName = 'phf_encrypted.db';
@@ -197,6 +198,9 @@ class SQLCipherDatabaseService {
     batch.execute('CREATE INDEX idx_records_visit_date ON records(visit_date_ms)');
     batch.execute('CREATE INDEX idx_records_person_status ON records(person_id, status)');
     batch.execute('CREATE INDEX idx_images_record_order ON images(record_id, page_index)');
+
+    // 9. 执行种子数据填充
+    DatabaseSeeder.run(batch);
 
     await batch.commit();
   }
