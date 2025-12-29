@@ -70,6 +70,43 @@ class FileSecurityHelper {
     );
   }
 
+  /// 直接加密内存数据到文件
+  ///
+  /// [data]: 原始数据字节。
+  /// [targetDir]: 目标目录绝对路径。
+  Future<EncryptedFileResult> saveEncryptedFile({
+    required Uint8List data,
+    required String targetDir,
+  }) async {
+    // 1. Generate Key
+    final keyBytes = _cryptoService.generateRandomKey();
+    final base64Key = base64Encode(keyBytes);
+
+    // 2. Determine Output Path
+    final fileName = '${_uuid.v4()}.enc';
+    final destPath = '$targetDir/$fileName';
+
+    // Ensure directory exists
+    final dir = Directory(targetDir);
+    if (!await dir.exists()) {
+      await dir.create(recursive: true);
+    }
+
+    // 3. Encrypt Data directly to File
+    final encryptedPacket = await _cryptoService.encrypt(
+      data: data, 
+      key: keyBytes,
+    );
+    
+    final file = File(destPath);
+    await file.writeAsBytes(encryptedPacket);
+
+    return EncryptedFileResult(
+      relativePath: fileName,
+      base64Key: base64Key,
+    );
+  }
+
   /// 解密文件到临时目录
   ///
   /// [encryptedPath]: 加密文件的绝对路径。

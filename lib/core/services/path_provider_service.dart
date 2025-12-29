@@ -62,6 +62,13 @@ class PathProviderService {
   /// 获取指定文件名的完整数据库路径
   String getDatabasePath(String fileName) => p.join(dbDirPath, fileName);
 
+  /// 获取相对于应用文档目录的安全文件句柄
+  /// [relativePath]: 例如 'images/uuid.enc'
+  Future<File> getSecureFile(String relativePath) async {
+    _checkInitialized();
+    return File(p.join(_appDocDir.path, relativePath));
+  }
+
   /// 清理临时目录
   /// 
   /// 遍历 temp 目录并物理删除所有文件，符合安全清理策略。

@@ -54,7 +54,9 @@ class PermissionService {
   }
 
   Future<bool> hasPhotosPermission() async {
-    return Permission.photos.isGranted || Permission.photos.isLimited;
+    final granted = await Permission.photos.isGranted;
+    final limited = await Permission.photos.isLimited;
+    return granted || limited;
   }
 
   /// 打开系统设置页面
