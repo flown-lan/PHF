@@ -15,12 +15,12 @@
 - [x] **Review**: `review_dependencies.md` - 确保三方库离线友好。
 - [x] **Commit**: `chore: configure project dependencies and package versions`
 
-### T1: 物理目录架构与脚手架 [低]
-- [ ] **Implement**: 创建核心分层目录。配置 `analysis_options.yaml` 强化 Lint。
-- [ ] **Document**: 更新 `lib/README.md`，定义模块可见性规则。 (Ref: Constitution#II. Architecture)
-- [ ] **Test**: `flutter analyze` 确保脚手架零警告。
-- [ ] **Review**: 确认物理结构足以支撑 Clean Architecture 落地。
-- [ ] **Commit**: `feat(scaffold): initialize core architecture directory structure`
+### T1: 物理目录架构与脚手架 [x]
+- [x] **Implement**: 创建核心分层目录。配置 `analysis_options.yaml` 强化 Lint。
+- [x] **Document**: 更新 `lib/README.md`，定义模块可见性规则。 (Ref: Constitution#II. Architecture)
+- [x] **Test**: `flutter analyze` 确保脚手架零警告。
+- [x] **Review**: 确认物理结构足以支撑 Clean Architecture 落地。
+- [x] **Commit**: `feat(scaffold): initialize core architecture directory structure`
 
 ### T2: 领域实体模型 (Domain Entities) [低]
 - [ ] **Implement**: 实现 `Record`, `Image`, `Tag`, `Person` 实体类。禁止使用 `dynamic`。 (Ref: Constitution#VII. Coding Standards)
