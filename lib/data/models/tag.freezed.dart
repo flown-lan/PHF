@@ -21,6 +21,7 @@ Tag _$TagFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$Tag {
   String get id => throw _privateConstructorUsedError;
+  String? get personId => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   String get color => throw _privateConstructorUsedError;
   bool get isSystem => throw _privateConstructorUsedError;
@@ -42,6 +43,7 @@ abstract class $TagCopyWith<$Res> {
   @useResult
   $Res call(
       {String id,
+      String? personId,
       String name,
       String color,
       bool isSystem,
@@ -63,6 +65,7 @@ class _$TagCopyWithImpl<$Res, $Val extends Tag> implements $TagCopyWith<$Res> {
   @override
   $Res call({
     Object? id = null,
+    Object? personId = freezed,
     Object? name = null,
     Object? color = null,
     Object? isSystem = null,
@@ -73,6 +76,10 @@ class _$TagCopyWithImpl<$Res, $Val extends Tag> implements $TagCopyWith<$Res> {
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
+      personId: freezed == personId
+          ? _value.personId
+          : personId // ignore: cast_nullable_to_non_nullable
+              as String?,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -101,6 +108,7 @@ abstract class _$$TagImplCopyWith<$Res> implements $TagCopyWith<$Res> {
   @useResult
   $Res call(
       {String id,
+      String? personId,
       String name,
       String color,
       bool isSystem,
@@ -119,6 +127,7 @@ class __$$TagImplCopyWithImpl<$Res> extends _$TagCopyWithImpl<$Res, _$TagImpl>
   @override
   $Res call({
     Object? id = null,
+    Object? personId = freezed,
     Object? name = null,
     Object? color = null,
     Object? isSystem = null,
@@ -129,6 +138,10 @@ class __$$TagImplCopyWithImpl<$Res> extends _$TagCopyWithImpl<$Res, _$TagImpl>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
+      personId: freezed == personId
+          ? _value.personId
+          : personId // ignore: cast_nullable_to_non_nullable
+              as String?,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -154,6 +167,7 @@ class __$$TagImplCopyWithImpl<$Res> extends _$TagCopyWithImpl<$Res, _$TagImpl>
 class _$TagImpl implements _Tag {
   const _$TagImpl(
       {required this.id,
+      this.personId,
       required this.name,
       required this.color,
       this.isSystem = false,
@@ -164,6 +178,8 @@ class _$TagImpl implements _Tag {
 
   @override
   final String id;
+  @override
+  final String? personId;
   @override
   final String name;
   @override
@@ -176,7 +192,7 @@ class _$TagImpl implements _Tag {
 
   @override
   String toString() {
-    return 'Tag(id: $id, name: $name, color: $color, isSystem: $isSystem, createdAt: $createdAt)';
+    return 'Tag(id: $id, personId: $personId, name: $name, color: $color, isSystem: $isSystem, createdAt: $createdAt)';
   }
 
   @override
@@ -185,6 +201,8 @@ class _$TagImpl implements _Tag {
         (other.runtimeType == runtimeType &&
             other is _$TagImpl &&
             (identical(other.id, id) || other.id == id) &&
+            (identical(other.personId, personId) ||
+                other.personId == personId) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.color, color) || other.color == color) &&
             (identical(other.isSystem, isSystem) ||
@@ -196,7 +214,7 @@ class _$TagImpl implements _Tag {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
-      Object.hash(runtimeType, id, name, color, isSystem, createdAt);
+      Object.hash(runtimeType, id, personId, name, color, isSystem, createdAt);
 
   /// Create a copy of Tag
   /// with the given fields replaced by the non-null parameter values.
@@ -217,6 +235,7 @@ class _$TagImpl implements _Tag {
 abstract class _Tag implements Tag {
   const factory _Tag(
       {required final String id,
+      final String? personId,
       required final String name,
       required final String color,
       final bool isSystem,
@@ -226,6 +245,8 @@ abstract class _Tag implements Tag {
 
   @override
   String get id;
+  @override
+  String? get personId;
   @override
   String get name;
   @override

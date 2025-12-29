@@ -9,8 +9,11 @@
 /// - `encryptionKey`: 针对该图片的 256-bit AES 密钥 (Base64 编码存储).
 /// - `filePath`: 加密后的原始图文件相对路径.
 /// - `thumbnailPath`: 加密后的缩略图文件相对路径.
+/// - `mimeType`: 文件 MIME 类型 (默认 image/webp).
+/// - `fileSize`: 文件大小 (字节).
 /// - `displayOrder`: 在 Record 中的显示顺序.
 /// - `width`, `height`: 原始图像素尺寸.
+/// - `createdAt`: 图片录入时间.
 /// - `tags`: 该图片关联的标签列表 (非数据库字段, 内存聚合).
 ///
 /// ## Security & Privacy
@@ -31,9 +34,13 @@ class MedicalImage with _$MedicalImage {
     required String encryptionKey,
     required String filePath,
     required String thumbnailPath,
+    @Default('image/webp') String mimeType,
+    @Default(0) int fileSize,
     @Default(0) int displayOrder,
     int? width,
     int? height,
+    required DateTime createdAt,
+
     /// 内存关联字段，不直接参与数据库简单序列化
     @JsonKey(includeFromJson: false, includeToJson: false)
     @Default([]) List<Tag> tags,

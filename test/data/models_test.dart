@@ -5,14 +5,15 @@ import 'package:phf/data/models/image.dart';
 import 'package:phf/data/models/record.dart';
 
 void main() {
-  group('Entity Sanity Tests', () {
+  group('Entity Sanity Tests (Fixed)', () {
+    final testTime = DateTime(2025, 12, 29, 12, 0);
+
     test('Person serialization and defaults', () {
-      final now = DateTime.now();
       final person = Person(
         id: 'p1',
         nickname: 'Me',
         isDefault: true,
-        createdAt: now,
+        createdAt: testTime,
       );
 
       final json = person.toJson();
@@ -24,20 +25,21 @@ void main() {
       expect(fromJson, person);
     });
 
-    test('Tag serialization', () {
+    test('Tag serialization with personId', () {
       final tag = Tag(
         id: 't1',
+        personId: 'p1',
         name: 'Report',
         color: '#FF0000',
-        createdAt: DateTime.now(),
+        createdAt: testTime,
       );
 
       final json = tag.toJson();
-      expect(json['name'], 'Report');
+      expect(json['personId'], 'p1');
       expect(Tag.fromJson(json), tag);
     });
 
-    test('MedicalImage encryptionKey and order', () {
+    test('MedicalImage metadata and fields', () {
       final image = MedicalImage(
         id: 'i1',
         recordId: 'r1',
@@ -46,26 +48,52 @@ void main() {
         thumbnailPath: 'path/to/thumb',
         width: 100,
         height: 100,
+        fileSize: 1024,
+        createdAt: testTime,
       );
 
-      expect(image.displayOrder, 0); // Default value
+      expect(image.mimeType, 'image/webp'); // Default
+      expect(image.displayOrder, 0); // Default
+      
       final json = image.toJson();
-      expect(json['encryptionKey'], 'base64_key');
+      expect(json['mimeType'], 'image/webp');
+      expect(json['fileSize'], 1024);
       expect(MedicalImage.fromJson(json), image);
     });
 
-    test('MedicalRecord status and tagsCache', () {
+    test('MedicalRecord schema and title logic', () {
       final record = MedicalRecord(
         id: 'r1',
-        title: 'Checkup',
+        personId: 'p1',
+        hospitalName: 'Mayo Clinic',
+        notes: 'Annual checkup.',
         notedAt: DateTime(2023, 1, 1),
-        createdAt: DateTime.now(),
+        createdAt: testTime,
+        updatedAt: testTime,
       );
 
-      expect(record.status, RecordStatus.archived); // Default value
+      expect(record.status, RecordStatus.archived); // Default
+      expect(record.title, 'Mayo Clinic'); // Getter logic
+      
       final json = record.toJson();
+      expect(json['personId'], 'p1');
+      expect(json['hospitalName'], 'Mayo Clinic');
       expect(json['status'], 'archived');
-      expect(MedicalRecord.fromJson(json).title, 'Checkup');
+      
+      final fromJson = MedicalRecord.fromJson(json);
+      expect(fromJson.title, 'Mayo Clinic');
+      expect(fromJson, record);
+    });
+
+    test('MedicalRecord title fallback', () {
+       final record = MedicalRecord(
+        id: 'r2',
+        personId: 'p1',
+        notedAt: DateTime(2023, 1, 1),
+        createdAt: testTime,
+        updatedAt: testTime,
+      );
+      expect(record.title, '医疗记录');
     });
   });
 }

@@ -13,9 +13,12 @@ _$MedicalImageImpl _$$MedicalImageImplFromJson(Map<String, dynamic> json) =>
       encryptionKey: json['encryptionKey'] as String,
       filePath: json['filePath'] as String,
       thumbnailPath: json['thumbnailPath'] as String,
+      mimeType: json['mimeType'] as String? ?? 'image/webp',
+      fileSize: (json['fileSize'] as num?)?.toInt() ?? 0,
       displayOrder: (json['displayOrder'] as num?)?.toInt() ?? 0,
       width: (json['width'] as num?)?.toInt(),
       height: (json['height'] as num?)?.toInt(),
+      createdAt: DateTime.parse(json['createdAt'] as String),
     );
 
 Map<String, dynamic> _$$MedicalImageImplToJson(_$MedicalImageImpl instance) =>
@@ -25,7 +28,10 @@ Map<String, dynamic> _$$MedicalImageImplToJson(_$MedicalImageImpl instance) =>
       'encryptionKey': instance.encryptionKey,
       'filePath': instance.filePath,
       'thumbnailPath': instance.thumbnailPath,
+      'mimeType': instance.mimeType,
+      'fileSize': instance.fileSize,
       'displayOrder': instance.displayOrder,
       'width': instance.width,
       'height': instance.height,
+      'createdAt': instance.createdAt.toIso8601String(),
     };

@@ -25,9 +25,12 @@ mixin _$MedicalImage {
   String get encryptionKey => throw _privateConstructorUsedError;
   String get filePath => throw _privateConstructorUsedError;
   String get thumbnailPath => throw _privateConstructorUsedError;
+  String get mimeType => throw _privateConstructorUsedError;
+  int get fileSize => throw _privateConstructorUsedError;
   int get displayOrder => throw _privateConstructorUsedError;
   int? get width => throw _privateConstructorUsedError;
   int? get height => throw _privateConstructorUsedError;
+  DateTime get createdAt => throw _privateConstructorUsedError;
 
   /// 内存关联字段，不直接参与数据库简单序列化
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -55,9 +58,12 @@ abstract class $MedicalImageCopyWith<$Res> {
       String encryptionKey,
       String filePath,
       String thumbnailPath,
+      String mimeType,
+      int fileSize,
       int displayOrder,
       int? width,
       int? height,
+      DateTime createdAt,
       @JsonKey(includeFromJson: false, includeToJson: false) List<Tag> tags});
 }
 
@@ -81,9 +87,12 @@ class _$MedicalImageCopyWithImpl<$Res, $Val extends MedicalImage>
     Object? encryptionKey = null,
     Object? filePath = null,
     Object? thumbnailPath = null,
+    Object? mimeType = null,
+    Object? fileSize = null,
     Object? displayOrder = null,
     Object? width = freezed,
     Object? height = freezed,
+    Object? createdAt = null,
     Object? tags = null,
   }) {
     return _then(_value.copyWith(
@@ -107,6 +116,14 @@ class _$MedicalImageCopyWithImpl<$Res, $Val extends MedicalImage>
           ? _value.thumbnailPath
           : thumbnailPath // ignore: cast_nullable_to_non_nullable
               as String,
+      mimeType: null == mimeType
+          ? _value.mimeType
+          : mimeType // ignore: cast_nullable_to_non_nullable
+              as String,
+      fileSize: null == fileSize
+          ? _value.fileSize
+          : fileSize // ignore: cast_nullable_to_non_nullable
+              as int,
       displayOrder: null == displayOrder
           ? _value.displayOrder
           : displayOrder // ignore: cast_nullable_to_non_nullable
@@ -119,6 +136,10 @@ class _$MedicalImageCopyWithImpl<$Res, $Val extends MedicalImage>
           ? _value.height
           : height // ignore: cast_nullable_to_non_nullable
               as int?,
+      createdAt: null == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
       tags: null == tags
           ? _value.tags
           : tags // ignore: cast_nullable_to_non_nullable
@@ -141,9 +162,12 @@ abstract class _$$MedicalImageImplCopyWith<$Res>
       String encryptionKey,
       String filePath,
       String thumbnailPath,
+      String mimeType,
+      int fileSize,
       int displayOrder,
       int? width,
       int? height,
+      DateTime createdAt,
       @JsonKey(includeFromJson: false, includeToJson: false) List<Tag> tags});
 }
 
@@ -165,9 +189,12 @@ class __$$MedicalImageImplCopyWithImpl<$Res>
     Object? encryptionKey = null,
     Object? filePath = null,
     Object? thumbnailPath = null,
+    Object? mimeType = null,
+    Object? fileSize = null,
     Object? displayOrder = null,
     Object? width = freezed,
     Object? height = freezed,
+    Object? createdAt = null,
     Object? tags = null,
   }) {
     return _then(_$MedicalImageImpl(
@@ -191,6 +218,14 @@ class __$$MedicalImageImplCopyWithImpl<$Res>
           ? _value.thumbnailPath
           : thumbnailPath // ignore: cast_nullable_to_non_nullable
               as String,
+      mimeType: null == mimeType
+          ? _value.mimeType
+          : mimeType // ignore: cast_nullable_to_non_nullable
+              as String,
+      fileSize: null == fileSize
+          ? _value.fileSize
+          : fileSize // ignore: cast_nullable_to_non_nullable
+              as int,
       displayOrder: null == displayOrder
           ? _value.displayOrder
           : displayOrder // ignore: cast_nullable_to_non_nullable
@@ -203,6 +238,10 @@ class __$$MedicalImageImplCopyWithImpl<$Res>
           ? _value.height
           : height // ignore: cast_nullable_to_non_nullable
               as int?,
+      createdAt: null == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
       tags: null == tags
           ? _value._tags
           : tags // ignore: cast_nullable_to_non_nullable
@@ -220,9 +259,12 @@ class _$MedicalImageImpl implements _MedicalImage {
       required this.encryptionKey,
       required this.filePath,
       required this.thumbnailPath,
+      this.mimeType = 'image/webp',
+      this.fileSize = 0,
       this.displayOrder = 0,
       this.width,
       this.height,
+      required this.createdAt,
       @JsonKey(includeFromJson: false, includeToJson: false)
       final List<Tag> tags = const []})
       : _tags = tags;
@@ -242,11 +284,19 @@ class _$MedicalImageImpl implements _MedicalImage {
   final String thumbnailPath;
   @override
   @JsonKey()
+  final String mimeType;
+  @override
+  @JsonKey()
+  final int fileSize;
+  @override
+  @JsonKey()
   final int displayOrder;
   @override
   final int? width;
   @override
   final int? height;
+  @override
+  final DateTime createdAt;
 
   /// 内存关联字段，不直接参与数据库简单序列化
   final List<Tag> _tags;
@@ -262,7 +312,7 @@ class _$MedicalImageImpl implements _MedicalImage {
 
   @override
   String toString() {
-    return 'MedicalImage(id: $id, recordId: $recordId, encryptionKey: $encryptionKey, filePath: $filePath, thumbnailPath: $thumbnailPath, displayOrder: $displayOrder, width: $width, height: $height, tags: $tags)';
+    return 'MedicalImage(id: $id, recordId: $recordId, encryptionKey: $encryptionKey, filePath: $filePath, thumbnailPath: $thumbnailPath, mimeType: $mimeType, fileSize: $fileSize, displayOrder: $displayOrder, width: $width, height: $height, createdAt: $createdAt, tags: $tags)';
   }
 
   @override
@@ -279,10 +329,16 @@ class _$MedicalImageImpl implements _MedicalImage {
                 other.filePath == filePath) &&
             (identical(other.thumbnailPath, thumbnailPath) ||
                 other.thumbnailPath == thumbnailPath) &&
+            (identical(other.mimeType, mimeType) ||
+                other.mimeType == mimeType) &&
+            (identical(other.fileSize, fileSize) ||
+                other.fileSize == fileSize) &&
             (identical(other.displayOrder, displayOrder) ||
                 other.displayOrder == displayOrder) &&
             (identical(other.width, width) || other.width == width) &&
             (identical(other.height, height) || other.height == height) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
             const DeepCollectionEquality().equals(other._tags, _tags));
   }
 
@@ -295,9 +351,12 @@ class _$MedicalImageImpl implements _MedicalImage {
       encryptionKey,
       filePath,
       thumbnailPath,
+      mimeType,
+      fileSize,
       displayOrder,
       width,
       height,
+      createdAt,
       const DeepCollectionEquality().hash(_tags));
 
   /// Create a copy of MedicalImage
@@ -323,9 +382,12 @@ abstract class _MedicalImage implements MedicalImage {
       required final String encryptionKey,
       required final String filePath,
       required final String thumbnailPath,
+      final String mimeType,
+      final int fileSize,
       final int displayOrder,
       final int? width,
       final int? height,
+      required final DateTime createdAt,
       @JsonKey(includeFromJson: false, includeToJson: false)
       final List<Tag> tags}) = _$MedicalImageImpl;
 
@@ -343,11 +405,17 @@ abstract class _MedicalImage implements MedicalImage {
   @override
   String get thumbnailPath;
   @override
+  String get mimeType;
+  @override
+  int get fileSize;
+  @override
   int get displayOrder;
   @override
   int? get width;
   @override
   int? get height;
+  @override
+  DateTime get createdAt;
 
   /// 内存关联字段，不直接参与数据库简单序列化
   @override

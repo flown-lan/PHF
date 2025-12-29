@@ -5,9 +5,12 @@
 ///
 /// ## Fields
 /// - `id`: 唯一标识 (UUID).
-/// - `title`: 标题或简述.
+/// - `personId`: 所属用户的 ID.
+/// - `hospitalName`: 就诊医院名称.
+/// - `notes`: 备注/笔记.
 /// - `notedAt`: 事件发生时间.
 /// - `createdAt`: 系统录入时间.
+/// - `updatedAt`: 最后修改时间.
 /// - `status`: 状态 (`archived`, `deleted`).
 /// - `tagsCache`: 聚合标签的 JSON 缓存字串，用于 Timeline 快速渲染.
 /// - `images`: 该记录包含的所有图片 (非数据库字段, 内存聚合).
@@ -33,16 +36,23 @@ enum RecordStatus {
 class MedicalRecord with _$MedicalRecord {
   const factory MedicalRecord({
     required String id,
-    required String title,
+    required String personId,
+    String? hospitalName,
+    String? notes,
     required DateTime notedAt,
     required DateTime createdAt,
+    required DateTime updatedAt,
     @Default(RecordStatus.archived) RecordStatus status,
     String? tagsCache,
-    
+
     /// 内存关联字段
     @JsonKey(includeFromJson: false, includeToJson: false)
     @Default([]) List<MedicalImage> images,
   }) = _MedicalRecord;
 
   factory MedicalRecord.fromJson(Map<String, dynamic> json) => _$MedicalRecordFromJson(json);
+}
+
+extension MedicalRecordX on MedicalRecord {
+  String get title => hospitalName ?? '医疗记录';
 }

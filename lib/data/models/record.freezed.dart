@@ -21,9 +21,12 @@ MedicalRecord _$MedicalRecordFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$MedicalRecord {
   String get id => throw _privateConstructorUsedError;
-  String get title => throw _privateConstructorUsedError;
+  String get personId => throw _privateConstructorUsedError;
+  String? get hospitalName => throw _privateConstructorUsedError;
+  String? get notes => throw _privateConstructorUsedError;
   DateTime get notedAt => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
+  DateTime get updatedAt => throw _privateConstructorUsedError;
   RecordStatus get status => throw _privateConstructorUsedError;
   String? get tagsCache => throw _privateConstructorUsedError;
 
@@ -49,9 +52,12 @@ abstract class $MedicalRecordCopyWith<$Res> {
   @useResult
   $Res call(
       {String id,
-      String title,
+      String personId,
+      String? hospitalName,
+      String? notes,
       DateTime notedAt,
       DateTime createdAt,
+      DateTime updatedAt,
       RecordStatus status,
       String? tagsCache,
       @JsonKey(includeFromJson: false, includeToJson: false)
@@ -74,9 +80,12 @@ class _$MedicalRecordCopyWithImpl<$Res, $Val extends MedicalRecord>
   @override
   $Res call({
     Object? id = null,
-    Object? title = null,
+    Object? personId = null,
+    Object? hospitalName = freezed,
+    Object? notes = freezed,
     Object? notedAt = null,
     Object? createdAt = null,
+    Object? updatedAt = null,
     Object? status = null,
     Object? tagsCache = freezed,
     Object? images = null,
@@ -86,10 +95,18 @@ class _$MedicalRecordCopyWithImpl<$Res, $Val extends MedicalRecord>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      title: null == title
-          ? _value.title
-          : title // ignore: cast_nullable_to_non_nullable
+      personId: null == personId
+          ? _value.personId
+          : personId // ignore: cast_nullable_to_non_nullable
               as String,
+      hospitalName: freezed == hospitalName
+          ? _value.hospitalName
+          : hospitalName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      notes: freezed == notes
+          ? _value.notes
+          : notes // ignore: cast_nullable_to_non_nullable
+              as String?,
       notedAt: null == notedAt
           ? _value.notedAt
           : notedAt // ignore: cast_nullable_to_non_nullable
@@ -97,6 +114,10 @@ class _$MedicalRecordCopyWithImpl<$Res, $Val extends MedicalRecord>
       createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      updatedAt: null == updatedAt
+          ? _value.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
       status: null == status
           ? _value.status
@@ -124,9 +145,12 @@ abstract class _$$MedicalRecordImplCopyWith<$Res>
   @useResult
   $Res call(
       {String id,
-      String title,
+      String personId,
+      String? hospitalName,
+      String? notes,
       DateTime notedAt,
       DateTime createdAt,
+      DateTime updatedAt,
       RecordStatus status,
       String? tagsCache,
       @JsonKey(includeFromJson: false, includeToJson: false)
@@ -147,9 +171,12 @@ class __$$MedicalRecordImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
-    Object? title = null,
+    Object? personId = null,
+    Object? hospitalName = freezed,
+    Object? notes = freezed,
     Object? notedAt = null,
     Object? createdAt = null,
+    Object? updatedAt = null,
     Object? status = null,
     Object? tagsCache = freezed,
     Object? images = null,
@@ -159,10 +186,18 @@ class __$$MedicalRecordImplCopyWithImpl<$Res>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      title: null == title
-          ? _value.title
-          : title // ignore: cast_nullable_to_non_nullable
+      personId: null == personId
+          ? _value.personId
+          : personId // ignore: cast_nullable_to_non_nullable
               as String,
+      hospitalName: freezed == hospitalName
+          ? _value.hospitalName
+          : hospitalName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      notes: freezed == notes
+          ? _value.notes
+          : notes // ignore: cast_nullable_to_non_nullable
+              as String?,
       notedAt: null == notedAt
           ? _value.notedAt
           : notedAt // ignore: cast_nullable_to_non_nullable
@@ -170,6 +205,10 @@ class __$$MedicalRecordImplCopyWithImpl<$Res>
       createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      updatedAt: null == updatedAt
+          ? _value.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
       status: null == status
           ? _value.status
@@ -192,9 +231,12 @@ class __$$MedicalRecordImplCopyWithImpl<$Res>
 class _$MedicalRecordImpl implements _MedicalRecord {
   const _$MedicalRecordImpl(
       {required this.id,
-      required this.title,
+      required this.personId,
+      this.hospitalName,
+      this.notes,
       required this.notedAt,
       required this.createdAt,
+      required this.updatedAt,
       this.status = RecordStatus.archived,
       this.tagsCache,
       @JsonKey(includeFromJson: false, includeToJson: false)
@@ -207,11 +249,17 @@ class _$MedicalRecordImpl implements _MedicalRecord {
   @override
   final String id;
   @override
-  final String title;
+  final String personId;
+  @override
+  final String? hospitalName;
+  @override
+  final String? notes;
   @override
   final DateTime notedAt;
   @override
   final DateTime createdAt;
+  @override
+  final DateTime updatedAt;
   @override
   @JsonKey()
   final RecordStatus status;
@@ -232,7 +280,7 @@ class _$MedicalRecordImpl implements _MedicalRecord {
 
   @override
   String toString() {
-    return 'MedicalRecord(id: $id, title: $title, notedAt: $notedAt, createdAt: $createdAt, status: $status, tagsCache: $tagsCache, images: $images)';
+    return 'MedicalRecord(id: $id, personId: $personId, hospitalName: $hospitalName, notes: $notes, notedAt: $notedAt, createdAt: $createdAt, updatedAt: $updatedAt, status: $status, tagsCache: $tagsCache, images: $images)';
   }
 
   @override
@@ -241,10 +289,16 @@ class _$MedicalRecordImpl implements _MedicalRecord {
         (other.runtimeType == runtimeType &&
             other is _$MedicalRecordImpl &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.title, title) || other.title == title) &&
+            (identical(other.personId, personId) ||
+                other.personId == personId) &&
+            (identical(other.hospitalName, hospitalName) ||
+                other.hospitalName == hospitalName) &&
+            (identical(other.notes, notes) || other.notes == notes) &&
             (identical(other.notedAt, notedAt) || other.notedAt == notedAt) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
+            (identical(other.updatedAt, updatedAt) ||
+                other.updatedAt == updatedAt) &&
             (identical(other.status, status) || other.status == status) &&
             (identical(other.tagsCache, tagsCache) ||
                 other.tagsCache == tagsCache) &&
@@ -253,8 +307,18 @@ class _$MedicalRecordImpl implements _MedicalRecord {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, title, notedAt, createdAt,
-      status, tagsCache, const DeepCollectionEquality().hash(_images));
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      personId,
+      hospitalName,
+      notes,
+      notedAt,
+      createdAt,
+      updatedAt,
+      status,
+      tagsCache,
+      const DeepCollectionEquality().hash(_images));
 
   /// Create a copy of MedicalRecord
   /// with the given fields replaced by the non-null parameter values.
@@ -275,9 +339,12 @@ class _$MedicalRecordImpl implements _MedicalRecord {
 abstract class _MedicalRecord implements MedicalRecord {
   const factory _MedicalRecord(
       {required final String id,
-      required final String title,
+      required final String personId,
+      final String? hospitalName,
+      final String? notes,
       required final DateTime notedAt,
       required final DateTime createdAt,
+      required final DateTime updatedAt,
       final RecordStatus status,
       final String? tagsCache,
       @JsonKey(includeFromJson: false, includeToJson: false)
@@ -289,11 +356,17 @@ abstract class _MedicalRecord implements MedicalRecord {
   @override
   String get id;
   @override
-  String get title;
+  String get personId;
+  @override
+  String? get hospitalName;
+  @override
+  String? get notes;
   @override
   DateTime get notedAt;
   @override
   DateTime get createdAt;
+  @override
+  DateTime get updatedAt;
   @override
   RecordStatus get status;
   @override
