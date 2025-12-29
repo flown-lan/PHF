@@ -41,10 +41,12 @@
 ## 2. Infrastructure & Security (P1)
 **Goal**: 落地安全内核与沙盒。
 
-### T4: 密钥与 User Salt 管理工厂 [中]
-- [ ] **Implement**: 实现 `MasterKeyManager`。负责 256-bit Master Key 和随机 Salt 的生成、持久化。 (Ref: Constitution#I. Privacy)
-- [ ] **Document**: 录入 Master Key 派生流程图。
-- [ ] **Test**: `persistence_test.dart` 验证重启 App 后仍能读取到一致的 Key (DoD-T1.1)。
+### T4: 密钥与 User Salt 管理工厂 [x]
+- [x] **Implement**: 创建 `MasterKeyManager`，基于 secure storage 惰性生成/读取 Master Key (32 bytes) 和 User Salt (16 bytes)。 (Ref: Spec#5. Security Implementation)
+- [x] **Test**: 编写单元测试验证密钥生成的随机性与持久化。
+- [x] **Review**: 确认存储方案使用了系统级Keychain/Keystore。
+- [x] **Commit**: `feat(security): implement master key manager with secure storage persistence`
+ 验证重启 App 后仍能读取到一致的 Key (DoD-T1.1)。
 - [ ] **Review**: `review_keystore_security.md` - 审计 KeyStore/KeyChain 调用安全性。
 - [ ] **Commit**: `feat(security): implement master key and user salt management`
 
