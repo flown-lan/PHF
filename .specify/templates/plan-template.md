@@ -31,7 +31,17 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+- **I. 隐私与安全 (Privacy & Security)**:
+  - [ ] **无网络**: 方案是否确保核心功能不产生任何网络请求？
+  - [ ] **数据加密**: 是否已规划本地数据库和文件的加密措施？
+  - [ ] **安全访问**: 是否包含应用启动锁等访问控制机制？
+- **II. 本地优先 (Local-First)**:
+  - [ ] **离线功能**: 所有功能是否设计为完全离线可用？
+  - [ ] **无云依赖**: 是否避免了任何云端服务的依赖？
+  - [ ] **设备端计算**: 数据处理（如OCR）是否在设备上执行？
+- **III. 智能数字化与归档 (Intelligent Digitization & Archiving)**:
+  - [ ] **数字化能力**: 方案是否包含了将纸质文档数字化的功能？
+  - [ ] **结构化归档**: 数据是否按“就诊”单元进行结构化组织？
 
 ## Project Structure
 
