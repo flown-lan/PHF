@@ -1,20 +1,19 @@
 # Project Review Status Summary
 
 **Last Updated**: 2025-12-29
-**Coverage**: T0 - T10
+**Coverage**: T0 - T11
 
 ## 🟢 Approved Features (Highlights)
-- **Security Core**: AES-256-GCM encryption with streaming support (T5), secure key management via OS Keychain/Keystore (T4), and random IV/path management (T6).
-- **Data Persistence**: Encrypted SQLCipher database (T8) with complete schema and FTS5 search. Default "Me" profile and system tags initialized (T9).
-- **Domain Modeling**: Robust entities (T2) and clean business interfaces (T3) decoupled from implementation details.
-- **Environment**: Secure sandbox directories (db, images, temp) established with automatic cleanup (T7).
-- **Image Handling**: Basic processing engine supporting resizing and secure deletion (T10).
+- **Security Core**: AES-256-GCM encryption (T5), secure key management (T4), and random IV/path management (T6).
+- **Data Persistence**: Encrypted SQLCipher database (T8) with FTS5. Initial Schema and Seed Data (T9) deployed.
+- **Environment**: Secure sandbox directories with auto-cleanup (T7).
+- **Image Handling**: Basic processing engine (PNG fallback) (T10) and Gallery/Camera integration (T11) with granular permission handling (Android 13+ support).
+- **Domain Modeling**: Robust entities (T2) and clean business interfaces (T3).
 
 ## 🟡 Pending Issues / Technical Debt
-- **T10: PNG Fallback**: Currently using PNG instead of WebP due to library limitations. This increases storage usage significantly. (High Priority for P2)
-- **T8: Database Configuration**: explicitly set `PRAGMA cipher_page_size = 4096` and verify KDF iteration counts to match the most recent security standards.
-- **T7: Android Versioning**: Verify photo permission fallback logic for devices running Android 11 (API 30) or lower.
-- **T10: Physical Wiping**: Current `secureWipe` depends on OS file deletion. Physical overwriting is not guaranteed on flash storage.
+- **T10: PNG Fallback**: Currently using PNG instead of WebP due to library limitations. (High Priority for P2)
+- **T8: Database Configuration**: Explicitly set `PRAGMA cipher_page_size = 4096` and verify KDF iteration counts.
+- **T10: Physical Wiping**: Reliance on OS file deletion (flash storage limitation).
 
 ## 🔴 Blockers
 - None.

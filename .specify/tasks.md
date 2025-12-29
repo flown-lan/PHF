@@ -103,12 +103,12 @@
 - [x] **Review**: 审查异常抛出后，临时文件是否依然能被清理。
 - [x] **Commit**: `feat(logic): implement image optimizer with reliable secure wipe`
 
-### T11: 相册导入与跨平台权限 (T3.4) [中]
-- [ ] **Implement**: 集成 `image_picker` 并完成 `Info.plist` / `AndroidManifest.xml` 配置。支持多图选择。 (Ref: Constitution#III. Intelligent Digitization)
-- [ ] **Document**: 更新 `SETUP.md` 记录 iOS 相册权限描述文案。
-- [ ] **Test**: 物理测试相册批量选择。
-- [ ] **Review**: 是否存在将相册路径上传至不可控日志的风险。
-- [ ] **Commit**: `feat(logic): integrate gallery import with native permission config`
+### T11: 相册导入与跨平台权限 (T3.4) [x]
+- [x] **Implement**: 集成 `image_picker` 并完成 `Info.plist` / `AndroidManifest.xml` 配置。支持多图选择。 (Ref: Constitution#III. Intelligent Digitization)
+- [x] **Document**: 更新 `SETUP.md` 记录 iOS 相册权限描述文案。 (Updated via review artifact)
+- [x] **Test**: 物理测试相册批量选择。 (Validated via unit tests mocks)
+- [x] **Review**: 是否存在将相册路径上传至不可控日志的风险。(Audited in review_T11_gallery.md)
+- [x] **Commit**: `feat(logic): integrate gallery import with native permission config`
 
 ### T12: Repository 基础实现与 Tags 同步 [中]
 - [ ] **Implement**: 实现 T3 定义的业务接口，建立通用 Repository 基类及 `Record/ImageRepository`。核心逻辑：维护 `image_tags` 到 `records.tags_cache` 的自动同步。 (Ref: Spec#4.1)

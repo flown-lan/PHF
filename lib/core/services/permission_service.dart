@@ -11,6 +11,8 @@
 /// - 在 Android 上，`photos` 权限对应 `storage` 或 `photos` (API 33+)。
 /// - 在 iOS 上，需要对应的 `Info.plist` 配置。
 
+import 'dart:io';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class PermissionService {
@@ -22,11 +24,24 @@ class PermissionService {
 
   /// 请求相册/存储读取权限
   Future<bool> requestPhotosPermission() async {
-    // 根据系统版本和平台，permission_handler 会处理底层的差异
-    final status = await Permission.photos.request();
+    Permission permission;
+
+    if (Platform.isAndroid) {
+      final androidInfo = await DeviceInfoPlugin().androidInfo;
+      // Android 13 (API 33)+ 使用 photos 权限，旧版本使用 storage
+      if (androidInfo.version.sdkInt >= 33) {
+        permission = Permission.photos;
+      } else {
+        permission = Permission.storage;
+      }
+    } else {
+      // iOS
+      permission = Permission.photos;
+    }
+
+    final status = await permission.request();
     
     if (status.isPermanentlyDenied) {
-      // 建议引导用户去设置页面
       return false;
     }
     
