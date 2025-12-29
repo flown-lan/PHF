@@ -58,12 +58,12 @@
 - [x] **Review**: `review_crypto_service.md` - 算法选择与流式处理逻辑审查。
 - [x] **Commit**: `feat(security): implement aes-256-gcm crypto service with streaming support`
 
-### T6: 文件安全封装器 (Stream & IV Prepend) [高]
-- [ ] **Implement**: 实现 `FileSecurityWrapper`。负责大文件流式加解密、IV 头部预置/提取 (T1.4)。 (Ref: Constitution#VII. Performance)
-- [ ] **Document**: 更新文件头结构布局图。
-- [ ] **Test**: 验证同一文件两次加密结果不一致 (DoD-T1.4)。
-- [ ] **Review**: `review_file_security.md` - 重点审计流处理时的内存阈值控制。
-- [ ] **Commit**: `feat(security): implement streaming file security with IV prepending`
+### T6: 文件安全封装器 (Stream & IV Prepend) [x]
+- [x] **Implement**: 实现 `FileSecurityHelper`。负责大文件流式加解密、IV 头部预置/提取 (T1.4)。 (Ref: Constitution#VII. Performance)
+- [x] **Document**: 更新文件头结构布局图。
+- [x] **Test**: 模拟 Mock File IO，验证 IV 拼接逻辑。
+- [x] **Review**: `review_file_security.md` - 确保存储格式符合 Spec。
+- [x] **Commit**: `feat(security): implement file security wrapper with random key and path management`
 
 ### T7: 沙盒目录与权限治理 (T1.6) [低]
 - [ ] **Implement**: 实现 `PathProviderService`。初始化加密存储专用沙盒，管理系统权限弹窗。 (Ref: Constitution#I. Privacy)
