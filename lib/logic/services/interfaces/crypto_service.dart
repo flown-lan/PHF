@@ -42,6 +42,29 @@ abstract class ICryptoService {
     required Uint8List key,
     Uint8List? associatedData,
   });
+
+  /// [Streaming] 对物理文件执行流式加密
+  /// 
+  /// 符合 `Constitution#I. Privacy`：避免大文件加载导致 OOM。
+  /// 
+  /// [sourcePath]: 原始明文文件路径。
+  /// [destPath]: 加密后结果存储路径。
+  /// [key]: 32 字节密钥。
+  Future<void> encryptFile({
+    required String sourcePath,
+    required String destPath,
+    required Uint8List key,
+  });
+
+  /// [Streaming] 对物理文件执行流式解密
+  /// 
+  /// [sourcePath]: 加密后的密文文件路径（含 IV 头部）。
+  /// [destPath]: 解密后明文临时存储路径（处理完需立即 Wipe）。
+  Future<void> decryptFile({
+    required String sourcePath,
+    required String destPath,
+    required Uint8List key,
+  });
 }
 
 /// 安全相关异常
