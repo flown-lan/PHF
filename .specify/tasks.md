@@ -22,12 +22,12 @@
 - [x] **Review**: 确认物理结构足以支撑 Clean Architecture 落地。
 - [x] **Commit**: `feat(scaffold): initialize core architecture directory structure`
 
-### T2: 领域实体模型 (Domain Entities) [低]
-- [ ] **Implement**: 实现 `Record`, `Image`, `Tag`, `Person` 实体类。禁止使用 `dynamic`。 (Ref: Constitution#VII. Coding Standards)
-- [ ] **Document**: 定义核心实体的 ID 生成规则与 JSON 序列化规范。
-- [ ] **Test**: 编写实体转换单元测试。
-- [ ] **Review**: 检查命名是否符合 Dart 驼峰规范。
-- [ ] **Commit**: `feat(data): define core domain entities for records and images`
+### T2: 领域实体模型 (Domain Entities) [x]
+- [x] **Implement**: 实现 `Record`, `Image`, `Tag`, `Person` 实体类。禁止使用 `dynamic`。 (Ref: Constitution#VII. Coding Standards)
+- [x] **Document**: 定义核心实体的 ID 生成规则与 JSON 序列化规范。
+- [x] **Test**: 编写实体转换单元测试。
+- [x] **Review**: 检查命名是否符合 Dart 驼峰规范。
+- [x] **Commit**: `feat(data): define core domain entities for records and images`
 
 ### T3: 业务契约 (Interfaces) 定义 [低]
 - [ ] **Implement**: 定义 `IRecordRepository`, `IImageRepository`, `ICryptoService`, `IImageService` 接口类。
