@@ -178,240 +178,254 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
         foregroundColor: AppTheme.textPrimary,
         elevation: 0,
         actions: [
-          if (!_isEditing)
-            IconButton(
-              icon: const Icon(Icons.edit_outlined),
-              onPressed: () => setState(() => _isEditing = true),
-            )
-          else
-                        TextButton(
-                          onPressed: _saveChanges,
-                          child: const Text('保存', style: TextStyle(fontWeight: FontWeight.bold)),
-                        ),
-                      const SizedBox(width: 8),
-                    ],
-                  ),
-                  body: Column(
-                    children: [
-                      // 1. Top Section - Image Pager
-                      Expanded(
-                        flex: 4,
-                        child: Stack(
-                          children: [
-                            PageView.builder(
-                              controller: _pageController,
-                              itemCount: _images.length,
-                              onPageChanged: _onPageChanged,
-                              itemBuilder: (context, index) {
-                                final img = _images[index];
-                                return Center(
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      Navigator.push<int>(
-                                        context,
-                                        MaterialPageRoute<int>(
-                                          builder: (context) => FullImageViewer(
-                                            images: _images,
-                                            initialIndex: _currentIndex,
-                                          ),
-                                        ),
-                                      ).then((newIndex) {
-                                        // If viewer returned with a new index, sync it
-                                        if (newIndex is int && mounted) {
-                                          _pageController.jumpToPage(newIndex);
-                                        }
-                                      });
-                                    },
-                                    child: SecureImage(
-                                      imagePath: img.filePath, // Use main file in detail
-                                      encryptionKey: img.encryptionKey,
-                                      fit: BoxFit.contain,
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                            // Left/Right Indicators
-                            if (_images.length > 1) ...[
-                              if (_currentIndex > 0)
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: IconButton(
-                                    icon: const Icon(Icons.chevron_left, color: Colors.black54, size: 40),
-                                    onPressed: () {
-                                      _pageController.previousPage(
-                                        duration: const Duration(milliseconds: 300),
-                                        curve: Curves.easeInOut,
-                                      );
-                                    },
-                                  ),
-                                ),
-                              if (_currentIndex < _images.length - 1)
-                                Align(
-                                  alignment: Alignment.centerRight,
-                                  child: IconButton(
-                                    icon: const Icon(Icons.chevron_right, color: Colors.black54, size: 40),
-                                    onPressed: () {
-                                      _pageController.nextPage(
-                                        duration: const Duration(milliseconds: 300),
-                                        curve: Curves.easeInOut,
-                                      );
-                                    },
-                                  ),
-                                ),
-                            ],
-                            // Page indicator
-                            Positioned(
-                              bottom: 16,
-                              left: 0,
-                              right: 0,
-                              child: Center(
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                                  decoration: BoxDecoration(
-                                    color: Colors.black54,
-                                    borderRadius: BorderRadius.circular(16)
-                                  ),
-                                  child: Text(
-                                    '${_currentIndex + 1} / ${_images.length}',
-                                    style: const TextStyle(color: Colors.white, fontSize: 12),
-                                  ),
-                                ),
+          if (_isEditing)
+            TextButton(
+              onPressed: _saveChanges,
+              child: const Text('保存', style: TextStyle(fontWeight: FontWeight.bold)),
+            ),
+          const SizedBox(width: 8),
+        ],
+      ),
+      body: Column(
+        children: [
+          // ... (existing Image Pager code remains the same)
+          Expanded(
+            flex: 4,
+            child: Stack(
+              children: [
+                PageView.builder(
+                  controller: _pageController,
+                  itemCount: _images.length,
+                  onPageChanged: _onPageChanged,
+                  itemBuilder: (context, index) {
+                    final img = _images[index];
+                    return Center(
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push<int>(
+                            context,
+                            MaterialPageRoute<int>(
+                              builder: (context) => FullImageViewer(
+                                images: _images,
+                                initialIndex: _currentIndex,
                               ),
                             ),
-                          ],
+                          ).then((newIndex) {
+                            if (newIndex is int && mounted) {
+                              _pageController.jumpToPage(newIndex);
+                            }
+                          });
+                        },
+                        child: SecureImage(
+                          imagePath: img.filePath,
+                          encryptionKey: img.encryptionKey,
+                          fit: BoxFit.contain,
                         ),
                       ),
-            
-                      const Divider(height: 1),
-            
-                      // 2. Bottom Section - Details
-                      Expanded(
-                        flex: 6,
-                        child: SingleChildScrollView(
-                          padding: const EdgeInsets.all(20),
-                          child: _isEditing ? _buildEditView() : _buildInfoView(currentImage),
-                        ),
+                    );
+                  },
+                ),
+                if (_images.length > 1) ...[
+                  if (_currentIndex > 0)
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: IconButton(
+                        icon: const Icon(Icons.chevron_left, color: Colors.black54, size: 40),
+                        onPressed: () {
+                          _pageController.previousPage(
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                          );
+                        },
                       ),
-                    ],
+                    ),
+                  if (_currentIndex < _images.length - 1)
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: IconButton(
+                        icon: const Icon(Icons.chevron_right, color: Colors.black54, size: 40),
+                        onPressed: () {
+                          _pageController.nextPage(
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                          );
+                        },
+                      ),
+                    ),
+                ],
+                Positioned(
+                  bottom: 16,
+                  left: 0,
+                  right: 0,
+                  child: Center(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.black54,
+                        borderRadius: BorderRadius.circular(16)
+                      ),
+                      child: Text(
+                        '${_currentIndex + 1} / ${_images.length}',
+                        style: const TextStyle(color: Colors.white, fontSize: 12),
+                      ),
+                    ),
                   ),
-                  bottomNavigationBar: _isEditing ? null : SafeArea(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: OutlinedButton.icon(
-                              onPressed: _deleteCurrentImage,
-                              icon: const Icon(Icons.delete_outline, size: 18),
-                              label: const Text('删除当前页'),
-                              style: OutlinedButton.styleFrom(
-                                foregroundColor: AppTheme.errorRed,
-                                side: const BorderSide(color: AppTheme.errorRed),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              }
-            
-              Widget _buildInfoView(MedicalImage img) {
-                final hospital = img.hospitalName ?? _record?.hospitalName ?? '未填写';
-                final date = img.visitDate ?? _record?.notedAt;
-                final dateStr = date != null ? DateFormat('yyyy-MM-dd').format(date) : '未知日期';
-            
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text('医院', style: TextStyle(fontSize: 12, color: AppTheme.textHint)),
-                    Text(hospital, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                    
-                    const SizedBox(height: 16),
-                    
-                    const Text('就诊日期', style: TextStyle(fontSize: 12, color: AppTheme.textHint)),
-                    Text(dateStr, style: AppTheme.monoStyle.copyWith(fontSize: 16)),
-                    
-                    const SizedBox(height: 24),
-                    
-                    const Text('标签', style: TextStyle(fontSize: 12, color: AppTheme.textHint)),
-                    const SizedBox(height: 8),
-                    if (img.tagIds.isEmpty)
-                      const Text('无标签', style: TextStyle(color: AppTheme.textHint, fontSize: 14))
-                    else
-                      Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-                        children: img.tagIds.map((tid) => _TagNameChip(tagId: tid)).toList(),
-                      ),
-                  ],
-                );
-              }
-            
-              Widget _buildEditView() {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TextField(
-                      controller: _hospitalController,
-                      decoration: const InputDecoration(labelText: '医院名称'),
-                    ),
-                    const SizedBox(height: 16),
-                    ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      title: const Text('就诊日期'),
-                      subtitle: Text(_visitDate != null ? DateFormat('yyyy-MM-dd').format(_visitDate!) : '选择日期'),
-                      trailing: const Icon(Icons.calendar_today),
-                      onTap: () async {
-                        final picked = await showDatePicker(
-                          context: context,
-                          initialDate: _visitDate ?? DateTime.now(),
-                          firstDate: DateTime(2000),
-                          lastDate: DateTime.now(),
-                        );
-                        if (picked != null) setState(() => _visitDate = picked);
-                      },
-                    ),
-                    const SizedBox(height: 24),
-                    const Text('管理标签', style: TextStyle(fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 12),
-                    TagSelector(
-                      selectedTagIds: _images[_currentIndex].tagIds,
-                      onToggle: (tid) {
-                        final currentIds = [..._images[_currentIndex].tagIds];
-                        if (currentIds.contains(tid)) {
-                          currentIds.remove(tid);
-                        } else {
-                          currentIds.add(tid);
-                        }
-                        setState(() {
-                          _images[_currentIndex] = _images[_currentIndex].copyWith(tagIds: currentIds);
-                        });
-                        // Persist tag update
-                        ref.read(imageRepositoryProvider).updateImageTags(
-                          _images[_currentIndex].id, 
-                          currentIds
-                        );
-                      },
-                      onReorder: (oldIdx, newIdx) {
-                        final currentIds = [..._images[_currentIndex].tagIds];
-                        if (oldIdx < newIdx) newIdx -= 1;
-                        final item = currentIds.removeAt(oldIdx);
-                        currentIds.insert(newIdx, item);
-                        setState(() {
-                          _images[_currentIndex] = _images[_currentIndex].copyWith(tagIds: currentIds);
-                        });
-                        ref.read(imageRepositoryProvider).updateImageTags(
-                          _images[_currentIndex].id, 
-                          currentIds
-                        );
-                      },
-                    ),
-                  ],
-                );
-              }
+                ),
+              ],
+            ),
+          ),
+
+          const Divider(height: 1),
+
+          // 2. Bottom Section - Details
+          Expanded(
+            flex: 6,
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(20),
+              child: _isEditing ? _buildEditView() : _buildInfoView(currentImage),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInfoView(MedicalImage img) {
+    final hospital = img.hospitalName ?? _record?.hospitalName ?? '未填写';
+    final date = img.visitDate ?? _record?.notedAt;
+    final dateStr = date != null ? DateFormat('yyyy-MM-dd').format(date) : '未知日期';
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text('医院', style: TextStyle(fontSize: 12, color: AppTheme.textHint)),
+        Text(hospital, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        
+        const SizedBox(height: 16),
+        
+        const Text('就诊日期', style: TextStyle(fontSize: 12, color: AppTheme.textHint)),
+        Text(dateStr, style: AppTheme.monoStyle.copyWith(fontSize: 16)),
+        
+        const SizedBox(height: 24),
+        
+        const Text('标签', style: TextStyle(fontSize: 12, color: AppTheme.textHint)),
+        const SizedBox(height: 8),
+        if (img.tagIds.isEmpty)
+          const Text('无标签', style: TextStyle(color: AppTheme.textHint, fontSize: 14))
+        else
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: img.tagIds.map((tid) => _TagNameChip(tagId: tid)).toList(),
+          ),
+
+        const SizedBox(height: 40),
+        const Divider(),
+        const SizedBox(height: 16),
+        
+        Row(
+          children: [
+            Expanded(
+              child: OutlinedButton.icon(
+                onPressed: () => setState(() => _isEditing = true),
+                icon: const Icon(Icons.edit_outlined, size: 18),
+                label: const Text('编辑此页'),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: OutlinedButton.icon(
+                onPressed: _deleteCurrentImage,
+                icon: const Icon(Icons.delete_outline, size: 18),
+                label: const Text('删除此页'),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: AppTheme.errorRed,
+                  side: const BorderSide(color: AppTheme.errorRed),
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 24),
+      ],
+    );
+  }
+
+  Widget _buildEditView() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextField(
+          controller: _hospitalController,
+          decoration: const InputDecoration(labelText: '医院名称'),
+        ),
+        const SizedBox(height: 16),
+        ListTile(
+          contentPadding: EdgeInsets.zero,
+          title: const Text('就诊日期'),
+          subtitle: Text(_visitDate != null ? DateFormat('yyyy-MM-dd').format(_visitDate!) : '选择日期'),
+          trailing: const Icon(Icons.calendar_today),
+          onTap: () async {
+            final picked = await showDatePicker(
+              context: context,
+              initialDate: _visitDate ?? DateTime.now(),
+              firstDate: DateTime(2000),
+              lastDate: DateTime.now(),
+            );
+            if (picked != null) setState(() => _visitDate = picked);
+          },
+        ),
+        const SizedBox(height: 24),
+        const Text('管理标签', style: TextStyle(fontWeight: FontWeight.bold)),
+        const SizedBox(height: 12),
+        TagSelector(
+          selectedTagIds: _images[_currentIndex].tagIds,
+          onToggle: (tid) {
+            final currentIds = [..._images[_currentIndex].tagIds];
+            if (currentIds.contains(tid)) {
+              currentIds.remove(tid);
+            } else {
+              currentIds.add(tid);
+            }
+            setState(() {
+              _images[_currentIndex] = _images[_currentIndex].copyWith(tagIds: currentIds);
+            });
+            ref.read(imageRepositoryProvider).updateImageTags(
+              _images[_currentIndex].id, 
+              currentIds
+            );
+          },
+          onReorder: (oldIdx, newIdx) {
+            final currentIds = [..._images[_currentIndex].tagIds];
+            if (oldIdx < newIdx) newIdx -= 1;
+            final item = currentIds.removeAt(oldIdx);
+            currentIds.insert(newIdx, item);
+            setState(() {
+              _images[_currentIndex] = _images[_currentIndex].copyWith(tagIds: currentIds);
+            });
+            ref.read(imageRepositoryProvider).updateImageTags(
+              _images[_currentIndex].id, 
+              currentIds
+            );
+          },
+        ),
+        const SizedBox(height: 32),
+        SizedBox(
+          width: double.infinity,
+          child: TextButton(
+            onPressed: () {
+              setState(() {
+                _isEditing = false;
+                _updateControllersForIndex(_currentIndex);
+              });
+            },
+            child: const Text('取消编辑', style: TextStyle(color: AppTheme.textGrey)),
+          ),
+        ),
+        const SizedBox(height: 24),
+      ],
+    );
+  }
             }
             
             class _TagNameChip extends ConsumerWidget {
