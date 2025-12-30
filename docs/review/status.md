@@ -15,6 +15,7 @@
 - **UI Kit**: 
   - Foundation: `AppTheme` (Teal/Monospace) and atomic security components (T13.1).
   - Structure: Global `CustomTopBar` and `MainFab` (T13.2) with integrated security indicators.
+  - Components: `EventCard` and `SecureImage` (T13.3) for secure in-memory media rendering.
 
 ## 🟡 Pending Issues / Technical Debt
 - **T13: Thumbnail Encryption**: Reusing main image key due to entity schema limitations (Phase 1 Workaround).
