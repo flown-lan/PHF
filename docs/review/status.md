@@ -13,7 +13,7 @@
 - **UI & UX (T16 Overhaul)**: 
   - **Timeline**: Simplified navigation (AppBar-only settings), 4-6 image grid preview, and optimized data loading.
   - **Ingestion**: Streamlined "Capture -> Preview -> Save" flow.
-  - **Detail View**: Split-view layout with per-image metadata (Hospital, Date, Tags) support and in-place editing.
+  - **Detail View**: Split-view layout with per-image metadata (Hospital, Date, Tags) support and in-place editing. Fully enhanced Tag Selector with highlighting and drag-sort.
 - **Components**: `EventCard` and `SecureImage` (T13.3) for secure in-memory media rendering.
 
 ## 🟡 Pending Issues / Technical Debt
