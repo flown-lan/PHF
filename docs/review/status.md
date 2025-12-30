@@ -1,10 +1,11 @@
 # Project Review Status Summary
 
 **Last Updated**: 2025-12-30
-**Coverage**: T0 - T13.2
+**Coverage**: T0 - T14
 
 ## 🟢 Approved Features (Highlights)
 - **Security Core**: AES-256-GCM encryption (T5), secure key management (T4), and random IV/path management (T6).
+- **Onboarding & Auth**: Security Onboarding (T14) with PIN setup (SHA-256) and optional biometric authentication.
 - **Data Persistence**: Encrypted SQLCipher database (T8) with FTS5. Initial Schema and Seed Data (T9) deployed.
 - **Repository Layer**: Type-safe `RecordRepository` and `ImageRepository` (T12) with automated tag cache synchronization.
 - **Environment**: Secure sandbox directories (T7).
