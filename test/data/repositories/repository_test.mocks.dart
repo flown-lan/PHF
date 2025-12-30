@@ -3,11 +3,13 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i4;
+import 'dart:async' as _i6;
 
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:phf/data/datasources/local/database_service.dart' as _i3;
-import 'package:sqflite_sqlcipher/sqflite.dart' as _i2;
+import 'package:phf/core/security/master_key_manager.dart' as _i2;
+import 'package:phf/core/services/path_provider_service.dart' as _i3;
+import 'package:phf/data/datasources/local/database_service.dart' as _i5;
+import 'package:sqflite_sqlcipher/sqflite.dart' as _i4;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -23,8 +25,30 @@ import 'package:sqflite_sqlcipher/sqflite.dart' as _i2;
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
 
-class _FakeDatabase_0 extends _i1.SmartFake implements _i2.Database {
-  _FakeDatabase_0(
+class _FakeMasterKeyManager_0 extends _i1.SmartFake
+    implements _i2.MasterKeyManager {
+  _FakeMasterKeyManager_0(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakePathProviderService_1 extends _i1.SmartFake
+    implements _i3.PathProviderService {
+  _FakePathProviderService_1(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeDatabase_2 extends _i1.SmartFake implements _i4.Database {
+  _FakeDatabase_2(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -37,28 +61,71 @@ class _FakeDatabase_0 extends _i1.SmartFake implements _i2.Database {
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockSQLCipherDatabaseService extends _i1.Mock
-    implements _i3.SQLCipherDatabaseService {
+    implements _i5.SQLCipherDatabaseService {
   @override
-  _i4.Future<_i2.Database> get database => (super.noSuchMethod(
+  _i2.MasterKeyManager get keyManager => (super.noSuchMethod(
+        Invocation.getter(#keyManager),
+        returnValue: _FakeMasterKeyManager_0(
+          this,
+          Invocation.getter(#keyManager),
+        ),
+        returnValueForMissingStub: _FakeMasterKeyManager_0(
+          this,
+          Invocation.getter(#keyManager),
+        ),
+      ) as _i2.MasterKeyManager);
+
+  @override
+  _i3.PathProviderService get pathService => (super.noSuchMethod(
+        Invocation.getter(#pathService),
+        returnValue: _FakePathProviderService_1(
+          this,
+          Invocation.getter(#pathService),
+        ),
+        returnValueForMissingStub: _FakePathProviderService_1(
+          this,
+          Invocation.getter(#pathService),
+        ),
+      ) as _i3.PathProviderService);
+
+  @override
+  _i6.Future<_i4.Database> get database => (super.noSuchMethod(
         Invocation.getter(#database),
-        returnValue: _i4.Future<_i2.Database>.value(_FakeDatabase_0(
+        returnValue: _i6.Future<_i4.Database>.value(_FakeDatabase_2(
           this,
           Invocation.getter(#database),
         )),
         returnValueForMissingStub:
-            _i4.Future<_i2.Database>.value(_FakeDatabase_0(
+            _i6.Future<_i4.Database>.value(_FakeDatabase_2(
           this,
           Invocation.getter(#database),
         )),
-      ) as _i4.Future<_i2.Database>);
+      ) as _i6.Future<_i4.Database>);
 
   @override
-  _i4.Future<void> close() => (super.noSuchMethod(
+  _i6.Future<void> close() => (super.noSuchMethod(
         Invocation.method(
           #close,
           [],
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
+
+  @override
+  _i6.Future<void> onCreate(
+    _i4.Database? db,
+    int? version,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #onCreate,
+          [
+            db,
+            version,
+          ],
+        ),
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
 }

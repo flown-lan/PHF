@@ -32,6 +32,9 @@ mixin _$MedicalImage {
   int? get height => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
 
+  /// 数据库存储的 Tag IDs (JSON List from DB)
+  List<String> get tagIds => throw _privateConstructorUsedError;
+
   /// 内存关联字段，不直接参与数据库简单序列化
   @JsonKey(includeFromJson: false, includeToJson: false)
   List<Tag> get tags => throw _privateConstructorUsedError;
@@ -64,6 +67,7 @@ abstract class $MedicalImageCopyWith<$Res> {
       int? width,
       int? height,
       DateTime createdAt,
+      List<String> tagIds,
       @JsonKey(includeFromJson: false, includeToJson: false) List<Tag> tags});
 }
 
@@ -93,6 +97,7 @@ class _$MedicalImageCopyWithImpl<$Res, $Val extends MedicalImage>
     Object? width = freezed,
     Object? height = freezed,
     Object? createdAt = null,
+    Object? tagIds = null,
     Object? tags = null,
   }) {
     return _then(_value.copyWith(
@@ -140,6 +145,10 @@ class _$MedicalImageCopyWithImpl<$Res, $Val extends MedicalImage>
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      tagIds: null == tagIds
+          ? _value.tagIds
+          : tagIds // ignore: cast_nullable_to_non_nullable
+              as List<String>,
       tags: null == tags
           ? _value.tags
           : tags // ignore: cast_nullable_to_non_nullable
@@ -168,6 +177,7 @@ abstract class _$$MedicalImageImplCopyWith<$Res>
       int? width,
       int? height,
       DateTime createdAt,
+      List<String> tagIds,
       @JsonKey(includeFromJson: false, includeToJson: false) List<Tag> tags});
 }
 
@@ -195,6 +205,7 @@ class __$$MedicalImageImplCopyWithImpl<$Res>
     Object? width = freezed,
     Object? height = freezed,
     Object? createdAt = null,
+    Object? tagIds = null,
     Object? tags = null,
   }) {
     return _then(_$MedicalImageImpl(
@@ -242,6 +253,10 @@ class __$$MedicalImageImplCopyWithImpl<$Res>
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      tagIds: null == tagIds
+          ? _value._tagIds
+          : tagIds // ignore: cast_nullable_to_non_nullable
+              as List<String>,
       tags: null == tags
           ? _value._tags
           : tags // ignore: cast_nullable_to_non_nullable
@@ -265,9 +280,11 @@ class _$MedicalImageImpl implements _MedicalImage {
       this.width,
       this.height,
       required this.createdAt,
+      final List<String> tagIds = const [],
       @JsonKey(includeFromJson: false, includeToJson: false)
       final List<Tag> tags = const []})
-      : _tags = tags;
+      : _tagIds = tagIds,
+        _tags = tags;
 
   factory _$MedicalImageImpl.fromJson(Map<String, dynamic> json) =>
       _$$MedicalImageImplFromJson(json);
@@ -298,6 +315,18 @@ class _$MedicalImageImpl implements _MedicalImage {
   @override
   final DateTime createdAt;
 
+  /// 数据库存储的 Tag IDs (JSON List from DB)
+  final List<String> _tagIds;
+
+  /// 数据库存储的 Tag IDs (JSON List from DB)
+  @override
+  @JsonKey()
+  List<String> get tagIds {
+    if (_tagIds is EqualUnmodifiableListView) return _tagIds;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_tagIds);
+  }
+
   /// 内存关联字段，不直接参与数据库简单序列化
   final List<Tag> _tags;
 
@@ -312,7 +341,7 @@ class _$MedicalImageImpl implements _MedicalImage {
 
   @override
   String toString() {
-    return 'MedicalImage(id: $id, recordId: $recordId, encryptionKey: $encryptionKey, filePath: $filePath, thumbnailPath: $thumbnailPath, mimeType: $mimeType, fileSize: $fileSize, displayOrder: $displayOrder, width: $width, height: $height, createdAt: $createdAt, tags: $tags)';
+    return 'MedicalImage(id: $id, recordId: $recordId, encryptionKey: $encryptionKey, filePath: $filePath, thumbnailPath: $thumbnailPath, mimeType: $mimeType, fileSize: $fileSize, displayOrder: $displayOrder, width: $width, height: $height, createdAt: $createdAt, tagIds: $tagIds, tags: $tags)';
   }
 
   @override
@@ -339,6 +368,7 @@ class _$MedicalImageImpl implements _MedicalImage {
             (identical(other.height, height) || other.height == height) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
+            const DeepCollectionEquality().equals(other._tagIds, _tagIds) &&
             const DeepCollectionEquality().equals(other._tags, _tags));
   }
 
@@ -357,6 +387,7 @@ class _$MedicalImageImpl implements _MedicalImage {
       width,
       height,
       createdAt,
+      const DeepCollectionEquality().hash(_tagIds),
       const DeepCollectionEquality().hash(_tags));
 
   /// Create a copy of MedicalImage
@@ -388,6 +419,7 @@ abstract class _MedicalImage implements MedicalImage {
       final int? width,
       final int? height,
       required final DateTime createdAt,
+      final List<String> tagIds,
       @JsonKey(includeFromJson: false, includeToJson: false)
       final List<Tag> tags}) = _$MedicalImageImpl;
 
@@ -416,6 +448,10 @@ abstract class _MedicalImage implements MedicalImage {
   int? get height;
   @override
   DateTime get createdAt;
+
+  /// 数据库存储的 Tag IDs (JSON List from DB)
+  @override
+  List<String> get tagIds;
 
   /// 内存关联字段，不直接参与数据库简单序列化
   @override

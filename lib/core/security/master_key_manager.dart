@@ -22,6 +22,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class MasterKeyManager {
   static const _keyParams = AndroidOptions(encryptedSharedPreferences: true);
+  static const _iosParams = IOSOptions(accessibility: KeychainAccessibility.first_unlock);
   
   // Storage Keys
   static const String _kMasterKey = 'phf_master_key_v1';
@@ -30,7 +31,10 @@ class MasterKeyManager {
   final FlutterSecureStorage _storage;
 
   MasterKeyManager({FlutterSecureStorage? storage})
-      : _storage = storage ?? const FlutterSecureStorage(aOptions: _keyParams);
+      : _storage = storage ?? const FlutterSecureStorage(
+          aOptions: _keyParams,
+          iOptions: _iosParams,
+        );
 
   /// 获取 Master Key (32 bytes)
   ///
@@ -54,20 +58,29 @@ class MasterKeyManager {
 
   /// 内部通用逻辑：读取 -> (空则生成 -> 保存) -> 返回
   Future<Uint8List> _getOrGenerate(String storageKey, int lengthInBytes) async {
-    // 1. Try read
-    final storedBase64 = await _storage.read(key: storageKey);
-    if (storedBase64 != null) {
-      return base64Decode(storedBase64);
+    print('MasterKeyManager: Requesting $storageKey...');
+    try {
+      // 1. Try read
+      final storedBase64 = await _storage.read(key: storageKey);
+      if (storedBase64 != null) {
+        print('MasterKeyManager: Found existing $storageKey.');
+        return base64Decode(storedBase64);
+      }
+
+      // 2. Generate
+      print('MasterKeyManager: Generating new $storageKey...');
+      final newBytes = _generateRandomBytes(lengthInBytes);
+      final newBase64 = base64Encode(newBytes);
+
+      // 3. Write
+      await _storage.write(key: storageKey, value: newBase64);
+      print('MasterKeyManager: Saved new $storageKey.');
+
+      return newBytes;
+    } catch (e) {
+      print('MasterKeyManager: Error accessing $storageKey: $e');
+      rethrow;
     }
-
-    // 2. Generate
-    final newBytes = _generateRandomBytes(lengthInBytes);
-    final newBase64 = base64Encode(newBytes);
-
-    // 3. Write
-    await _storage.write(key: storageKey, value: newBase64);
-
-    return newBytes;
   }
 
   /// 使用 CSPRNG 生成指定长度的随机字节

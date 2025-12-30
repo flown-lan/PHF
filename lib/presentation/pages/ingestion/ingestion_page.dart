@@ -7,6 +7,7 @@ import '../../../logic/providers/ingestion_provider.dart';
 import '../../../logic/providers/states/ingestion_state.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/active_button.dart';
+import '../../widgets/tag_selector.dart';
 
 class IngestionPage extends ConsumerStatefulWidget {
   const IngestionPage({super.key});
@@ -214,9 +215,23 @@ class _IngestionPageState extends ConsumerState<IngestionPage> {
               onChanged: (val) => notifier.updateNotes(val),
             ),
 
+            const SizedBox(height: 24),
+
+            // 5. Tag Selector
+            const Text(
+              '标签',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            TagSelector(
+              selectedTagIds: state.selectedTagIds,
+              onToggle: (id) => notifier.toggleTag(id),
+              onReorder: (oldIndex, newIndex) => notifier.reorderTags(oldIndex, newIndex),
+            ),
+
             const SizedBox(height: 40),
 
-            // 5. Submit Button
+            // 6. Submit Button
             SizedBox(
               width: double.infinity,
               child: ActiveButton(

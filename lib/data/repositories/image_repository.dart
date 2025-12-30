@@ -42,13 +42,42 @@ class ImageRepository extends BaseRepository implements IImageRepository {
           'file_size': image.fileSize,
           'page_index': image.displayOrder, // mapped
           'created_at_ms': image.createdAt.millisecondsSinceEpoch,
-          // OCR fields optional
+          // Store tags (List<String> Ids) as JSON string in 'tags' column
+          'tags': jsonEncode(image.tagIds),
         },
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
+
+      // Handle Tags Relationship
+      if (image.tagIds.isNotEmpty) {
+        // 1. Insert into image_tags
+        for (var tagId in image.tagIds) {
+          batch.insert(
+            'image_tags',
+            {'image_id': image.id, 'tag_id': tagId},
+            conflictAlgorithm: ConflictAlgorithm.ignore,
+          );
+        }
+      }
     }
 
     await batch.commit();
+
+    // After commit, sync cache for distinct records
+    // Optimization: Collect distinct recordIds involved
+    final recordIds = images.map((i) => i.recordId).toSet();
+    
+    // We can't do this inside the same batch easily if we want to run queries.
+    // So distinct implementation is needed.
+    // Actually `_syncRecordTagsCache` is async and runs queries.
+    // We should do it inside a transaction ideally, but batch commit is atomic.
+    // We can run sync after.
+    await db.transaction((txn) async {
+       for (var recordId in recordIds) {
+         await _syncRecordTagsCache(txn, recordId);
+       }
+    });
+
   }
 
   @override
@@ -65,28 +94,22 @@ class ImageRepository extends BaseRepository implements IImageRepository {
   }
 
   @override
-  Future<void> deleteImage(String id) async {
+  Future<void> deleteImage(String imageId) async {
     final db = await dbService.database;
-    // Check record_id first to sync tags later (if implemented more Granularly)
-    // But for now, just delete. Constraint ON DELETE CASCADE handles image_tags.
-    // However, we ideally should update record's tags_cache if a tagged image is deleted.
-    
-    // 1. Get record_id before delete
-    final List<Map<String, dynamic>> res = await db.query(
+    // Get recordId before deletion for sync
+    final List<Map<String, dynamic>> maps = await db.query(
       'images',
       columns: ['record_id'],
       where: 'id = ?',
-      whereArgs: [id],
+      whereArgs: [imageId],
     );
     
-    if (res.isEmpty) return; // Already deleted
-    final recordId = res.first['record_id'] as String;
+    if (maps.isEmpty) return;
+    final String recordId = maps.first['record_id'] as String;
 
     await db.transaction((txn) async {
-      // 2. Delete Image
-      await txn.delete('images', where: 'id = ?', whereArgs: [id]);
-      
-      // 3. Trigger Sync for Record
+      await txn.delete('images', where: 'id = ?', whereArgs: [imageId]);
+      await txn.delete('image_tags', where: 'image_id = ?', whereArgs: [imageId]);
       await _syncRecordTagsCache(txn, recordId);
     });
   }
@@ -94,66 +117,74 @@ class ImageRepository extends BaseRepository implements IImageRepository {
   @override
   Future<void> updateImageTags(String imageId, List<String> tagIds) async {
     final db = await dbService.database;
-
-    // We need record_id to sync
-    final List<Map<String, dynamic>> res = await db.query(
+    
+    // Get recordId
+     final List<Map<String, dynamic>> maps = await db.query(
       'images',
       columns: ['record_id'],
       where: 'id = ?',
       whereArgs: [imageId],
     );
-
-    if (res.isEmpty) throw Exception('Image not found: $imageId');
-    final recordId = res.first['record_id'] as String;
+    if (maps.isEmpty) return;
+    final String recordId = maps.first['record_id'] as String;
 
     await db.transaction((txn) async {
-      // 1. Clear old tags for this image
-      await txn.delete(
-        'image_tags',
-        where: 'image_id = ?',
-        whereArgs: [imageId],
+      // 1. Update image tags column (local cache)
+      await txn.update(
+        'images', 
+        {'tags': jsonEncode(tagIds)}, 
+        where: 'id = ?', 
+        whereArgs: [imageId]
       );
 
-      // 2. Insert new tags
-      final batch = txn.batch();
+      // 2. Update relational table
+      await txn.delete('image_tags', where: 'image_id = ?', whereArgs: [imageId]);
       for (var tagId in tagIds) {
-        batch.insert('image_tags', {
-          'image_id': imageId,
-          'tag_id': tagId,
-        });
+        await txn.insert(
+          'image_tags',
+          {'image_id': imageId, 'tag_id': tagId},
+          conflictAlgorithm: ConflictAlgorithm.ignore,
+        );
       }
-      await batch.commit(noResult: true);
 
-      // 3. Sync Record Tags Cache
+      // 3. Sync record cache
       await _syncRecordTagsCache(txn, recordId);
     });
   }
 
-  /// Internal helper to recalculate and update tags_cache for a record
   Future<void> _syncRecordTagsCache(Transaction txn, String recordId) async {
-    // Query ALL distinct tag names for this record
+    // 1. Query all tags for this record
+    // Join images -> image_tags -> tags to get Names
     final List<Map<String, dynamic>> results = await txn.rawQuery('''
       SELECT DISTINCT t.name 
       FROM tags t
-      JOIN image_tags it ON t.id = it.tag_id
-      JOIN images i ON i.id = it.image_id
+      INNER JOIN image_tags it ON t.id = it.tag_id
+      INNER JOIN images i ON it.image_id = i.id
       WHERE i.record_id = ?
+      ORDER BY t.created_at_ms ASC
     ''', [recordId]);
 
-    final List<String> tagNames = results.map((r) => r['name'] as String).toList();
+    final List<String> tagNames = results.map((row) => row['name'] as String).toList();
     
-    // Normalize string: JSON array
-    final jsonCache = jsonEncode(tagNames);
-
+    // 2. Update record
     await txn.update(
       'records',
-      {'tags_cache': jsonCache},
+      {'tags_cache': jsonEncode(tagNames)},
       where: 'id = ?',
       whereArgs: [recordId],
     );
   }
 
   MedicalImage _mapToImage(Map<String, dynamic> row) {
+    List<String> tags = [];
+    if (row['tags'] != null) {
+      try {
+        tags = List<String>.from(jsonDecode(row['tags'] as String));
+      } catch (e) {
+        // ignore parsing error
+      }
+    }
+
     return MedicalImage.fromJson({
       'id': row['id'],
       'recordId': row['record_id'],
@@ -166,6 +197,7 @@ class ImageRepository extends BaseRepository implements IImageRepository {
       'width': row['width'],
       'height': row['height'],
       'createdAt': DateTime.fromMillisecondsSinceEpoch(row['created_at_ms'] as int).toIso8601String(),
+      'tagIds': tags,
     });
   }
 }

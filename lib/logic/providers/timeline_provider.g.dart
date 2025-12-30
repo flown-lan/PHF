@@ -7,7 +7,7 @@ part of 'timeline_provider.dart';
 // **************************************************************************
 
 String _$timelineControllerHash() =>
-    r'ba942e8d0de84d0c334517735faac67f36b9a80f';
+    r'e8b718f594526dc03d5427b86a0c6c22dcd8ac76';
 
 /// See also [TimelineController].
 @ProviderFor(TimelineController)

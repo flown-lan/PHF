@@ -16,6 +16,8 @@ import 'package:phf/data/models/record.dart';
 import 'package:phf/logic/providers/core_providers.dart';
 import 'package:phf/presentation/theme/app_theme.dart';
 import 'package:phf/presentation/widgets/secure_image.dart';
+import 'package:phf/data/models/tag.dart';
+import 'package:phf/logic/providers/core_providers.dart';
 import 'package:phf/presentation/widgets/full_image_viewer.dart';
 import 'dart:convert';
 
@@ -186,6 +188,31 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
               ),
             ],
 
+            const SizedBox(height: 16),
+      
+            // Tags from Images
+            if (_images.isNotEmpty) ...[
+               Wrap(
+                spacing: 8,
+                runSpacing: 4,
+                children: _getAllUniqueTags().map((tagId) {
+                  // Need to fetch Tag Name by ID. 
+                  // Phase 1 Optimization: We use FutureBuilder to fetch Tag Name
+                  // Or better: Just show Tag ID for now or fetch all tags in initState?
+                  // To make it look good, let's fetch individual Tag name.
+                  return _TagNameChip(tagId: tagId);
+                }).toList(),
+               ),
+               const SizedBox(height: 16),
+            ],
+
+            Text(
+              widget.recordId,
+              style: AppTheme.monoStyle.copyWith(
+                fontSize: 12,
+                color: AppTheme.textHint,
+              ),
+            ),
             const SizedBox(height: 24),
             const Divider(),
             const SizedBox(height: 24),
@@ -219,6 +246,52 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
           ],
         ),
       ),
+    );
+  }
+  List<String> _getAllUniqueTags() {
+    final Set<String> tags = {};
+    for (var img in _images) {
+      tags.addAll(img.tagIds);
+    }
+    return tags.toList();
+  }
+}
+
+class _TagNameChip extends ConsumerWidget {
+  final String tagId;
+  const _TagNameChip({required this.tagId});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    // In a real app, we'd cache all tags in a provider map to avoid N+1 queries.
+    // Here we just fetch all tags and find it.
+    final repo = ref.watch(tagRepositoryProvider);
+    return FutureBuilder(
+      future: repo.getAllTags(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) return const SizedBox();
+        // Handle empty or missing tags gracefully
+        try {
+          final tag = snapshot.data!.firstWhere((t) => t.id == tagId, orElse: () => Tag(id: '', name: 'Unknown', createdAt: DateTime(0), color: '#808080')); // Default grey
+          if (tag.name == 'Unknown') return const SizedBox();
+          
+          return Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: (tag.color != null && tag.color!.isNotEmpty) 
+                  ? Color(int.parse(tag.color!.replaceAll('#', '0xFF'))) 
+                  : AppTheme.primaryTeal.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Text(
+              tag.name,
+              style: const TextStyle(fontSize: 12, color: AppTheme.primaryTeal),
+            ),
+          );
+        } catch (e) {
+          return const SizedBox();
+        }
+      },
     );
   }
 }

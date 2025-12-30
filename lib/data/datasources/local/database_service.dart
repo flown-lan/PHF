@@ -23,6 +23,7 @@
 /// - `ocr_search_index`: FTS5 全文索引
 
 import 'dart:convert';
+import 'package:flutter/foundation.dart'; // for visibleForTesting
 import 'package:sqflite_sqlcipher/sqflite.dart';
 import 'package:path/path.dart' as p;
 import '../../../core/security/master_key_manager.dart';
@@ -31,18 +32,17 @@ import 'seeds/database_seeder.dart';
 
 class SQLCipherDatabaseService {
   static const String _dbName = 'phf_encrypted.db';
-  static const int _dbVersion = 1;
+  static const int _dbVersion = 2;
 
-  final MasterKeyManager _keyManager;
-  final PathProviderService _pathService;
+  final MasterKeyManager keyManager;
+  final PathProviderService pathService;
 
   Database? _database;
 
   SQLCipherDatabaseService({
-    required MasterKeyManager keyManager,
-    required PathProviderService pathService,
-  })  : _keyManager = keyManager,
-        _pathService = pathService;
+    required this.keyManager,
+    required this.pathService,
+  });
 
   /// 获取数据库实例
   ///
@@ -62,20 +62,26 @@ class SQLCipherDatabaseService {
   }
 
   Future<Database> _initDatabase() async {
-    final dbPath = _pathService.getDatabasePath(_dbName);
+    final dbPath = pathService.getDatabasePath(_dbName);
+    print('SQLCipherDatabaseService: Init DB at $dbPath');
     
     // 从安全存储获取 Master Key
-    // SQLCipher 接受字符串作为密码。我们将 32 字节的二进制 Key 转为 Base64 字符串传递。
-    final rawKey = await _keyManager.getMasterKey();
+    print('SQLCipherDatabaseService: Getting Master Key...');
+    final rawKey = await keyManager.getMasterKey();
+    print('SQLCipherDatabaseService: Master Key acquired.');
     final password = base64Encode(rawKey);
 
+    print('SQLCipherDatabaseService: Opening database (version $_dbVersion)...');
     return await openDatabase(
       dbPath,
       version: _dbVersion,
       password: password,
       onConfigure: _onConfigure,
-      onCreate: _onCreate,
+      onCreate: onCreate,
       onUpgrade: _onUpgrade,
+      onOpen: (db) {
+        print('SQLCipherDatabaseService: Database Opened Successfully.');
+      },
     );
   }
 
@@ -91,7 +97,8 @@ class SQLCipherDatabaseService {
     await db.execute('PRAGMA kdf_iter = 256000');
   }
 
-  Future<void> _onCreate(Database db, int version) async {
+  @visibleForTesting
+  Future<void> onCreate(Database db, int version) async {
     final batch = db.batch();
 
     // 1. Persons (多成员管理)
@@ -151,6 +158,7 @@ class SQLCipherDatabaseService {
         ocr_text        TEXT,
         ocr_raw_json    TEXT,
         ocr_confidence  REAL,
+        tags            TEXT,
         created_at_ms   INTEGER NOT NULL
       )
     ''');
@@ -206,6 +214,69 @@ class SQLCipherDatabaseService {
   }
 
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
-    // Phase 1 暂无迁移逻辑
+    final batch = db.batch();
+
+    if (oldVersion < 2) {
+      // Upgrade to v2: Add Tags Schema
+      
+      // 1. Add 'tags_cache' to records table
+      // SQLite 'ADD COLUMN' adds it as NULLable.
+      try {
+        await db.execute('ALTER TABLE records ADD COLUMN tags_cache TEXT');
+      } catch (_) {
+        // Ignore if column exists (though unlikely in verified upgrade path)
+      }
+
+      // 2. Add 'tags' to images table
+      try {
+        await db.execute('ALTER TABLE images ADD COLUMN tags TEXT');
+      } catch (_) {
+        // Ignore
+      }
+
+      // 3. Create 'tags' table
+      batch.execute('''
+        CREATE TABLE IF NOT EXISTS tags (
+          id              TEXT PRIMARY KEY,
+          name            TEXT NOT NULL UNIQUE,
+          color           TEXT,
+          order_index     INTEGER,
+          person_id       TEXT REFERENCES persons(id) ON DELETE CASCADE,
+          is_custom       INTEGER NOT NULL DEFAULT 0,
+          created_at_ms   INTEGER NOT NULL
+        )
+      ''');
+
+      // 4. Create 'image_tags' table
+      batch.execute('''
+        CREATE TABLE IF NOT EXISTS image_tags (
+          image_id        TEXT NOT NULL REFERENCES images(id) ON DELETE CASCADE,
+          tag_id          TEXT NOT NULL REFERENCES tags(id) ON DELETE CASCADE,
+          PRIMARY KEY (image_id, tag_id)
+        )
+      ''');
+
+      // 5. Seed System Tags (Copied from DatabaseSeeder logic)
+      final now = DateTime.now().millisecondsSinceEpoch;
+      final tags = [
+        {'id': 'sys_tag_1', 'name': '检验', 'color': '#009688', 'order_index': 1}, 
+        {'id': 'sys_tag_2', 'name': '检查', 'color': '#26A69A', 'order_index': 2}, 
+        {'id': 'sys_tag_3', 'name': '病历', 'color': '#00796B', 'order_index': 3}, 
+        {'id': 'sys_tag_4', 'name': '处方', 'color': '#4DB6AC', 'order_index': 4}, 
+      ];
+
+      for (var tag in tags) {
+        batch.insert('tags', {
+          'id': tag['id'],
+          'name': tag['name'],
+          'color': tag['color'],
+          'order_index': tag['order_index'],
+          'is_custom': 0,
+          'created_at_ms': now,
+        }, conflictAlgorithm: ConflictAlgorithm.ignore);
+      }
+    }
+    
+    await batch.commit();
   }
 }

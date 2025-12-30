@@ -213,5 +213,22 @@ final securityServiceProvider = Provider<SecurityService>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef SecurityServiceRef = ProviderRef<SecurityService>;
+String _$tagRepositoryHash() => r'af31d335dddee78d2ffe41433370facdce944052';
+
+/// See also [tagRepository].
+@ProviderFor(tagRepository)
+final tagRepositoryProvider = Provider<ITagRepository>.internal(
+  tagRepository,
+  name: r'tagRepositoryProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$tagRepositoryHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef TagRepositoryRef = ProviderRef<ITagRepository>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

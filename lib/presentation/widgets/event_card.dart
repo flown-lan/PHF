@@ -10,14 +10,17 @@
 
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../../data/models/image.dart';
 import '../../data/models/record.dart';
+import '../../data/models/tag.dart';
+import '../../logic/providers/core_providers.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_card.dart';
 import '../widgets/secure_image.dart';
 
-class EventCard extends StatelessWidget {
+class EventCard extends ConsumerWidget {
   final MedicalRecord record;
   final MedicalImage? firstImage;
   final VoidCallback? onTap;
@@ -30,7 +33,7 @@ class EventCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final dateStr = DateFormat('yyyy-MM-dd').format(record.notedAt);
     
     // Parse tags from JSON cache
@@ -102,33 +105,64 @@ class EventCard extends StatelessWidget {
               child: const Icon(Icons.medical_services_outlined, color: AppTheme.textHint, size: 48),
             ),
 
-          // 3. Footer (Tags + Note Snippet)
-          if (tags.isNotEmpty || (record.notes?.isNotEmpty ?? false))
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (tags.isNotEmpty)
-                    Wrap(
+          // 3. Footer (Tags + Note/Image Tag)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (tags.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 6),
+                    child: Wrap(
                       spacing: 6,
                       runSpacing: 4,
                       children: tags.map((t) => _buildTagChip(t)).toList(),
                     ),
-                  if (tags.isNotEmpty && (record.notes?.isNotEmpty ?? false))
-                    const SizedBox(height: 6),
-                  if (record.notes?.isNotEmpty ?? false)
-                    Text(
-                      record.notes!,
-                      style: const TextStyle(fontSize: 13, color: AppTheme.textSecondary),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                ],
-              ),
+                  ),
+                
+                // Priority: First Image Tag > Notes
+                if (firstImage != null && firstImage!.tagIds.isNotEmpty)
+                  _buildFirstImageTag(ref, firstImage!.tagIds.first)
+                else if (record.notes?.isNotEmpty ?? false)
+                  Text(
+                    record.notes!,
+                    style: const TextStyle(fontSize: 13, color: AppTheme.textSecondary),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+              ],
             ),
+          ),
         ],
       ),
+    );
+  }
+
+  Widget _buildFirstImageTag(WidgetRef ref, String tagId) {
+    final repo = ref.watch(tagRepositoryProvider);
+    return FutureBuilder<List<Tag>>(
+      future: repo.getAllTags(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) return const SizedBox();
+        try {
+          final tag = snapshot.data!.firstWhere((t) => t.id == tagId, orElse: () => Tag(id: '', name: '', color: '', createdAt: DateTime.now()));
+          if (tag.name.isEmpty) return const SizedBox();
+          
+          return Text(
+            tag.name, // Display Tag Name as description
+            style: const TextStyle(
+              fontSize: 13, 
+              color: AppTheme.textPrimary, 
+              fontWeight: FontWeight.w500
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          );
+        } catch (e) {
+          return const SizedBox();
+        }
+      },
     );
   }
 

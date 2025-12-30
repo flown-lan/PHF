@@ -19,6 +19,10 @@ _$MedicalImageImpl _$$MedicalImageImplFromJson(Map<String, dynamic> json) =>
       width: (json['width'] as num?)?.toInt(),
       height: (json['height'] as num?)?.toInt(),
       createdAt: DateTime.parse(json['createdAt'] as String),
+      tagIds: (json['tagIds'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
     );
 
 Map<String, dynamic> _$$MedicalImageImplToJson(_$MedicalImageImpl instance) =>
@@ -34,4 +38,5 @@ Map<String, dynamic> _$$MedicalImageImplToJson(_$MedicalImageImpl instance) =>
       'width': instance.width,
       'height': instance.height,
       'createdAt': instance.createdAt.toIso8601String(),
+      'tagIds': instance.tagIds,
     };

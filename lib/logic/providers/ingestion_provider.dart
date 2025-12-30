@@ -89,6 +89,28 @@ class IngestionController extends _$IngestionController {
     state = state.copyWith(rawImages: newList);
   }
 
+  /// 切换标签选中状态
+  void toggleTag(String tagId) {
+    final current = [...state.selectedTagIds];
+    if (current.contains(tagId)) {
+      current.remove(tagId);
+    } else {
+      current.add(tagId);
+    }
+    state = state.copyWith(selectedTagIds: current);
+  }
+
+  /// 标签排序
+  void reorderTags(int oldIndex, int newIndex) {
+    if (oldIndex < newIndex) {
+      newIndex -= 1;
+    }
+    final current = [...state.selectedTagIds];
+    final item = current.removeAt(oldIndex);
+    current.insert(newIndex, item);
+    state = state.copyWith(selectedTagIds: current);
+  }
+
   /// 提交保存
   Future<void> submit() async {
     if (state.rawImages.isEmpty) {
@@ -158,6 +180,7 @@ class IngestionController extends _$IngestionController {
           width: dimensions.width,
           height: dimensions.height,
           createdAt: DateTime.now(),
+          tagIds: state.selectedTagIds, // Apply global tags to all images for Phase 1
         ));
       }));
 

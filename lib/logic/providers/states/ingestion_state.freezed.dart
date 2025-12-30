@@ -22,6 +22,7 @@ mixin _$IngestionState {
   String? get notes => throw _privateConstructorUsedError;
   IngestionStatus get status => throw _privateConstructorUsedError;
   String? get errorMessage => throw _privateConstructorUsedError;
+  List<String> get selectedTagIds => throw _privateConstructorUsedError;
 
   /// Create a copy of IngestionState
   /// with the given fields replaced by the non-null parameter values.
@@ -42,7 +43,8 @@ abstract class $IngestionStateCopyWith<$Res> {
       String? hospitalName,
       String? notes,
       IngestionStatus status,
-      String? errorMessage});
+      String? errorMessage,
+      List<String> selectedTagIds});
 }
 
 /// @nodoc
@@ -66,6 +68,7 @@ class _$IngestionStateCopyWithImpl<$Res, $Val extends IngestionState>
     Object? notes = freezed,
     Object? status = null,
     Object? errorMessage = freezed,
+    Object? selectedTagIds = null,
   }) {
     return _then(_value.copyWith(
       rawImages: null == rawImages
@@ -92,6 +95,10 @@ class _$IngestionStateCopyWithImpl<$Res, $Val extends IngestionState>
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
               as String?,
+      selectedTagIds: null == selectedTagIds
+          ? _value.selectedTagIds
+          : selectedTagIds // ignore: cast_nullable_to_non_nullable
+              as List<String>,
     ) as $Val);
   }
 }
@@ -110,7 +117,8 @@ abstract class _$$IngestionStateImplCopyWith<$Res>
       String? hospitalName,
       String? notes,
       IngestionStatus status,
-      String? errorMessage});
+      String? errorMessage,
+      List<String> selectedTagIds});
 }
 
 /// @nodoc
@@ -132,6 +140,7 @@ class __$$IngestionStateImplCopyWithImpl<$Res>
     Object? notes = freezed,
     Object? status = null,
     Object? errorMessage = freezed,
+    Object? selectedTagIds = null,
   }) {
     return _then(_$IngestionStateImpl(
       rawImages: null == rawImages
@@ -158,6 +167,10 @@ class __$$IngestionStateImplCopyWithImpl<$Res>
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
               as String?,
+      selectedTagIds: null == selectedTagIds
+          ? _value._selectedTagIds
+          : selectedTagIds // ignore: cast_nullable_to_non_nullable
+              as List<String>,
     ));
   }
 }
@@ -171,8 +184,10 @@ class _$IngestionStateImpl implements _IngestionState {
       this.hospitalName,
       this.notes,
       this.status = IngestionStatus.idle,
-      this.errorMessage})
-      : _rawImages = rawImages;
+      this.errorMessage,
+      final List<String> selectedTagIds = const []})
+      : _rawImages = rawImages,
+        _selectedTagIds = selectedTagIds;
 
   final List<XFile> _rawImages;
   @override
@@ -194,10 +209,18 @@ class _$IngestionStateImpl implements _IngestionState {
   final IngestionStatus status;
   @override
   final String? errorMessage;
+  final List<String> _selectedTagIds;
+  @override
+  @JsonKey()
+  List<String> get selectedTagIds {
+    if (_selectedTagIds is EqualUnmodifiableListView) return _selectedTagIds;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_selectedTagIds);
+  }
 
   @override
   String toString() {
-    return 'IngestionState(rawImages: $rawImages, visitDate: $visitDate, hospitalName: $hospitalName, notes: $notes, status: $status, errorMessage: $errorMessage)';
+    return 'IngestionState(rawImages: $rawImages, visitDate: $visitDate, hospitalName: $hospitalName, notes: $notes, status: $status, errorMessage: $errorMessage, selectedTagIds: $selectedTagIds)';
   }
 
   @override
@@ -214,7 +237,9 @@ class _$IngestionStateImpl implements _IngestionState {
             (identical(other.notes, notes) || other.notes == notes) &&
             (identical(other.status, status) || other.status == status) &&
             (identical(other.errorMessage, errorMessage) ||
-                other.errorMessage == errorMessage));
+                other.errorMessage == errorMessage) &&
+            const DeepCollectionEquality()
+                .equals(other._selectedTagIds, _selectedTagIds));
   }
 
   @override
@@ -225,7 +250,8 @@ class _$IngestionStateImpl implements _IngestionState {
       hospitalName,
       notes,
       status,
-      errorMessage);
+      errorMessage,
+      const DeepCollectionEquality().hash(_selectedTagIds));
 
   /// Create a copy of IngestionState
   /// with the given fields replaced by the non-null parameter values.
@@ -244,7 +270,8 @@ abstract class _IngestionState implements IngestionState {
       final String? hospitalName,
       final String? notes,
       final IngestionStatus status,
-      final String? errorMessage}) = _$IngestionStateImpl;
+      final String? errorMessage,
+      final List<String> selectedTagIds}) = _$IngestionStateImpl;
 
   @override
   List<XFile> get rawImages;
@@ -258,6 +285,8 @@ abstract class _IngestionState implements IngestionState {
   IngestionStatus get status;
   @override
   String? get errorMessage;
+  @override
+  List<String> get selectedTagIds;
 
   /// Create a copy of IngestionState
   /// with the given fields replaced by the non-null parameter values.

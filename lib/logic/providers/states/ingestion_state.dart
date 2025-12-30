@@ -20,5 +20,6 @@ class IngestionState with _$IngestionState {
     String? notes,
     @Default(IngestionStatus.idle) IngestionStatus status,
     String? errorMessage,
+    @Default([]) List<String> selectedTagIds,
   }) = _IngestionState;
 }
