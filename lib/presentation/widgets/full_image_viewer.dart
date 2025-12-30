@@ -54,40 +54,51 @@ class _FullImageViewerState extends State<FullImageViewer> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        backgroundColor: Colors.black.withValues(alpha: 0.5),
-        iconTheme: const IconThemeData(color: Colors.white),
-        elevation: 0,
-        title: Text(
-          '${_currentIndex + 1} / ${widget.images.length}',
-          style: const TextStyle(color: Colors.white),
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        Navigator.pop(context, _currentIndex);
+      },
+      child: Scaffold(
+        backgroundColor: Colors.black,
+        appBar: AppBar(
+          backgroundColor: Colors.black.withValues(alpha: 0.5),
+          iconTheme: const IconThemeData(color: Colors.white),
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: () => Navigator.pop(context, _currentIndex),
+          ),
+          title: Text(
+            '${_currentIndex + 1} / ${widget.images.length}',
+            style: const TextStyle(color: Colors.white),
+          ),
         ),
-      ),
-      extendBodyBehindAppBar: true,
-      body: PageView.builder(
-        controller: _pageController,
-        itemCount: widget.images.length,
-        onPageChanged: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        itemBuilder: (context, index) {
-          final image = widget.images[index];
-          return InteractiveViewer(
-            minScale: 1.0,
-            maxScale: 4.0,
-            child: Center(
-              child: SecureImage(
-                imagePath: image.filePath, // Use original high-res encrypted file
-                encryptionKey: image.encryptionKey, 
-                fit: BoxFit.contain,
+        extendBodyBehindAppBar: true,
+        body: PageView.builder(
+          controller: _pageController,
+          itemCount: widget.images.length,
+          onPageChanged: (index) {
+            setState(() {
+              _currentIndex = index;
+            });
+          },
+          itemBuilder: (context, index) {
+            final image = widget.images[index];
+            return InteractiveViewer(
+              minScale: 1.0,
+              maxScale: 4.0,
+              child: Center(
+                child: SecureImage(
+                  imagePath: image.filePath, // Use original high-res encrypted file
+                  encryptionKey: image.encryptionKey, 
+                  fit: BoxFit.contain,
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

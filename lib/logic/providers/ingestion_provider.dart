@@ -140,6 +140,9 @@ class IngestionController extends _$IngestionController {
       
       const currentPersonId = 'def_me'; // Phase 1 Single User
       
+      final defaultHospital = state.hospitalName ?? '未命名记录';
+      final defaultDate = state.visitDate ?? DateTime.now();
+
       final List<MedicalImage> medicalImages = [];
       
       // Process images concurrently
@@ -185,8 +188,8 @@ class IngestionController extends _$IngestionController {
           width: dimensions.width,
           height: dimensions.height,
           createdAt: DateTime.now(),
-          hospitalName: state.hospitalName,
-          visitDate: state.visitDate,
+          hospitalName: defaultHospital,
+          visitDate: defaultDate,
           tagIds: state.selectedTagIds,
         ));
       }));
@@ -195,9 +198,9 @@ class IngestionController extends _$IngestionController {
       final record = MedicalRecord(
         id: recordId,
         personId: currentPersonId,
-        hospitalName: state.hospitalName,
+        hospitalName: defaultHospital,
         notes: state.notes,
-        notedAt: state.visitDate ?? DateTime.now(),
+        notedAt: defaultDate,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
         status: RecordStatus.archived,
@@ -208,7 +211,10 @@ class IngestionController extends _$IngestionController {
       await recordRepo.saveRecord(record);
       await imageRepo.saveImages(medicalImages);
       
-      // 7. Refresh Timeline & Reset State
+      // 7. Sync Aggregated Metadata (New Phase 2 Requirement)
+      await recordRepo.syncRecordMetadata(recordId);
+      
+      // 8. Refresh Timeline & Reset State
       ref.invalidate(timelineControllerProvider);
       state = const IngestionState(status: IngestionStatus.success);
       

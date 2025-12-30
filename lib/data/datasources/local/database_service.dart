@@ -32,7 +32,7 @@ import 'seeds/database_seeder.dart';
 
 class SQLCipherDatabaseService {
   static const String _dbName = 'phf_encrypted.db';
-  static const int _dbVersion = 4;
+  static const int _dbVersion = 5;
 
   final MasterKeyManager keyManager;
   final PathProviderService pathService;
@@ -140,6 +140,7 @@ class SQLCipherDatabaseService {
         hospital_id     TEXT REFERENCES hospitals(id),
         notes           TEXT,
         tags_cache      TEXT,
+        visit_end_date_ms INTEGER,
         created_at_ms   INTEGER NOT NULL,
         updated_at_ms   INTEGER NOT NULL
       )
@@ -309,6 +310,16 @@ class SQLCipherDatabaseService {
               visit_date_ms = (SELECT visit_date_ms FROM records WHERE records.id = images.record_id)
           WHERE hospital_name IS NULL OR visit_date_ms IS NULL
         ''');
+      } catch (_) {}
+    }
+
+    if (oldVersion < 5) {
+      // Upgrade to v5: Add visit_end_date_ms to records
+      try {
+        await db.execute('ALTER TABLE records ADD COLUMN visit_end_date_ms INTEGER');
+        
+        // Initialize visit_end_date_ms with the same value as visit_date_ms for existing records
+        await db.execute('UPDATE records SET visit_end_date_ms = visit_date_ms WHERE visit_end_date_ms IS NULL');
       } catch (_) {}
     }
     

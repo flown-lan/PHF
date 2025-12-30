@@ -41,6 +41,7 @@ class MedicalRecord with _$MedicalRecord {
     String? hospitalName,
     String? notes,
     required DateTime notedAt,
+    DateTime? visitEndDate,
     required DateTime createdAt,
     required DateTime updatedAt,
     @Default(RecordStatus.archived) RecordStatus status,

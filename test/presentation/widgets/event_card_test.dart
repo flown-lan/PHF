@@ -15,21 +15,30 @@ import 'package:phf/data/models/record.dart';
 import 'package:phf/logic/providers/core_providers.dart';
 import 'package:phf/presentation/widgets/event_card.dart';
 
+import 'package:phf/data/models/tag.dart';
+import 'package:phf/data/repositories/interfaces/tag_repository.dart';
+
 import 'event_card_test.mocks.dart';
 
 @GenerateNiceMocks([
   MockSpec<FileSecurityHelper>(), 
   MockSpec<PathProviderService>(),
+  MockSpec<ITagRepository>(),
 ])
 void main() {
   late MockFileSecurityHelper mockFileSecurityHelper;
   late MockPathProviderService mockPathProviderService;
+  late MockITagRepository mockTagRepository;
   
   Widget createSubject(MedicalRecord record, {MedicalImage? image}) {
     return ProviderScope(
       overrides: [
         fileSecurityHelperProvider.overrideWithValue(mockFileSecurityHelper),
         pathProviderServiceProvider.overrideWithValue(mockPathProviderService),
+        tagRepositoryProvider.overrideWithValue(mockTagRepository),
+        allTagsProvider.overrideWith((ref) async {
+          return mockTagRepository.getAllTags();
+        }),
       ],
       child: MaterialApp(
         home: Scaffold(
@@ -43,6 +52,7 @@ void main() {
     setUp(() {
       mockFileSecurityHelper = MockFileSecurityHelper();
       mockPathProviderService = MockPathProviderService();
+      mockTagRepository = MockITagRepository();
     });
 
     void setupMocks() {
@@ -51,6 +61,7 @@ void main() {
           final path = realInvocation.positionalArguments[0] as String;
           return Future.value(File('/mock/sandbox/$path'));
         });
+        when(mockTagRepository.getAllTags()).thenAnswer((_) async => []);
     }
 
     testWidgets('displays hospital name and date', (widgetTester) async {
@@ -69,7 +80,7 @@ void main() {
       await widgetTester.pumpWidget(createSubject(record));
 
       expect(find.text('Test Hospital'), findsOneWidget);
-      expect(find.text('2023-10-25'), findsOneWidget);
+      expect(find.text('2023.10.25'), findsOneWidget);
     });
 
     testWidgets('displays secure image when provided', (widgetTester) async {
@@ -120,8 +131,21 @@ void main() {
       expect(find.byType(Image), findsOneWidget);
     });
 
-    testWidgets('displays tags if present', (widgetTester) async {
+    testWidgets('displays tags if present on images', (widgetTester) async {
        setupMocks();
+       final tag = Tag(id: 't1', name: 'Tag A', createdAt: DateTime.now(), color: '#008080');
+       when(mockTagRepository.getAllTags()).thenAnswer((_) async => [tag]);
+
+       final image = MedicalImage(
+        id: 'i1',
+        recordId: 'r1',
+        encryptionKey: 'base64Key',
+        thumbnailEncryptionKey: 'base64ThumbKey',
+        filePath: 'orig.enc',
+        thumbnailPath: 'thumb.enc',
+        createdAt: DateTime.now(),
+        tagIds: ['t1'],
+      );
 
       final record = MedicalRecord(
         id: 'r1',
@@ -129,13 +153,15 @@ void main() {
         notedAt: DateTime.now(),
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
-        tagsCache: jsonEncode(['Tag A', 'Tag B']),
+        images: [image],
       );
 
       await widgetTester.pumpWidget(createSubject(record));
+      await widgetTester.pumpAndSettle();
 
       expect(find.text('Tag A'), findsOneWidget);
-      expect(find.text('Tag B'), findsNothing); // UI now only shows first tag
     });
+  });
+}
   });
 }

@@ -23,7 +23,7 @@ final hasLockProvider = FutureProvider<bool>.internal(
 // ignore: unused_element
 typedef HasLockRef = FutureProviderRef<bool>;
 String _$authStateControllerHash() =>
-    r'6f9b6298a18679dce6005215c25901e269463af4';
+    r'58932b92492625c9e0a665ea3be992f8ff80953b';
 
 /// See also [AuthStateController].
 @ProviderFor(AuthStateController)

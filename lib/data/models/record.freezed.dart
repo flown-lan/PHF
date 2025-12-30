@@ -25,6 +25,7 @@ mixin _$MedicalRecord {
   String? get hospitalName => throw _privateConstructorUsedError;
   String? get notes => throw _privateConstructorUsedError;
   DateTime get notedAt => throw _privateConstructorUsedError;
+  DateTime? get visitEndDate => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
   DateTime get updatedAt => throw _privateConstructorUsedError;
   RecordStatus get status => throw _privateConstructorUsedError;
@@ -56,6 +57,7 @@ abstract class $MedicalRecordCopyWith<$Res> {
       String? hospitalName,
       String? notes,
       DateTime notedAt,
+      DateTime? visitEndDate,
       DateTime createdAt,
       DateTime updatedAt,
       RecordStatus status,
@@ -84,6 +86,7 @@ class _$MedicalRecordCopyWithImpl<$Res, $Val extends MedicalRecord>
     Object? hospitalName = freezed,
     Object? notes = freezed,
     Object? notedAt = null,
+    Object? visitEndDate = freezed,
     Object? createdAt = null,
     Object? updatedAt = null,
     Object? status = null,
@@ -111,6 +114,10 @@ class _$MedicalRecordCopyWithImpl<$Res, $Val extends MedicalRecord>
           ? _value.notedAt
           : notedAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      visitEndDate: freezed == visitEndDate
+          ? _value.visitEndDate
+          : visitEndDate // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -149,6 +156,7 @@ abstract class _$$MedicalRecordImplCopyWith<$Res>
       String? hospitalName,
       String? notes,
       DateTime notedAt,
+      DateTime? visitEndDate,
       DateTime createdAt,
       DateTime updatedAt,
       RecordStatus status,
@@ -175,6 +183,7 @@ class __$$MedicalRecordImplCopyWithImpl<$Res>
     Object? hospitalName = freezed,
     Object? notes = freezed,
     Object? notedAt = null,
+    Object? visitEndDate = freezed,
     Object? createdAt = null,
     Object? updatedAt = null,
     Object? status = null,
@@ -202,6 +211,10 @@ class __$$MedicalRecordImplCopyWithImpl<$Res>
           ? _value.notedAt
           : notedAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      visitEndDate: freezed == visitEndDate
+          ? _value.visitEndDate
+          : visitEndDate // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -235,6 +248,7 @@ class _$MedicalRecordImpl implements _MedicalRecord {
       this.hospitalName,
       this.notes,
       required this.notedAt,
+      this.visitEndDate,
       required this.createdAt,
       required this.updatedAt,
       this.status = RecordStatus.archived,
@@ -256,6 +270,8 @@ class _$MedicalRecordImpl implements _MedicalRecord {
   final String? notes;
   @override
   final DateTime notedAt;
+  @override
+  final DateTime? visitEndDate;
   @override
   final DateTime createdAt;
   @override
@@ -280,7 +296,7 @@ class _$MedicalRecordImpl implements _MedicalRecord {
 
   @override
   String toString() {
-    return 'MedicalRecord(id: $id, personId: $personId, hospitalName: $hospitalName, notes: $notes, notedAt: $notedAt, createdAt: $createdAt, updatedAt: $updatedAt, status: $status, tagsCache: $tagsCache, images: $images)';
+    return 'MedicalRecord(id: $id, personId: $personId, hospitalName: $hospitalName, notes: $notes, notedAt: $notedAt, visitEndDate: $visitEndDate, createdAt: $createdAt, updatedAt: $updatedAt, status: $status, tagsCache: $tagsCache, images: $images)';
   }
 
   @override
@@ -295,6 +311,8 @@ class _$MedicalRecordImpl implements _MedicalRecord {
                 other.hospitalName == hospitalName) &&
             (identical(other.notes, notes) || other.notes == notes) &&
             (identical(other.notedAt, notedAt) || other.notedAt == notedAt) &&
+            (identical(other.visitEndDate, visitEndDate) ||
+                other.visitEndDate == visitEndDate) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
@@ -314,6 +332,7 @@ class _$MedicalRecordImpl implements _MedicalRecord {
       hospitalName,
       notes,
       notedAt,
+      visitEndDate,
       createdAt,
       updatedAt,
       status,
@@ -343,6 +362,7 @@ abstract class _MedicalRecord implements MedicalRecord {
       final String? hospitalName,
       final String? notes,
       required final DateTime notedAt,
+      final DateTime? visitEndDate,
       required final DateTime createdAt,
       required final DateTime updatedAt,
       final RecordStatus status,
@@ -363,6 +383,8 @@ abstract class _MedicalRecord implements MedicalRecord {
   String? get notes;
   @override
   DateTime get notedAt;
+  @override
+  DateTime? get visitEndDate;
   @override
   DateTime get createdAt;
   @override

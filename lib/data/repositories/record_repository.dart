@@ -35,6 +35,7 @@ class RecordRepository extends BaseRepository implements IRecordRepository {
       'notes': record.notes,
       'visit_date_ms': record.notedAt.millisecondsSinceEpoch,
       'visit_date_iso': record.notedAt.toIso8601String(),
+      'visit_end_date_ms': record.visitEndDate?.millisecondsSinceEpoch,
       'created_at_ms': record.createdAt.millisecondsSinceEpoch,
       'updated_at_ms': record.updatedAt.millisecondsSinceEpoch,
       'status': record.status.name, // 'archived', 'deleted'
@@ -178,11 +179,69 @@ class RecordRepository extends BaseRepository implements IRecordRepository {
     return maps.map((m) => _mapToRecord(m, [])).toList();
   }
 
+  @override
+  Future<void> syncRecordMetadata(String recordId) async {
+    final db = await dbService.database;
+    
+    // 1. 获取所有属于该 Record 的图片
+    final List<Map<String, dynamic>> images = await db.query(
+      'images',
+      columns: ['visit_date_ms', 'hospital_name'],
+      where: 'record_id = ?',
+      whereArgs: [recordId],
+      orderBy: 'page_index ASC',
+    );
+    
+    if (images.isEmpty) return;
+
+    int? minDate;
+    int? maxDate;
+    String? hospitalName;
+
+    for (var img in images) {
+      final date = img['visit_date_ms'] as int?;
+      if (date != null) {
+        if (minDate == null || date < minDate) minDate = date;
+        if (maxDate == null || date > maxDate) maxDate = date;
+      }
+      
+      if (hospitalName == null && img['hospital_name'] != null && (img['hospital_name'] as String).isNotEmpty) {
+        hospitalName = img['hospital_name'] as String;
+      }
+    }
+
+    // 2. 更新 records 表
+    final Map<String, dynamic> updates = {};
+    if (minDate != null) {
+      updates['visit_date_ms'] = minDate;
+      updates['visit_date_iso'] = DateTime.fromMillisecondsSinceEpoch(minDate).toIso8601String();
+    }
+    if (maxDate != null) {
+      updates['visit_end_date_ms'] = maxDate;
+    }
+    if (hospitalName != null) {
+      updates['hospital_name'] = hospitalName;
+    }
+
+    if (updates.isNotEmpty) {
+      updates['updated_at_ms'] = DateTime.now().millisecondsSinceEpoch;
+      await db.update(
+        'records',
+        updates,
+        where: 'id = ?',
+        whereArgs: [recordId],
+      );
+    }
+  }
+
   // --- Helpers ---
 
   MedicalRecord _mapToRecord(Map<String, dynamic> row, List<MedicalImage> images) {
     // 还原 DateTime
     final notedAt = DateTime.fromMillisecondsSinceEpoch(row['visit_date_ms'] as int);
+    final visitEndDate = row['visit_end_date_ms'] != null 
+        ? DateTime.fromMillisecondsSinceEpoch(row['visit_end_date_ms'] as int) 
+        : null;
     final createdAt = DateTime.fromMillisecondsSinceEpoch(row['created_at_ms'] as int);
     final updatedAt = DateTime.fromMillisecondsSinceEpoch(row['updated_at_ms'] as int);
     
@@ -199,6 +258,7 @@ class RecordRepository extends BaseRepository implements IRecordRepository {
       hospitalName: row['hospital_name'] as String?,
       notes: row['notes'] as String?,
       notedAt: notedAt,
+      visitEndDate: visitEndDate,
       createdAt: createdAt,
       updatedAt: updatedAt,
       status: status,

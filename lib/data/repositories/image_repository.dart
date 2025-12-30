@@ -78,6 +78,7 @@ class ImageRepository extends BaseRepository implements IImageRepository {
     await db.transaction((txn) async {
        for (var recordId in recordIds) {
          await _syncRecordTagsCache(txn, recordId);
+         await _syncRecordMetadataCache(txn, recordId);
        }
     });
 
@@ -114,6 +115,7 @@ class ImageRepository extends BaseRepository implements IImageRepository {
       await txn.delete('images', where: 'id = ?', whereArgs: [imageId]);
       await txn.delete('image_tags', where: 'image_id = ?', whereArgs: [imageId]);
       await _syncRecordTagsCache(txn, recordId);
+      await _syncRecordMetadataCache(txn, recordId);
     });
   }
 
@@ -158,15 +160,30 @@ class ImageRepository extends BaseRepository implements IImageRepository {
   @override
   Future<void> updateImageMetadata(String imageId, {String? hospitalName, DateTime? visitDate}) async {
     final db = await dbService.database;
-    await db.update(
+
+    // Get recordId before update
+    final List<Map<String, dynamic>> maps = await db.query(
       'images',
-      {
-        if (hospitalName != null) 'hospital_name': hospitalName,
-        if (visitDate != null) 'visit_date_ms': visitDate.millisecondsSinceEpoch,
-      },
+      columns: ['record_id'],
       where: 'id = ?',
       whereArgs: [imageId],
     );
+    if (maps.isEmpty) return;
+    final String recordId = maps.first['record_id'] as String;
+
+    await db.transaction((txn) async {
+      await txn.update(
+        'images',
+        {
+          if (hospitalName != null) 'hospital_name': hospitalName,
+          if (visitDate != null) 'visit_date_ms': visitDate.millisecondsSinceEpoch,
+        },
+        where: 'id = ?',
+        whereArgs: [imageId],
+      );
+
+      await _syncRecordMetadataCache(txn, recordId);
+    });
   }
 
   Future<void> _syncRecordTagsCache(Transaction txn, String recordId) async {
@@ -188,8 +205,76 @@ class ImageRepository extends BaseRepository implements IImageRepository {
       'records',
       {'tags_cache': jsonEncode(tagNames)},
       where: 'id = ?',
-      whereArgs: [recordId],
     );
+  }
+
+  Future<void> _syncRecordMetadataCache(DatabaseExecutor txn, String recordId) async {
+    // 1. 获取所有属于该 Record 的图片汇总信息
+    final List<Map<String, dynamic>> images = await txn.query(
+      'images',
+      columns: ['visit_date_ms', 'hospital_name'],
+      where: 'record_id = ?',
+      whereArgs: [recordId],
+      orderBy: 'page_index ASC',
+    );
+
+    if (images.isEmpty) {
+       // 如果没有图片了，可能需要重置或保持现状？
+       // 通常删除最后一张图片会连带删除 Record（或者 Record 变为空）。
+       // 这里如果图片为空，尝试清空缓存字段。
+       await txn.update(
+         'records',
+         {
+           'hospital_name': null,
+           'visit_date_ms': null,
+           'visit_date_iso': null,
+           'visit_end_date_ms': null,
+           'updated_at_ms': DateTime.now().millisecondsSinceEpoch,
+         },
+         where: 'id = ?',
+         whereArgs: [recordId],
+       );
+       return;
+    }
+
+    int? minDate;
+    int? maxDate;
+    String? hospitalName;
+
+    for (var img in images) {
+      final date = img['visit_date_ms'] as int?;
+      if (date != null) {
+        if (minDate == null || date < minDate) minDate = date;
+        if (maxDate == null || date > maxDate) maxDate = date;
+      }
+      
+      if (hospitalName == null && img['hospital_name'] != null && (img['hospital_name'] as String).isNotEmpty) {
+        hospitalName = img['hospital_name'] as String;
+      }
+    }
+
+    // 2. 更新 records 表缓存
+    final Map<String, dynamic> updates = {};
+    if (minDate != null) {
+      updates['visit_date_ms'] = minDate;
+      updates['visit_date_iso'] = DateTime.fromMillisecondsSinceEpoch(minDate).toIso8601String();
+    }
+    if (maxDate != null) {
+      updates['visit_end_date_ms'] = maxDate;
+    }
+    if (hospitalName != null) {
+      updates['hospital_name'] = hospitalName;
+    }
+
+    if (updates.isNotEmpty) {
+      updates['updated_at_ms'] = DateTime.now().millisecondsSinceEpoch;
+      await txn.update(
+        'records',
+        updates,
+        where: 'id = ?',
+        whereArgs: [recordId],
+      );
+    }
   }
 
   MedicalImage _mapToImage(Map<String, dynamic> row) {

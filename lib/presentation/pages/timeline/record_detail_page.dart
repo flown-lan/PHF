@@ -5,9 +5,11 @@ import '../../../data/models/image.dart';
 import '../../../data/models/record.dart';
 import '../../../data/models/tag.dart';
 import '../../../logic/providers/core_providers.dart';
+import '../../../logic/providers/timeline_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/secure_image.dart';
 import '../../widgets/tag_selector.dart';
+import '../../widgets/full_image_viewer.dart';
 
 class RecordDetailPage extends ConsumerStatefulWidget {
   final String recordId;
@@ -24,6 +26,7 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
   bool _isLoading = true;
   int _currentIndex = 0;
   bool _isEditing = false;
+  late PageController _pageController;
   
   // Edit controllers
   late TextEditingController _hospitalController;
@@ -33,12 +36,14 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
   void initState() {
     super.initState();
     _hospitalController = TextEditingController();
+    _pageController = PageController();
     _loadData();
   }
 
   @override
   void dispose() {
     _hospitalController.dispose();
+    _pageController.dispose();
     super.dispose();
   }
 
@@ -104,6 +109,9 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
         _isEditing = false;
       });
 
+      // Notify Timeline to refresh
+      ref.invalidate(timelineControllerProvider);
+
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('保存成功')));
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('保存失败: $e')));
@@ -141,6 +149,9 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
         Navigator.pop(context);
         return;
       }
+
+      // Notify Timeline to refresh
+      ref.invalidate(timelineControllerProvider);
 
       // Reload
       await _loadData();
@@ -188,6 +199,7 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
                         child: Stack(
                           children: [
                             PageView.builder(
+                              controller: _pageController,
                               itemCount: _images.length,
                               onPageChanged: _onPageChanged,
                               itemBuilder: (context, index) {
@@ -195,7 +207,20 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
                                 return Center(
                                   child: GestureDetector(
                                     onTap: () {
-                                      // Full screen viewer maybe?
+                                      Navigator.push<int>(
+                                        context,
+                                        MaterialPageRoute<int>(
+                                          builder: (context) => FullImageViewer(
+                                            images: _images,
+                                            initialIndex: _currentIndex,
+                                          ),
+                                        ),
+                                      ).then((newIndex) {
+                                        // If viewer returned with a new index, sync it
+                                        if (newIndex is int && mounted) {
+                                          _pageController.jumpToPage(newIndex);
+                                        }
+                                      });
                                     },
                                     child: SecureImage(
                                       imagePath: img.filePath, // Use main file in detail
@@ -214,7 +239,10 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
                                   child: IconButton(
                                     icon: const Icon(Icons.chevron_left, color: Colors.black54, size: 40),
                                     onPressed: () {
-                                        // PageController navigation would be better
+                                      _pageController.previousPage(
+                                        duration: const Duration(milliseconds: 300),
+                                        curve: Curves.easeInOut,
+                                      );
                                     },
                                   ),
                                 ),
@@ -223,7 +251,12 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
                                   alignment: Alignment.centerRight,
                                   child: IconButton(
                                     icon: const Icon(Icons.chevron_right, color: Colors.black54, size: 40),
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      _pageController.nextPage(
+                                        duration: const Duration(milliseconds: 300),
+                                        curve: Curves.easeInOut,
+                                      );
+                                    },
                                   ),
                                 ),
                             ],

@@ -36,4 +36,7 @@ abstract class IRecordRepository {
     String? query,
     List<String>? tags,
   });
+
+  /// 汇总 Image 数据并同步到 Record 缓存字段
+  Future<void> syncRecordMetadata(String recordId);
 }
