@@ -12,6 +12,7 @@
 /// ## Security
 /// - PIN 码输入过程中仅保存在内存状态中。
 /// - 只有在 Confirm 成功后才调用 `SecurityService.setPin` 进行 Hash 存储。
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

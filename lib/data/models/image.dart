@@ -19,6 +19,7 @@
 /// ## Security & Privacy
 /// - 符合 `Constitution#VI. Security`：每张图片使用独立随机密钥。
 /// - 符合 `Spec#4.1 IV Management`：IV 存储在物理文件头部，故此处不存储 IV。
+library;
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'tag.dart';
@@ -35,7 +36,7 @@ class MedicalImage with _$MedicalImage {
     required String thumbnailEncryptionKey,
     required String filePath,
     required String thumbnailPath,
-    @Default('image/webp') String mimeType,
+    @Default('image/jpeg') String mimeType,
     @Default(0) int fileSize,
     @Default(0) int displayOrder,
     int? width,

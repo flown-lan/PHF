@@ -5,6 +5,7 @@
 ///
 /// ## Architecture
 /// 属于 Data Layer，持有 `SQLCipherDatabaseService` 的引用。
+library;
 
 import '../datasources/local/database_service.dart';
 

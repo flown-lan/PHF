@@ -10,6 +10,7 @@
 ///
 /// ## Integrity Standards
 /// - 符合 `Spec#4.1 Data Schema`：维护 `image_tags` 表的关联一致性。
+library;
 
 import '../../../data/models/image.dart';
 

@@ -8,6 +8,7 @@
 /// - Icon: Lock / Shield
 /// - Color: Teal / Grey
 /// - Text: "AES-256 Encrypted on Device"
+library;
 
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';

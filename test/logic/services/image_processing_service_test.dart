@@ -31,31 +31,31 @@ void main() {
   });
 
   group('ImageProcessingService', () {
-    test('compressImage returns valid PNG data', () async {
-      final pngData = await service.compressImage(data: redPixelPng);
+    test('compressImage returns valid JPEG data', () async {
+      final jpegData = await service.compressImage(data: redPixelPng);
       
-      // PNG signature Check (89 50 4E 47 0D 0A 1A 0A)
-      expect(pngData.length, greaterThan(8));
-      expect(pngData[0], 0x89);
-      expect(String.fromCharCodes(pngData.sublist(1, 4)), 'PNG');
+      // JPEG signature Check (FF D8)
+      expect(jpegData.length, greaterThan(2));
+      expect(jpegData[0], 0xFF);
+      expect(jpegData[1], 0xD8);
       
-      final decoded = img.decodePng(pngData);
+      final decoded = img.decodeJpg(jpegData);
       expect(decoded, isNotNull);
       expect(decoded!.width, 1);
       expect(decoded.height, 1);
     });
 
     test('generateThumbnail resizes image', () async {
-      // Create a larger image (100x100) specifically for resizing test
+      // Create a larger image (400x400) specifically for resizing test
       final largeImage = img.Image(width: 400, height: 400);
-      final largePng = img.encodePng(largeImage);
+      final largeJpg = img.encodeJpg(largeImage);
       
       final thumbnailData = await service.generateThumbnail(
-        data: Uint8List.fromList(largePng),
+        data: Uint8List.fromList(largeJpg),
         width: 100, // Target width
       );
 
-      final decodedThumb = img.decodePng(thumbnailData);
+      final decodedThumb = img.decodeJpg(thumbnailData);
       expect(decodedThumb, isNotNull);
       expect(decodedThumb!.width, 100);
       // Aspect ratio maintained => height should also be 100

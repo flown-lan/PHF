@@ -44,6 +44,7 @@ void main() {
         id: 'i1',
         recordId: 'r1',
         encryptionKey: 'base64_key',
+        thumbnailEncryptionKey: 'base64_thumb_key',
         filePath: 'path/to/file',
         thumbnailPath: 'path/to/thumb',
         width: 100,
@@ -52,11 +53,11 @@ void main() {
         createdAt: testTime,
       );
 
-      expect(image.mimeType, 'image/webp'); // Default
+      expect(image.mimeType, 'image/jpeg'); // Default
       expect(image.displayOrder, 0); // Default
       
       final json = image.toJson();
-      expect(json['mimeType'], 'image/webp');
+      expect(json['mimeType'], 'image/jpeg');
       expect(json['fileSize'], 1024);
       expect(MedicalImage.fromJson(json), image);
     });

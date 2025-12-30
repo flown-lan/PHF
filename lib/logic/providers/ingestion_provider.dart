@@ -10,9 +10,9 @@
 ///    2. 并发处理所有图片 (Compress + Encrypt + Save)。
 ///    3. 保存 Record。
 ///    4. 触发 Timeline 刷新。
+library;
 
 import 'package:image_picker/image_picker.dart';
-import 'dart:convert';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 import '../../data/models/image.dart';
@@ -179,7 +179,7 @@ class IngestionController extends _$IngestionController {
           thumbnailEncryptionKey: thumbResult.base64Key, // Independent key
           filePath: 'images/${fileResult.relativePath}',
           thumbnailPath: 'images/thumbnails/${thumbResult.relativePath}',
-          mimeType: 'image/webp', // T16.2
+          mimeType: 'image/jpeg',
           fileSize: compressedBytes.lengthInBytes,
           displayOrder: index,
           width: dimensions.width,

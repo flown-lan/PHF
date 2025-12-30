@@ -13,6 +13,7 @@
 /// ## Security & Privacy
 /// - 符合 `Constitution#I. Privacy`：所有个人识别信息仅存储于本地加密数据库。
 /// - 不包含任何生物识别敏感字段，仅用于档案分类。
+library;
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 

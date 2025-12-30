@@ -36,7 +36,7 @@ void main() {
       final fakeEncrypted = Uint8List.fromList([9, 9, 9]); // Dummy encrypted
       final fakeKeyBytes = Uint8List.fromList(List.filled(32, 1));
       final fakeKeyBase64 = base64Encode(fakeKeyBytes);
-      final filename = 'test_enc.enc';
+      const filename = 'test_enc.enc';
       final encFile = File('${tempDir.path}/$filename');
 
       // Write "encrypted" data to disk

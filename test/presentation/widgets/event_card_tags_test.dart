@@ -1,6 +1,4 @@
-
 import 'dart:convert';
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -79,17 +77,21 @@ void main() {
         updatedAt: DateTime.now(),
         notes: noteText,
         status: RecordStatus.archived,
+        tagsCache: jsonEncode([tagName]),
+        images: [], // populated below
       );
 
       final image = MedicalImage(
         id: 'i1',
         recordId: 'r1',
         encryptionKey: 'key',
+        thumbnailEncryptionKey: 'tk',
         filePath: 'path',
         thumbnailPath: 'thumb',
         createdAt: DateTime.now(),
         tagIds: [tagId],
       );
+      final recordWithImage = record.copyWith(images: [image]);
 
       final tags = [Tag(id: tagId, name: tagName, color: '#FFFFFF', createdAt: DateTime.now())];
 
@@ -97,7 +99,7 @@ void main() {
       when(mockTagRepository.getAllTags()).thenAnswer((_) async => tags);
 
       // Pump Widget
-      await widgetTester.pumpWidget(createSubject(record, image: image));
+      await widgetTester.pumpWidget(createSubject(recordWithImage));
       await widgetTester.pumpAndSettle(); // Wait for FutureBuilder
 
       // Verify
@@ -123,16 +125,17 @@ void main() {
         id: 'i1',
         recordId: 'r1',
         encryptionKey: 'key',
+        thumbnailEncryptionKey: 'tk',
         filePath: 'path',
         thumbnailPath: 'thumb',
         createdAt: DateTime.now(),
         tagIds: [], // Empty tags
       );
 
-      await widgetTester.pumpWidget(createSubject(record, image: image));
+      await widgetTester.pumpWidget(createSubject(record.copyWith(images: [image])));
       await widgetTester.pumpAndSettle();
 
-      expect(find.text(noteText), findsOneWidget);
+      expect(find.text(noteText), findsNothing); // Notes no longer shown in EventCard
     });
   });
 }

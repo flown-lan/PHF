@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:phf/logic/providers/core_providers.dart';
 import 'package:phf/logic/providers/ingestion_provider.dart';
 import 'package:phf/logic/providers/states/ingestion_state.dart';
-import 'package:phf/logic/providers/timeline_provider.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:mockito/annotations.dart';
 import 'package:phf/data/datasources/local/database_service.dart';

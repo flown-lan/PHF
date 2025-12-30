@@ -3,6 +3,7 @@
 /// ## Description
 /// 安全的数字键盘组件，用于输入 PIN 码。
 /// 仅包含 0-9 数字键和退格键，无系统键盘调用。
+library;
 
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
@@ -76,7 +77,7 @@ class PinKeyboard extends StatelessWidget {
           alignment: Alignment.center,
           decoration: isFunction
               ? null
-              : BoxDecoration(
+              : const BoxDecoration(
                   shape: BoxShape.circle,
                   color: AppTheme.bgGray,
                 ),

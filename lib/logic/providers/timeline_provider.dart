@@ -10,6 +10,7 @@
 /// - `loadRecords`: 加载全部（分页暂未实现，Phase 1 全量）。
 /// - `search`: 根据关键字或 Tag 过滤。
 /// - `delete`: 执行软删除并刷新列表。
+library;
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../data/models/record.dart';

@@ -10,6 +10,7 @@
 /// ## Security
 /// - 数据均不包含敏感 PII。
 /// - 操作在 SQLCipher 事务中执行。
+library;
 
 import 'package:sqflite_sqlcipher/sqflite.dart';
 

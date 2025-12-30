@@ -1,6 +1,7 @@
 /// # TagRepository Implementation
 ///
 /// 使用 `databaseService` 访问 `tags` 表。
+library;
 
 import '../datasources/local/database_service.dart';
 import '../models/tag.dart';

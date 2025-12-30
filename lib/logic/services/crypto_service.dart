@@ -12,6 +12,7 @@
 /// - Algorithm: AES-GCM (256-bit key)
 /// - Nonce: 12 bytes (unique per chunk/message)
 /// - Tag: 16 bytes (authentication)
+library;
 
 import 'dart:io';
 import 'dart:typed_data';

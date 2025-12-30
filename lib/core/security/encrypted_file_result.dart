@@ -6,6 +6,7 @@
 /// ## Fields
 /// - `relativePath`: 加密文件相对于应用沙盒根目录的路径.
 /// - `base64Key`: 本次加密使用的随机密钥 (Base64).
+library;
 
 class EncryptedFileResult {
   final String relativePath;

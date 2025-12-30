@@ -6,6 +6,7 @@
 /// ## Privacy
 /// - 此服务仅负责返回用户选择的文件句柄 (XFile)。
 /// - **不**负责文件的持久化或加密。调用者 (Ingestion Logic) 必须负责将文件移动到加密沙盒并清理原始缓存（如果适用）。
+library;
 
 import 'package:image_picker/image_picker.dart';
 import 'interfaces/gallery_service.dart';

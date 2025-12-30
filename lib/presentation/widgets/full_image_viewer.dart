@@ -15,6 +15,7 @@
 ///   initialIndex: 0,
 /// )
 /// ```
+library;
 
 import 'package:flutter/material.dart';
 import 'package:phf/data/models/image.dart';

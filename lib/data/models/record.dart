@@ -18,6 +18,7 @@
 /// ## Implementation Rules
 /// - 符合 `Spec#Data Schema`：`status` 默认为 `archived`。
 /// - 符合 `Constitution#II. Architecture`：作为 Domain Layer 的核心对象。
+library;
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'image.dart';

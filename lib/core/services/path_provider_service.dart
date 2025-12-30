@@ -11,6 +11,7 @@
 /// ## Security Measures
 /// - 所有目录均位于应用私有沙盒 (`ApplicationDocumentsDirectory`) 内。
 /// - 提供 `clearTemp()` 机制以符合 `Constitution#I. Privacy` 的清理要求。
+library;
 
 import 'dart:io';
 import 'package:path/path.dart' as p;

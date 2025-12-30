@@ -8,6 +8,7 @@
 /// - **Pull to Refresh**: 下拉刷新列表。
 /// - **Navigation**: 点击卡片调整至详情页。
 /// - **Empty State**: 无记录时展示引导提示。
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

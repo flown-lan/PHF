@@ -1,10 +1,8 @@
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:cryptography/cryptography.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:phf/logic/services/crypto_service.dart';
 import 'package:phf/logic/services/interfaces/crypto_service.dart';
-import 'package:path_provider/path_provider.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -111,7 +109,7 @@ void main() {
       // Chunk Size default is 2MB.
       // Let's create a 3MB file to force 2 chunks (2MB + 1MB).
       final key = service.generateRandomKey();
-      final size = 3 * 1024 * 1024;
+      const size = 3 * 1024 * 1024;
       final plaintext = Uint8List(size); // Zero initialized
       // Fill some recognizable data
       plaintext[0] = 0xAA;

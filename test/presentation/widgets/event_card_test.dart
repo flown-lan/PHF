@@ -81,16 +81,20 @@ void main() {
         notedAt: DateTime.now(),
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
+        images: [], // Will be updated below
       );
 
       final image = MedicalImage(
         id: 'i1',
         recordId: 'r1',
         encryptionKey: 'base64Key',
+        thumbnailEncryptionKey: 'base64ThumbKey',
         filePath: 'orig.enc',
         thumbnailPath: 'thumb.enc',
         createdAt: DateTime.now(),
       );
+
+      final recordWithImage = record.copyWith(images: [image]);
 
       // Mock decryption
       final fakePng = Uint8List.fromList([
@@ -106,7 +110,7 @@ void main() {
       when(mockFileSecurityHelper.decryptDataFromFile(any, any))
           .thenAnswer((_) async => fakePng);
 
-      await widgetTester.pumpWidget(createSubject(record, image: image));
+      await widgetTester.pumpWidget(createSubject(recordWithImage));
       
       // Initial State (Placeholder)
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
@@ -131,7 +135,7 @@ void main() {
       await widgetTester.pumpWidget(createSubject(record));
 
       expect(find.text('Tag A'), findsOneWidget);
-      expect(find.text('Tag B'), findsOneWidget);
+      expect(find.text('Tag B'), findsNothing); // UI now only shows first tag
     });
   });
 }

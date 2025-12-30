@@ -6,6 +6,7 @@
 /// ## Methods
 /// - `getAllTags`: 获取所有可用标签。
 /// - `createTag`: 创建新标签（Phase 2）。
+library;
 import '../../../data/models/tag.dart';
 
 abstract class ITagRepository {

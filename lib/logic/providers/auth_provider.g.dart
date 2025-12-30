@@ -6,13 +6,29 @@ part of 'auth_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+String _$hasLockHash() => r'97c7f28599e68af60c7a7352a30b4bc0ad98812e';
+
+/// See also [hasLock].
+@ProviderFor(hasLock)
+final hasLockProvider = FutureProvider<bool>.internal(
+  hasLock,
+  name: r'hasLockProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$hasLockHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef HasLockRef = FutureProviderRef<bool>;
 String _$authStateControllerHash() =>
-    r'156da21cd8dccf55816f9f98e33404e30650847e';
+    r'6f9b6298a18679dce6005215c25901e269463af4';
 
 /// See also [AuthStateController].
 @ProviderFor(AuthStateController)
 final authStateControllerProvider =
-    AutoDisposeNotifierProvider<AuthStateController, bool>.internal(
+    NotifierProvider<AuthStateController, bool>.internal(
   AuthStateController.new,
   name: r'authStateControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -22,6 +38,6 @@ final authStateControllerProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$AuthStateController = AutoDisposeNotifier<bool>;
+typedef _$AuthStateController = Notifier<bool>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

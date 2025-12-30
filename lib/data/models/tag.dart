@@ -13,6 +13,7 @@
 ///
 /// ## Implementation Rules
 /// - 符合 `Spec#4.1`：标签与图片关联，Record 查看时聚合显示。
+library;
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 

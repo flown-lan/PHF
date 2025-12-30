@@ -34,6 +34,7 @@ dependencies:
   intl: ^0.20.2
   local_auth: ^3.0.0
 
+  path: any
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -47,6 +48,14 @@ dev_dependencies:
   mockito: ^5.4.6
   sqflite_common_ffi: ^2.4.0+1
 
+  path_provider_platform_interface: any
+  plugin_platform_interface: any
+  path: any
+  local_auth_android: any
+  local_auth_darwin: any
+  local_auth_windows: any
+  image_picker_platform_interface: any
+  sqflite_common: any
 flutter:
   uses-material-design: true
   fonts:

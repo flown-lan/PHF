@@ -14,6 +14,7 @@
 /// final manager = MasterKeyManager();
 /// final key = await manager.getMasterKey();
 /// ```
+library;
 
 import 'dart:convert';
 import 'dart:math';
@@ -58,27 +59,16 @@ class MasterKeyManager {
 
   /// 内部通用逻辑：读取 -> (空则生成 -> 保存) -> 返回
   Future<Uint8List> _getOrGenerate(String storageKey, int lengthInBytes) async {
-    print('MasterKeyManager: Requesting $storageKey...');
     try {
-      // 1. Try read
-      final storedBase64 = await _storage.read(key: storageKey);
-      if (storedBase64 != null) {
-        print('MasterKeyManager: Found existing $storageKey.');
-        return base64Decode(storedBase64);
+      String? encodedKey = await _storage.read(key: storageKey);
+      if (encodedKey != null) {
+        return base64Decode(encodedKey);
       }
 
-      // 2. Generate
-      print('MasterKeyManager: Generating new $storageKey...');
-      final newBytes = _generateRandomBytes(lengthInBytes);
-      final newBase64 = base64Encode(newBytes);
-
-      // 3. Write
-      await _storage.write(key: storageKey, value: newBase64);
-      print('MasterKeyManager: Saved new $storageKey.');
-
-      return newBytes;
+      final newKey = _generateRandomBytes(lengthInBytes);
+      await _storage.write(key: storageKey, value: base64Encode(newKey));
+      return newKey;
     } catch (e) {
-      print('MasterKeyManager: Error accessing $storageKey: $e');
       rethrow;
     }
   }

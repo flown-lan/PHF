@@ -7,7 +7,6 @@ import 'package:phf/data/models/record.dart';
 import 'package:phf/data/models/image.dart';
 import 'package:phf/data/repositories/record_repository.dart';
 import 'package:phf/data/repositories/image_repository.dart';
-import 'package:uuid/uuid.dart';
 import 'dart:convert';
 
 @GenerateNiceMocks([MockSpec<SQLCipherDatabaseService>()])
@@ -37,7 +36,7 @@ void main() {
     // Create Tables (simplified schema sufficient for repository testing)
     await db.execute('CREATE TABLE persons (id TEXT PRIMARY KEY, nickname TEXT, avatar_path TEXT, is_default INTEGER, created_at_ms INTEGER)');
     await db.execute('CREATE TABLE records (id TEXT PRIMARY KEY, person_id TEXT, status TEXT, visit_date_ms INTEGER, visit_date_iso TEXT, hospital_name TEXT, notes TEXT, tags_cache TEXT, created_at_ms INTEGER, updated_at_ms INTEGER)');
-    await db.execute('CREATE TABLE images (id TEXT PRIMARY KEY, record_id TEXT, file_path TEXT, thumbnail_path TEXT, encryption_key TEXT, width INTEGER, height INTEGER, mime_type TEXT, file_size INTEGER, page_index INTEGER, created_at_ms INTEGER)');
+    await db.execute('CREATE TABLE images (id TEXT PRIMARY KEY, record_id TEXT, file_path TEXT, thumbnail_path TEXT, encryption_key TEXT, thumbnail_encryption_key TEXT, width INTEGER, height INTEGER, hospital_name TEXT, visit_date_ms INTEGER, mime_type TEXT, file_size INTEGER, page_index INTEGER, ocr_text TEXT, ocr_raw_json TEXT, ocr_confidence REAL, tags TEXT, created_at_ms INTEGER)');
     await db.execute('CREATE TABLE tags (id TEXT PRIMARY KEY, name TEXT UNIQUE, color TEXT, order_index INTEGER, person_id TEXT, is_custom INTEGER, created_at_ms INTEGER)');
     await db.execute('CREATE TABLE image_tags (image_id TEXT, tag_id TEXT, PRIMARY KEY (image_id, tag_id))');
     
@@ -94,6 +93,7 @@ void main() {
         id: 'i1',
         recordId: 'r1',
         encryptionKey: 'key',
+        thumbnailEncryptionKey: 'thumb_key',
         filePath: 'path',
         thumbnailPath: 'thumb',
         createdAt: DateTime.now(),
@@ -123,7 +123,15 @@ void main() {
            'created_at_ms': 1, 
            'updated_at_ms': 1
          });
-         await db.insert('images', {'id': 'i2', 'record_id': 'r2', 'file_path': 'p', 'thumbnail_path': 't', 'encryption_key': 'k', 'created_at_ms': 1});
+          await db.insert('images', {
+            'id': 'i2', 
+            'record_id': 'r2', 
+            'file_path': 'p', 
+            'thumbnail_path': 't', 
+            'encryption_key': 'k', 
+            'thumbnail_encryption_key': 'tk',
+            'created_at_ms': 1
+          });
          await db.insert('image_tags', {'image_id': 'i2', 'tag_id': 't1'});
          
          // Pre-sync manually or assume state

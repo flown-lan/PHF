@@ -230,7 +230,7 @@ final tagRepositoryProvider = Provider<ITagRepository>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef TagRepositoryRef = ProviderRef<ITagRepository>;
-String _$allTagsHash() => r'46b02f3841afc46071903c43af083c4496a3a281';
+String _$allTagsHash() => r'2da877478590ccc47192cb22afe601e3bda15acf';
 
 /// See also [allTags].
 @ProviderFor(allTags)

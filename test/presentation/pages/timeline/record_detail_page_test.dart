@@ -14,7 +14,6 @@ import 'package:phf/presentation/widgets/secure_image.dart';
 
 import 'package:phf/core/security/file_security_helper.dart';
 import 'package:phf/core/services/path_provider_service.dart';
-import 'dart:typed_data';
 import 'dart:convert';
 
 @GenerateNiceMocks([
@@ -75,6 +74,7 @@ void main() {
       id: 'i1',
       recordId: recordId,
       encryptionKey: 'key',
+      thumbnailEncryptionKey: 'thumb_key',
       filePath: 'path/to/img.enc',
       thumbnailPath: 'path/to/thumb.enc',
       createdAt: DateTime.now(),
@@ -90,10 +90,10 @@ void main() {
 
     // Verify Metadata
     expect(find.text('Detail Hospital'), findsOneWidget);
-    expect(find.text('2023-10-01 10:00'), findsOneWidget); // DateFormat check
-    expect(find.text('Some notes'), findsOneWidget);
-    expect(find.text('Tag1'), findsOneWidget);
-    expect(find.text('Tag2'), findsOneWidget);
+    expect(find.text('2023-10-01'), findsOneWidget); // DateFormat changed to yyyy-MM-dd
+    expect(find.text('Some notes'), findsNothing); // Notes removed from detail view in T16
+    expect(find.text('Tag1'), findsNothing); // Record-level Tags removed from split-view detail
+    expect(find.text('Tag2'), findsNothing);
 
     // Verify Image Grid
     expect(find.byType(SecureImage), findsOneWidget);
@@ -109,6 +109,6 @@ void main() {
     await tester.pumpWidget(createSubject(recordId));
     await tester.pumpAndSettle();
 
-    expect(find.text('记录不存在或已被删除'), findsOneWidget);
+    expect(find.text('记录不存在'), findsOneWidget);
   });
 }

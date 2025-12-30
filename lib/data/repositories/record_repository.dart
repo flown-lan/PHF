@@ -12,10 +12,9 @@
 ///
 /// ## Sync Logic
 /// - `tagsCache`: 此字段由 `ImageRepository` 更新操作触发同步，本类仅负责读取和简单的写入。
+library;
 
-import 'dart:convert';
 import 'package:sqflite_sqlcipher/sqflite.dart';
-import '../../data/datasources/local/database_service.dart';
 import '../../data/models/image.dart';
 import '../../data/models/record.dart';
 import 'base_repository.dart';
@@ -138,7 +137,7 @@ class RecordRepository extends BaseRepository implements IRecordRepository {
   }) async {
     final db = await dbService.database;
     String sql;
-    List<dynamic> args = [];
+    final List<dynamic> args = [];
 
     // 基础查询
     String whereClause = 'r.person_id = ? AND r.status != ?';
@@ -209,19 +208,23 @@ class RecordRepository extends BaseRepository implements IRecordRepository {
   }
   
   MedicalImage _mapToImage(Map<String, dynamic> row) {
-      return MedicalImage.fromJson({
-          'id': row['id'],
-          'recordId': row['record_id'],
-          'encryptionKey': row['encryption_key'],
-          'filePath': row['file_path'],
-          'thumbnailPath': row['thumbnail_path'],
-          'mimeType': row['mime_type'],
-          'fileSize': row['file_size'],
-          'displayOrder': row['page_index'],
-          'width': row['width'],
-          'height': row['height'],
-          'createdAt': DateTime.fromMillisecondsSinceEpoch(row['created_at_ms'] as int).toIso8601String(),
-          // Tags for image not loaded here, usually
-      }); 
+    return MedicalImage.fromJson({
+      'id': row['id'],
+      'recordId': row['record_id'],
+      'encryptionKey': row['encryption_key'],
+      'thumbnailEncryptionKey': row['thumbnail_encryption_key'] ?? row['encryption_key'],
+      'filePath': row['file_path'],
+      'thumbnailPath': row['thumbnail_path'],
+      'mimeType': row['mime_type'],
+      'fileSize': row['file_size'],
+      'displayOrder': row['page_index'],
+      'width': row['width'],
+      'height': row['height'],
+      'hospitalName': row['hospital_name'],
+      'visitDate': row['visit_date_ms'] != null 
+          ? DateTime.fromMillisecondsSinceEpoch(row['visit_date_ms'] as int).toIso8601String() 
+          : null,
+      'createdAt': DateTime.fromMillisecondsSinceEpoch(row['created_at_ms'] as int).toIso8601String(),
+    }); 
   }
 }

@@ -10,6 +10,7 @@
 /// await repo.setHasLock(true);
 /// final enabled = await repo.hasLock();
 /// ```
+library;
 
 import 'package:sqflite_sqlcipher/sqflite.dart';
 import '../datasources/local/database_service.dart';

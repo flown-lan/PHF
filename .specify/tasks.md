@@ -47,7 +47,7 @@
 - [x] **Review**: 确认存储方案使用了系统级Keychain/Keystore。
 - [x] **Commit**: `feat(security): implement master key manager with secure storage persistence`
  验证重启 App 后仍能读取到一致的 Key (DoD-T1.1)。
-- [ ] **Review**: `review_keystore_security.md` - 审计 KeyStore/KeyChain 调用安全性。
+- [x] **Review**: `review_keystore_security.md` - 审计 KeyStore/KeyChain 调用安全性。
 - [x] **Commit**: `feat(security): implement master key and user salt management`
 
 ### T5: Crypto Service 实现 [x]
@@ -107,7 +107,7 @@
 - [x] **Implement**: 集成 `image_picker` 并完成 `Info.plist` / `AndroidManifest.xml` 配置。支持多图选择。 (Ref: Constitution#III. Intelligent Digitization)
 - [x] **Document**: 更新 `SETUP.md` 记录 iOS 相册权限描述文案。 (Updated via review artifact)
 - [x] **Test**: 物理测试相册批量选择。 (Validated via unit tests mocks)
-- [x] **Review**: 是否存在将相册路径上传至不可控日志的风险。(Audited in review_T11_gallery.md)
+- [x] **Review**: 走查组件点击反馈是否优雅。
 - [x] **Commit**: `feat(logic): integrate gallery import with native permission config`
 
 ### T12: Repository 基础实现与 Tags 同步 [x]
@@ -146,22 +146,22 @@
 ### T13.3 UI Kit Complex: EventCard 开发 [x]
 - [x] **Implement**: 封装 `SecureImage` 异步解密展示组件. 实现 `EventCard` 并集成 `SecureImage` 展示 Record 的首张缩略图，显示去重后的标签列表。 (Ref: Spec#4.1)
 - [x] **Document**: 记录 `tags_cache` 在 UI 层的解析示例。
-- [x] **Test**: 验证长标签列表下的布局稳定性。
-- [x] **Review**: 走查解密过程中的 UI 占位图效果。
+- [x] **Test**: 验证长标签列表下的布局稳定性.
+- [x] **Review**: 走查解密过程中的 UI 占位图效果.
 - [x] **Commit**: `feat(ui): implement complex EventCard with decrypted thumbnail support`
 
 ### T14: 安全引导与应用锁界面 (T1.5) [x]
 - [x] **Implement**: 实现 `SecurityOnboardingPage`。提供 Pin 码设置/指纹启用引导。 (Ref: Spec#FR-001)
-- [x] **Document**: 设置流程的逻辑分支图。
-- [x] **Test**: 验证设置完成后，逻辑标识（如 `has_lock = true`）被正确存入数据库。
-- [x] **Review**: 审查安全提示语是否足够醒目。
+- [x] **Document**: 设置流程的逻辑分支图.
+- [x] **Test**: 验证设置完成后，逻辑标识（如 `has_lock = true`）被正确存入数据库.
+- [x] **Review**: 审查安全提示语是否足够醒目.
 - [x] **Commit**: `feat(ui): implement application lock setup and onboarding experience`
 
 ### T15: 首页 Timeline 与 详情解密展示 UI [x]
 - [x] **Implement**: 完成首页 Timeline 列表及详情页。集成解密引擎大图浏览。 (Ref: Phase 1 Goal)
-- [x] **Document**: 记录详情页在大图关闭后的内存回收流程。
+- [x] **Document**: 记录详情页在大图关闭后的内存回收流程.
 - [x] **Test**: 物理测试流畅度，针对 10 张大图的快速切换执行内存检查 (DoD-T3.3).
-- [x] **Review**: 确保解密大图仅存在于内存，不进入任何公开临时目录。
+- [x] **Review**: 确保解密大图仅存在于内存，不进入任何公开临时目录.
 - [x] **Commit**: `feat(ui): finalize timeline and detail view with full decryption pipeline`
 
 ---
@@ -173,20 +173,20 @@
     - 实现 App 生命周期监听，冷启动或从后台恢复时强制校验 Pin/生物识别 (LockScreen)。
     - 处理 `status.md` 工作项：
         - `T16.1`: 实现独立缩略图加密密钥 (Update Entity & ImageRepository)。
-        - `T16.2`: 全量切换为 WebP 压缩存储 (Replace PNG Fallback)。
+        - `T16.2`: 切换为高压缩 JPEG (由于 `image` 库不支持 WebP 编码，暂退为 JPEG)。
         - `T16.3`: 数据库初始化配置 `PRAGMA cipher_page_size = 4096`。
 - [x] **Refactor Timeline UI**:
     - 去除底部 TabBar，将 `Settings` 移至 AppBar 右侧 Icon。
     - 优化 `EventCard`：去重标签，仅显示首个 Tag；改为 4-6 张图网格预览，超量显示 `>`。
     - 优化数据查询，避免 N+1 性能问题。
 - [x] **Refactor Ingestion Flow**:
-    - 简化为：首页点击 "+" -> 原生相机/库选择 -> 进入 Preview 预览页 (支持裁剪/旋转/删除) -> 一键保存后返回首页（Phase 2 进入 OCR 后台任务）。
+    - 简化为：首页点击 "+" -> 原生相机/库选择 -> 进入 Preview 预览页 (支持裁剪/旋转/删除) -> 一键保存后返回首页。
 - [x] **Refactor Detail View**:
     - 实现“上下分屏”布局：顶部图片（支持左右切图同步更新下方信息），底部展示图片专有的“医院、日期、标签”。
     - 每张图下方增加“编辑”与“删除（当前图片）”按钮。
-    - 移除详情页中重复的灰色标签及“备注”字段（备注移至 Phase 3 管理）。
-    - 开发“高亮+拖拽排序”标签选择器，支持多选。当用户点击编辑时显示用户全量标签库。
-- [x] **Test**: 针对重构后的录入流与详情页联动进行全量物理测试。
+    - 移除详情页中重复的灰色标签及“备注”字段.
+    - 开发“高亮+拖拽排序”标签选择器，支持多选。当用户点击编辑时显示用户全量标签库.
+- [x] **Test**: 针对重构后的录入流与详情页联动进行全量物理测试与单元测试回归 (Passing 54 tests).
 - [x] **Commit**: `refactor(ui): pivot to split-view details and streamlined ingestion workflow`
 
 ---

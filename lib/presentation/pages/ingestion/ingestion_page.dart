@@ -5,7 +5,6 @@ import '../../../logic/providers/ingestion_provider.dart';
 import '../../../logic/providers/states/ingestion_state.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/active_button.dart';
-import 'package:image_picker/image_picker.dart';
 
 class IngestionPage extends ConsumerStatefulWidget {
   const IngestionPage({super.key});

@@ -11,6 +11,7 @@
 /// ## Security Measures
 /// - 强制使用 `Uint8List` 处理字节，减少内存残留风险。
 /// - 接口不涉及具体的密钥存储逻辑，仅负责算法执行。
+library;
 
 import 'dart:typed_data';
 

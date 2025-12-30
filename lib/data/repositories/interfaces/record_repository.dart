@@ -10,6 +10,7 @@
 ///
 /// ## Architectural Principles
 /// - 符合 `Constitution#II. Architecture`：通过接口解耦逻辑层与具体的 SQL 实现。
+library;
 
 import '../../../data/models/record.dart';
 

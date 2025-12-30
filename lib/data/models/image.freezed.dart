@@ -32,6 +32,8 @@ mixin _$MedicalImage {
   int? get width => throw _privateConstructorUsedError;
   int? get height => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
+  String? get hospitalName => throw _privateConstructorUsedError;
+  DateTime? get visitDate => throw _privateConstructorUsedError;
 
   /// 数据库存储的 Tag IDs (JSON List from DB)
   List<String> get tagIds => throw _privateConstructorUsedError;
@@ -69,6 +71,8 @@ abstract class $MedicalImageCopyWith<$Res> {
       int? width,
       int? height,
       DateTime createdAt,
+      String? hospitalName,
+      DateTime? visitDate,
       List<String> tagIds,
       @JsonKey(includeFromJson: false, includeToJson: false) List<Tag> tags});
 }
@@ -100,6 +104,8 @@ class _$MedicalImageCopyWithImpl<$Res, $Val extends MedicalImage>
     Object? width = freezed,
     Object? height = freezed,
     Object? createdAt = null,
+    Object? hospitalName = freezed,
+    Object? visitDate = freezed,
     Object? tagIds = null,
     Object? tags = null,
   }) {
@@ -152,6 +158,14 @@ class _$MedicalImageCopyWithImpl<$Res, $Val extends MedicalImage>
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      hospitalName: freezed == hospitalName
+          ? _value.hospitalName
+          : hospitalName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      visitDate: freezed == visitDate
+          ? _value.visitDate
+          : visitDate // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       tagIds: null == tagIds
           ? _value.tagIds
           : tagIds // ignore: cast_nullable_to_non_nullable
@@ -185,6 +199,8 @@ abstract class _$$MedicalImageImplCopyWith<$Res>
       int? width,
       int? height,
       DateTime createdAt,
+      String? hospitalName,
+      DateTime? visitDate,
       List<String> tagIds,
       @JsonKey(includeFromJson: false, includeToJson: false) List<Tag> tags});
 }
@@ -214,6 +230,8 @@ class __$$MedicalImageImplCopyWithImpl<$Res>
     Object? width = freezed,
     Object? height = freezed,
     Object? createdAt = null,
+    Object? hospitalName = freezed,
+    Object? visitDate = freezed,
     Object? tagIds = null,
     Object? tags = null,
   }) {
@@ -266,6 +284,14 @@ class __$$MedicalImageImplCopyWithImpl<$Res>
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      hospitalName: freezed == hospitalName
+          ? _value.hospitalName
+          : hospitalName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      visitDate: freezed == visitDate
+          ? _value.visitDate
+          : visitDate // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       tagIds: null == tagIds
           ? _value._tagIds
           : tagIds // ignore: cast_nullable_to_non_nullable
@@ -288,12 +314,14 @@ class _$MedicalImageImpl implements _MedicalImage {
       required this.thumbnailEncryptionKey,
       required this.filePath,
       required this.thumbnailPath,
-      this.mimeType = 'image/webp',
+      this.mimeType = 'image/jpeg',
       this.fileSize = 0,
       this.displayOrder = 0,
       this.width,
       this.height,
       required this.createdAt,
+      this.hospitalName,
+      this.visitDate,
       final List<String> tagIds = const [],
       @JsonKey(includeFromJson: false, includeToJson: false)
       final List<Tag> tags = const []})
@@ -330,6 +358,10 @@ class _$MedicalImageImpl implements _MedicalImage {
   final int? height;
   @override
   final DateTime createdAt;
+  @override
+  final String? hospitalName;
+  @override
+  final DateTime? visitDate;
 
   /// 数据库存储的 Tag IDs (JSON List from DB)
   final List<String> _tagIds;
@@ -357,7 +389,7 @@ class _$MedicalImageImpl implements _MedicalImage {
 
   @override
   String toString() {
-    return 'MedicalImage(id: $id, recordId: $recordId, encryptionKey: $encryptionKey, thumbnailEncryptionKey: $thumbnailEncryptionKey, filePath: $filePath, thumbnailPath: $thumbnailPath, mimeType: $mimeType, fileSize: $fileSize, displayOrder: $displayOrder, width: $width, height: $height, createdAt: $createdAt, tagIds: $tagIds, tags: $tags)';
+    return 'MedicalImage(id: $id, recordId: $recordId, encryptionKey: $encryptionKey, thumbnailEncryptionKey: $thumbnailEncryptionKey, filePath: $filePath, thumbnailPath: $thumbnailPath, mimeType: $mimeType, fileSize: $fileSize, displayOrder: $displayOrder, width: $width, height: $height, createdAt: $createdAt, hospitalName: $hospitalName, visitDate: $visitDate, tagIds: $tagIds, tags: $tags)';
   }
 
   @override
@@ -386,6 +418,10 @@ class _$MedicalImageImpl implements _MedicalImage {
             (identical(other.height, height) || other.height == height) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
+            (identical(other.hospitalName, hospitalName) ||
+                other.hospitalName == hospitalName) &&
+            (identical(other.visitDate, visitDate) ||
+                other.visitDate == visitDate) &&
             const DeepCollectionEquality().equals(other._tagIds, _tagIds) &&
             const DeepCollectionEquality().equals(other._tags, _tags));
   }
@@ -406,6 +442,8 @@ class _$MedicalImageImpl implements _MedicalImage {
       width,
       height,
       createdAt,
+      hospitalName,
+      visitDate,
       const DeepCollectionEquality().hash(_tagIds),
       const DeepCollectionEquality().hash(_tags));
 
@@ -439,6 +477,8 @@ abstract class _MedicalImage implements MedicalImage {
       final int? width,
       final int? height,
       required final DateTime createdAt,
+      final String? hospitalName,
+      final DateTime? visitDate,
       final List<String> tagIds,
       @JsonKey(includeFromJson: false, includeToJson: false)
       final List<Tag> tags}) = _$MedicalImageImpl;
@@ -470,6 +510,10 @@ abstract class _MedicalImage implements MedicalImage {
   int? get height;
   @override
   DateTime get createdAt;
+  @override
+  String? get hospitalName;
+  @override
+  DateTime? get visitDate;
 
   /// 数据库存储的 Tag IDs (JSON List from DB)
   @override

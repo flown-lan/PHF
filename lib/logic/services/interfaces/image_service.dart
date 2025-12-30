@@ -10,6 +10,7 @@
 /// ## Privacy Standards
 /// - 符合 `Constitution#I. Privacy`：原始位图 (Bitmap/Bytes) 处理完后必须立即从内存释放。
 /// - 符合 `Spec#T3.1`：所有临时转换文件必须执行 Secure Wipe。
+library;
 
 import 'dart:typed_data';
 

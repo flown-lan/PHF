@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:phf/data/models/image.dart';
-import 'package:phf/data/models/record.dart';
 import 'package:phf/data/repositories/image_repository.dart';
 import 'package:phf/data/repositories/tag_repository.dart';
 import 'package:phf/data/datasources/local/database_service.dart';
@@ -14,7 +13,6 @@ import 'package:mockito/mockito.dart';
 import 'package:path/path.dart' as p;
 import 'dart:io';
 
-import 'package:sqflite_common/sqflite.dart' show OpenDatabaseOptions; 
 import 'package:sqflite_common_ffi/sqflite_ffi.dart' show sqfliteFfiInit, databaseFactoryFfi;
 // Import the SAME package as the Source Code to ensure Type Compatibility
 import 'package:sqflite_sqlcipher/sqflite.dart'; 
@@ -53,11 +51,11 @@ class TestDatabaseService extends SQLCipherDatabaseService {
        options: OpenDatabaseOptions(
          version: 1,
          onCreate: (db, version) async {
-            await onCreate(db as Database, version);
+            await onCreate(db, version);
          }
        )
      );
-     _cachedDb = db as Database; 
+     _cachedDb = db; 
      return _cachedDb!;
   }
 }
@@ -102,7 +100,9 @@ void main() {
 
     // 4. Create Image with Tags
     final img = MedicalImage(
-      id: 'i1', recordId: 'r1', encryptionKey: 'k', filePath: 'p', thumbnailPath: 't', 
+      id: 'i1', recordId: 'r1', encryptionKey: 'k', 
+      thumbnailEncryptionKey: 'tk',
+      filePath: 'p', thumbnailPath: 't', 
       createdAt: DateTime.now(),
       tagIds: ['t1', 't2']
     );

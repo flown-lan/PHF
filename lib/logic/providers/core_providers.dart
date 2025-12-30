@@ -3,6 +3,7 @@
 /// ## Description
 /// 全局核心服务的依赖注入定义。
 /// 使用 `riverpod_annotation` 生成 Provider。
+library;
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../core/security/file_security_helper.dart';
@@ -113,5 +114,5 @@ ITagRepository tagRepository(TagRepositoryRef ref) {
 @riverpod
 Future<List<Tag>> allTags(AllTagsRef ref) async {
   final repo = ref.watch(tagRepositoryProvider);
-  return await repo.getAllTags();
+  return repo.getAllTags();
 }

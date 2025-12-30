@@ -12,6 +12,7 @@
 /// ## Security
 /// - PIN 码明文仅在内存短暂存在，不落盘。
 /// - 只有 Hash 值被持久化。
+library;
 
 import 'dart:convert';
 import 'package:crypto/crypto.dart';

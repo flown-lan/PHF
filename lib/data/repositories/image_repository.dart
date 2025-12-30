@@ -11,10 +11,10 @@
 ///   1. 更新 `image_tags` 关联表。
 ///   2. 聚合查询该 Image 所属 Record 下的所有 Image 的所有 Tag。
 ///   3. 更新 `records.tags_cache` 字段，确保列表页查询性能。
+library;
 
 import 'dart:convert';
 import 'package:sqflite_sqlcipher/sqflite.dart';
-import '../../data/datasources/local/database_service.dart';
 import '../../data/models/image.dart';
 import 'base_repository.dart';
 import 'interfaces/image_repository.dart';

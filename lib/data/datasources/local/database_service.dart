@@ -21,11 +21,11 @@
 /// - `hospitals`: 医院数据
 /// - `app_meta`: 应用元数据
 /// - `ocr_search_index`: FTS5 全文索引
+library;
 
 import 'dart:convert';
 import 'package:flutter/foundation.dart'; // for visibleForTesting
 import 'package:sqflite_sqlcipher/sqflite.dart';
-import 'package:path/path.dart' as p;
 import '../../../core/security/master_key_manager.dart';
 import '../../../core/services/path_provider_service.dart';
 import 'seeds/database_seeder.dart';
@@ -38,6 +38,7 @@ class SQLCipherDatabaseService {
   final PathProviderService pathService;
 
   Database? _database;
+  Future<Database>? _initFuture;
 
   SQLCipherDatabaseService({
     required this.keyManager,
@@ -49,8 +50,19 @@ class SQLCipherDatabaseService {
   /// 如果尚未初始化，将触发初始化流程。
   Future<Database> get database async {
     if (_database != null) return _database!;
-    _database = await _initDatabase();
-    return _database!;
+    
+    // 如果已经在初始化中，等待同一个 Future
+    if (_initFuture != null) return _initFuture!;
+
+    _initFuture = _initDatabase();
+    try {
+      _database = await _initFuture;
+      return _database!;
+    } finally {
+      // 无论成功失败，初始化流程已结束，但如果成功了 _database 就不是 null 了
+      // 如果失败了，下次调用可以重试
+      _initFuture = null;
+    }
   }
 
   /// 关闭数据库连接
@@ -63,25 +75,17 @@ class SQLCipherDatabaseService {
 
   Future<Database> _initDatabase() async {
     final dbPath = pathService.getDatabasePath(_dbName);
-    print('SQLCipherDatabaseService: Init DB at $dbPath');
-    
     // 从安全存储获取 Master Key
-    print('SQLCipherDatabaseService: Getting Master Key...');
     final rawKey = await keyManager.getMasterKey();
-    print('SQLCipherDatabaseService: Master Key acquired.');
     final password = base64Encode(rawKey);
 
-    print('SQLCipherDatabaseService: Opening database (version $_dbVersion)...');
-    return await openDatabase(
+    return openDatabase(
       dbPath,
       version: _dbVersion,
       password: password,
       onConfigure: _onConfigure,
       onCreate: onCreate,
       onUpgrade: _onUpgrade,
-      onOpen: (db) {
-        print('SQLCipherDatabaseService: Database Opened Successfully.');
-      },
     );
   }
 

@@ -157,4 +157,23 @@ class MockIImageRepository extends _i1.Mock implements _i5.IImageRepository {
         returnValue: _i3.Future<void>.value(),
         returnValueForMissingStub: _i3.Future<void>.value(),
       ) as _i3.Future<void>);
+
+  @override
+  _i3.Future<void> updateImageMetadata(
+    String? imageId, {
+    String? hospitalName,
+    DateTime? visitDate,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #updateImageMetadata,
+          [imageId],
+          {
+            #hospitalName: hospitalName,
+            #visitDate: visitDate,
+          },
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 }

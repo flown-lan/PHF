@@ -14,8 +14,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../../data/models/image.dart';
 import '../../data/models/record.dart';
-import '../../data/models/tag.dart';
-import '../../logic/providers/core_providers.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_card.dart';
 import '../widgets/secure_image.dart';
@@ -130,8 +128,8 @@ class EventCard extends ConsumerWidget {
     final List<MedicalImage> displayImages = images.take(displayCount).toList();
 
     return LayoutBuilder(builder: (context, constraints) {
-      final double spacing = 4.0;
-      final int crossAxisCount = 3;
+      const double spacing = 4.0;
+      const int crossAxisCount = 3;
       final double itemSize = (constraints.maxWidth - (crossAxisCount - 1) * spacing) / crossAxisCount;
 
       return Wrap(

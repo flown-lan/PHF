@@ -12,6 +12,7 @@
 /// final helper = FileSecurityHelper(cryptoService: service);
 /// final result = await helper.encryptMedia(sourceFile, targetDir: '/path/to/sandbox/images');
 /// ```
+library;
 
 import 'dart:convert';
 import 'dart:io';

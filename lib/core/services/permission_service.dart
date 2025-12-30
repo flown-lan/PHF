@@ -10,6 +10,7 @@
 /// ## Handling
 /// - 在 Android 上，`photos` 权限对应 `storage` 或 `photos` (API 33+)。
 /// - 在 iOS 上，需要对应的 `Info.plist` 配置。
+library;
 
 import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
