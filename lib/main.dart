@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'presentation/theme/app_theme.dart';
+import 'presentation/pages/home/home_page.dart';
 
 void main() {
   runApp(
@@ -9,7 +10,10 @@ void main() {
         title: 'PaperHealth',
         theme: AppTheme.lightTheme,
         debugShowCheckedModeBanner: false,
-        home: Scaffold(body: const Center(child: Text('PHF'))),
+        home: const HomePage(),
+        routes: {
+          '/home': (context) => const HomePage(),
+        },
       ),
     ),
   );

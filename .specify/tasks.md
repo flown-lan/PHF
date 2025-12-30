@@ -157,11 +157,11 @@
 - [x] **Review**: 审查安全提示语是否足够醒目。
 - [x] **Commit**: `feat(ui): implement application lock setup and onboarding experience`
 
-### T15: 首页 Timeline 与 详情解密展示 UI [高]
-- [ ] **Implement**: 完成首页 Timeline 列表及详情页。集成解密引擎大图浏览。 (Ref: Phase 1 Goal)
-- [ ] **Document**: 记录详情页在大图关闭后的内存回收流程。
-- [ ] **Test**: 物理测试流畅度，针对 10 张大图的快速切换执行内存检查 (DoD-T3.3)。
-- [ ] **Review**: 确保解密大图仅存在于内存，不进入任何公开临时目录。
-- [ ] **Commit**: `feat(ui): finalize timeline and detail view with full decryption pipeline`
+### T15: 首页 Timeline 与 详情解密展示 UI [x]
+- [x] **Implement**: 完成首页 Timeline 列表及详情页。集成解密引擎大图浏览。 (Ref: Phase 1 Goal)
+- [x] **Document**: 记录详情页在大图关闭后的内存回收流程。
+- [x] **Test**: 物理测试流畅度，针对 10 张大图的快速切换执行内存检查 (DoD-T3.3).
+- [x] **Review**: 确保解密大图仅存在于内存，不进入任何公开临时目录。
+- [x] **Commit**: `feat(ui): finalize timeline and detail view with full decryption pipeline`
 
 ---

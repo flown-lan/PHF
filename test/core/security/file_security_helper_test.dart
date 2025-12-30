@@ -1,85 +1,72 @@
+
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:phf/core/security/file_security_helper.dart';
 import 'package:phf/logic/services/interfaces/crypto_service.dart';
-import 'package:uuid/uuid.dart';
 
-@GenerateNiceMocks([MockSpec<ICryptoService>(), MockSpec<Uuid>()])
 import 'file_security_helper_test.mocks.dart';
 
+@GenerateNiceMocks([MockSpec<ICryptoService>()])
 void main() {
   late MockICryptoService mockCryptoService;
-  late MockUuid mockUuid;
   late FileSecurityHelper helper;
+  late Directory tempDir;
 
-  setUp(() {
+  setUp(() async {
     mockCryptoService = MockICryptoService();
-    mockUuid = MockUuid();
-    helper = FileSecurityHelper(
-      cryptoService: mockCryptoService,
-      uuid: mockUuid,
-    );
+    helper = FileSecurityHelper(cryptoService: mockCryptoService);
+    tempDir = await Directory.systemTemp.createTemp('phf_test_');
+  });
+
+  tearDown(() async {
+    if (await tempDir.exists()) {
+      await tempDir.delete(recursive: true);
+    }
   });
 
   group('FileSecurityHelper', () {
-    test('encryptMedia orchestrates key and file ops', () async {
+    test('decryptDataFromFile should decrypt content correctly', () async {
       // Arrange
-      final sourceFile = File('/tmp/source.jpg');
-      final targetDir = '/sandbox/images';
-      final rawKey = Uint8List.fromList([1, 2, 3]);
-      
-      when(mockCryptoService.generateRandomKey()).thenReturn(rawKey);
-      when(mockUuid.v4()).thenReturn('test-uuid');
+      final fakeContent = Uint8List.fromList([1, 2, 3, 4]);
+      final fakeEncrypted = Uint8List.fromList([9, 9, 9]); // Dummy encrypted
+      final fakeKeyBytes = Uint8List.fromList(List.filled(32, 1));
+      final fakeKeyBase64 = base64Encode(fakeKeyBytes);
+      final filename = 'test_enc.enc';
+      final encFile = File('${tempDir.path}/$filename');
+
+      // Write "encrypted" data to disk
+      await encFile.writeAsBytes(fakeEncrypted);
+
+      // Mock Crypto Service
+      when(mockCryptoService.decrypt(
+        encryptedData: anyNamed('encryptedData'),
+        key: anyNamed('key'),
+      )).thenAnswer((_) async => fakeContent);
 
       // Act
-      final result = await helper.encryptMedia(
-        sourceFile,
-        targetDir: targetDir,
-      );
+      final result = await helper.decryptDataFromFile(encFile.path, fakeKeyBase64);
 
       // Assert
-      // 1. Check Key Encoding
-      expect(result.base64Key, base64Encode(rawKey));
-      
-      // 2. Check Path Generation
-      expect(result.relativePath, 'test-uuid.enc');
-      
-      // 3. Verify delegate call
-      verify(mockCryptoService.encryptFile(
-        sourcePath: sourceFile.path,
-        destPath: '$targetDir/test-uuid.enc', 
-        key: rawKey,
+      expect(result, fakeContent);
+      verify(mockCryptoService.decrypt(
+        encryptedData: fakeEncrypted, 
+        key: argThat(equals(fakeKeyBytes), named: 'key')
       )).called(1);
     });
 
-    test('decryptToTemp orchestrates decryption', () async {
-      // Arrange
-      final encryptedPath = '/sandbox/images/abc.enc';
-      final rawKey = Uint8List.fromList([4, 5, 6]);
-      final base64Key = base64Encode(rawKey);
-      final tempDir = '/tmp/cache';
-      
-      when(mockUuid.v4()).thenReturn('temp-uuid');
+    test('decryptDataFromFile should throw FileNotFoundException if file missing', () async {
+      final fakeKeyBase64 = base64Encode(Uint8List(32));
+      final missingPath = '${tempDir.path}/missing.enc';
 
-      // Act
-      final file = await helper.decryptToTemp(
-        encryptedPath,
-        base64Key,
-        tempDir: tempDir,
+      expect(
+        () => helper.decryptDataFromFile(missingPath, fakeKeyBase64),
+        throwsA(isA<FileNotFoundException>()),
       );
-
-      // Assert
-      expect(file.path, '$tempDir/temp-uuid.tmp');
-      
-      verify(mockCryptoService.decryptFile(
-        sourcePath: encryptedPath,
-        destPath: '$tempDir/temp-uuid.tmp',
-        key: rawKey,
-      )).called(1);
     });
   });
 }

@@ -79,6 +79,19 @@ class MockMasterKeyManager extends _i1.Mock implements _i3.MasterKeyManager {
 class MockPathProviderService extends _i1.Mock
     implements _i6.PathProviderService {
   @override
+  String get sandboxRoot => (super.noSuchMethod(
+        Invocation.getter(#sandboxRoot),
+        returnValue: _i7.dummyValue<String>(
+          this,
+          Invocation.getter(#sandboxRoot),
+        ),
+        returnValueForMissingStub: _i7.dummyValue<String>(
+          this,
+          Invocation.getter(#sandboxRoot),
+        ),
+      ) as String);
+
+  @override
   String get dbDirPath => (super.noSuchMethod(
         Invocation.getter(#dbDirPath),
         returnValue: _i7.dummyValue<String>(

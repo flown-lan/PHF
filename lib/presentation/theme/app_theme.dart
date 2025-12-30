@@ -32,12 +32,26 @@ class AppTheme {
   static const Color textBlack = Color(0xFF1C1C1E);
   static const Color textGrey = Color(0xFF8E8E93);
 
+  // Aliases for new UI Kit
+  static const Color primary = primaryTeal;
+  static const Color primaryLight = Color(0xFF4DB6AC); // Teal 300
+  static const Color bgGray = bgGrey;
+  static const Color textPrimary = textBlack;
+  static const Color textSecondary = Color(0xFF666666);
+  static const Color textHint = textGrey;
+
   // --- Radii ---
   static const double radiusCard = 12.0;
   static const double radiusButton = 8.0;
 
   // --- Typography ---
   static const String fontPool = 'Inconsolata'; 
+
+  static const TextStyle monoStyle = TextStyle(
+    fontFamily: fontPool,
+    fontSize: 14,
+    color: textBlack,
+  ); 
 
   static ThemeData get lightTheme {
     return ThemeData(

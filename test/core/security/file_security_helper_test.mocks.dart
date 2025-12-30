@@ -3,15 +3,11 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i5;
-import 'dart:typed_data' as _i4;
+import 'dart:async' as _i4;
+import 'dart:typed_data' as _i3;
 
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i8;
-import 'package:phf/logic/services/interfaces/crypto_service.dart' as _i3;
-import 'package:uuid/data.dart' as _i7;
-import 'package:uuid/uuid.dart' as _i6;
-import 'package:uuid/uuid_value.dart' as _i2;
+import 'package:phf/logic/services/interfaces/crypto_service.dart' as _i2;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -27,35 +23,25 @@ import 'package:uuid/uuid_value.dart' as _i2;
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
 
-class _FakeUuidValue_0 extends _i1.SmartFake implements _i2.UuidValue {
-  _FakeUuidValue_0(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
-}
-
 /// A class which mocks [ICryptoService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockICryptoService extends _i1.Mock implements _i3.ICryptoService {
+class MockICryptoService extends _i1.Mock implements _i2.ICryptoService {
   @override
-  _i4.Uint8List generateRandomKey() => (super.noSuchMethod(
+  _i3.Uint8List generateRandomKey() => (super.noSuchMethod(
         Invocation.method(
           #generateRandomKey,
           [],
         ),
-        returnValue: _i4.Uint8List(0),
-        returnValueForMissingStub: _i4.Uint8List(0),
-      ) as _i4.Uint8List);
+        returnValue: _i3.Uint8List(0),
+        returnValueForMissingStub: _i3.Uint8List(0),
+      ) as _i3.Uint8List);
 
   @override
-  _i5.Future<_i4.Uint8List> encrypt({
-    required _i4.Uint8List? data,
-    required _i4.Uint8List? key,
-    _i4.Uint8List? associatedData,
+  _i4.Future<_i3.Uint8List> encrypt({
+    required _i3.Uint8List? data,
+    required _i3.Uint8List? key,
+    _i3.Uint8List? associatedData,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -67,16 +53,16 @@ class MockICryptoService extends _i1.Mock implements _i3.ICryptoService {
             #associatedData: associatedData,
           },
         ),
-        returnValue: _i5.Future<_i4.Uint8List>.value(_i4.Uint8List(0)),
+        returnValue: _i4.Future<_i3.Uint8List>.value(_i3.Uint8List(0)),
         returnValueForMissingStub:
-            _i5.Future<_i4.Uint8List>.value(_i4.Uint8List(0)),
-      ) as _i5.Future<_i4.Uint8List>);
+            _i4.Future<_i3.Uint8List>.value(_i3.Uint8List(0)),
+      ) as _i4.Future<_i3.Uint8List>);
 
   @override
-  _i5.Future<_i4.Uint8List> decrypt({
-    required _i4.Uint8List? encryptedData,
-    required _i4.Uint8List? key,
-    _i4.Uint8List? associatedData,
+  _i4.Future<_i3.Uint8List> decrypt({
+    required _i3.Uint8List? encryptedData,
+    required _i3.Uint8List? key,
+    _i3.Uint8List? associatedData,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -88,16 +74,16 @@ class MockICryptoService extends _i1.Mock implements _i3.ICryptoService {
             #associatedData: associatedData,
           },
         ),
-        returnValue: _i5.Future<_i4.Uint8List>.value(_i4.Uint8List(0)),
+        returnValue: _i4.Future<_i3.Uint8List>.value(_i3.Uint8List(0)),
         returnValueForMissingStub:
-            _i5.Future<_i4.Uint8List>.value(_i4.Uint8List(0)),
-      ) as _i5.Future<_i4.Uint8List>);
+            _i4.Future<_i3.Uint8List>.value(_i3.Uint8List(0)),
+      ) as _i4.Future<_i3.Uint8List>);
 
   @override
-  _i5.Future<void> encryptFile({
+  _i4.Future<void> encryptFile({
     required String? sourcePath,
     required String? destPath,
-    required _i4.Uint8List? key,
+    required _i3.Uint8List? key,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -109,15 +95,15 @@ class MockICryptoService extends _i1.Mock implements _i3.ICryptoService {
             #key: key,
           },
         ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
 
   @override
-  _i5.Future<void> decryptFile({
+  _i4.Future<void> decryptFile({
     required String? sourcePath,
     required String? destPath,
-    required _i4.Uint8List? key,
+    required _i3.Uint8List? key,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -129,607 +115,7 @@ class MockICryptoService extends _i1.Mock implements _i3.ICryptoService {
             #key: key,
           },
         ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
-}
-
-/// A class which mocks [Uuid].
-///
-/// See the documentation for Mockito's code generation for more information.
-class MockUuid extends _i1.Mock implements _i6.Uuid {
-  @override
-  String v1({
-    Map<String, dynamic>? options,
-    _i7.V1Options? config,
-  }) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #v1,
-          [],
-          {
-            #options: options,
-            #config: config,
-          },
-        ),
-        returnValue: _i8.dummyValue<String>(
-          this,
-          Invocation.method(
-            #v1,
-            [],
-            {
-              #options: options,
-              #config: config,
-            },
-          ),
-        ),
-        returnValueForMissingStub: _i8.dummyValue<String>(
-          this,
-          Invocation.method(
-            #v1,
-            [],
-            {
-              #options: options,
-              #config: config,
-            },
-          ),
-        ),
-      ) as String);
-
-  @override
-  List<int> v1buffer(
-    List<int>? buffer, {
-    Map<String, dynamic>? options,
-    _i7.V1Options? config,
-    int? offset = 0,
-  }) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #v1buffer,
-          [buffer],
-          {
-            #options: options,
-            #config: config,
-            #offset: offset,
-          },
-        ),
-        returnValue: <int>[],
-        returnValueForMissingStub: <int>[],
-      ) as List<int>);
-
-  @override
-  _i2.UuidValue v1obj({
-    Map<String, dynamic>? options,
-    _i7.V1Options? config,
-  }) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #v1obj,
-          [],
-          {
-            #options: options,
-            #config: config,
-          },
-        ),
-        returnValue: _FakeUuidValue_0(
-          this,
-          Invocation.method(
-            #v1obj,
-            [],
-            {
-              #options: options,
-              #config: config,
-            },
-          ),
-        ),
-        returnValueForMissingStub: _FakeUuidValue_0(
-          this,
-          Invocation.method(
-            #v1obj,
-            [],
-            {
-              #options: options,
-              #config: config,
-            },
-          ),
-        ),
-      ) as _i2.UuidValue);
-
-  @override
-  String v4({
-    Map<String, dynamic>? options,
-    _i7.V4Options? config,
-  }) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #v4,
-          [],
-          {
-            #options: options,
-            #config: config,
-          },
-        ),
-        returnValue: _i8.dummyValue<String>(
-          this,
-          Invocation.method(
-            #v4,
-            [],
-            {
-              #options: options,
-              #config: config,
-            },
-          ),
-        ),
-        returnValueForMissingStub: _i8.dummyValue<String>(
-          this,
-          Invocation.method(
-            #v4,
-            [],
-            {
-              #options: options,
-              #config: config,
-            },
-          ),
-        ),
-      ) as String);
-
-  @override
-  List<int> v4buffer(
-    List<int>? buffer, {
-    Map<String, dynamic>? options,
-    _i7.V4Options? config,
-    int? offset = 0,
-  }) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #v4buffer,
-          [buffer],
-          {
-            #options: options,
-            #config: config,
-            #offset: offset,
-          },
-        ),
-        returnValue: <int>[],
-        returnValueForMissingStub: <int>[],
-      ) as List<int>);
-
-  @override
-  _i2.UuidValue v4obj({
-    Map<String, dynamic>? options,
-    _i7.V4Options? config,
-  }) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #v4obj,
-          [],
-          {
-            #options: options,
-            #config: config,
-          },
-        ),
-        returnValue: _FakeUuidValue_0(
-          this,
-          Invocation.method(
-            #v4obj,
-            [],
-            {
-              #options: options,
-              #config: config,
-            },
-          ),
-        ),
-        returnValueForMissingStub: _FakeUuidValue_0(
-          this,
-          Invocation.method(
-            #v4obj,
-            [],
-            {
-              #options: options,
-              #config: config,
-            },
-          ),
-        ),
-      ) as _i2.UuidValue);
-
-  @override
-  String v5(
-    String? namespace,
-    String? name, {
-    Map<String, dynamic>? options,
-    _i7.V5Options? config,
-  }) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #v5,
-          [
-            namespace,
-            name,
-          ],
-          {
-            #options: options,
-            #config: config,
-          },
-        ),
-        returnValue: _i8.dummyValue<String>(
-          this,
-          Invocation.method(
-            #v5,
-            [
-              namespace,
-              name,
-            ],
-            {
-              #options: options,
-              #config: config,
-            },
-          ),
-        ),
-        returnValueForMissingStub: _i8.dummyValue<String>(
-          this,
-          Invocation.method(
-            #v5,
-            [
-              namespace,
-              name,
-            ],
-            {
-              #options: options,
-              #config: config,
-            },
-          ),
-        ),
-      ) as String);
-
-  @override
-  List<int> v5buffer(
-    String? namespace,
-    String? name,
-    List<int>? buffer, {
-    Map<String, dynamic>? options,
-    _i7.V5Options? config,
-    int? offset = 0,
-  }) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #v5buffer,
-          [
-            namespace,
-            name,
-            buffer,
-          ],
-          {
-            #options: options,
-            #config: config,
-            #offset: offset,
-          },
-        ),
-        returnValue: <int>[],
-        returnValueForMissingStub: <int>[],
-      ) as List<int>);
-
-  @override
-  _i2.UuidValue v5obj(
-    String? namespace,
-    String? name, {
-    Map<String, dynamic>? options,
-    _i7.V5Options? config,
-  }) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #v5obj,
-          [
-            namespace,
-            name,
-          ],
-          {
-            #options: options,
-            #config: config,
-          },
-        ),
-        returnValue: _FakeUuidValue_0(
-          this,
-          Invocation.method(
-            #v5obj,
-            [
-              namespace,
-              name,
-            ],
-            {
-              #options: options,
-              #config: config,
-            },
-          ),
-        ),
-        returnValueForMissingStub: _FakeUuidValue_0(
-          this,
-          Invocation.method(
-            #v5obj,
-            [
-              namespace,
-              name,
-            ],
-            {
-              #options: options,
-              #config: config,
-            },
-          ),
-        ),
-      ) as _i2.UuidValue);
-
-  @override
-  String v6({_i7.V6Options? config}) => (super.noSuchMethod(
-        Invocation.method(
-          #v6,
-          [],
-          {#config: config},
-        ),
-        returnValue: _i8.dummyValue<String>(
-          this,
-          Invocation.method(
-            #v6,
-            [],
-            {#config: config},
-          ),
-        ),
-        returnValueForMissingStub: _i8.dummyValue<String>(
-          this,
-          Invocation.method(
-            #v6,
-            [],
-            {#config: config},
-          ),
-        ),
-      ) as String);
-
-  @override
-  List<int> v6buffer(
-    List<int>? buffer, {
-    _i7.V6Options? config,
-    int? offset = 0,
-  }) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #v6buffer,
-          [buffer],
-          {
-            #config: config,
-            #offset: offset,
-          },
-        ),
-        returnValue: <int>[],
-        returnValueForMissingStub: <int>[],
-      ) as List<int>);
-
-  @override
-  _i2.UuidValue v6obj({_i7.V6Options? config}) => (super.noSuchMethod(
-        Invocation.method(
-          #v6obj,
-          [],
-          {#config: config},
-        ),
-        returnValue: _FakeUuidValue_0(
-          this,
-          Invocation.method(
-            #v6obj,
-            [],
-            {#config: config},
-          ),
-        ),
-        returnValueForMissingStub: _FakeUuidValue_0(
-          this,
-          Invocation.method(
-            #v6obj,
-            [],
-            {#config: config},
-          ),
-        ),
-      ) as _i2.UuidValue);
-
-  @override
-  String v7({_i7.V7Options? config}) => (super.noSuchMethod(
-        Invocation.method(
-          #v7,
-          [],
-          {#config: config},
-        ),
-        returnValue: _i8.dummyValue<String>(
-          this,
-          Invocation.method(
-            #v7,
-            [],
-            {#config: config},
-          ),
-        ),
-        returnValueForMissingStub: _i8.dummyValue<String>(
-          this,
-          Invocation.method(
-            #v7,
-            [],
-            {#config: config},
-          ),
-        ),
-      ) as String);
-
-  @override
-  List<int> v7buffer(
-    List<int>? buffer, {
-    _i7.V7Options? config,
-    int? offset = 0,
-  }) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #v7buffer,
-          [buffer],
-          {
-            #config: config,
-            #offset: offset,
-          },
-        ),
-        returnValue: <int>[],
-        returnValueForMissingStub: <int>[],
-      ) as List<int>);
-
-  @override
-  _i2.UuidValue v7obj({_i7.V7Options? config}) => (super.noSuchMethod(
-        Invocation.method(
-          #v7obj,
-          [],
-          {#config: config},
-        ),
-        returnValue: _FakeUuidValue_0(
-          this,
-          Invocation.method(
-            #v7obj,
-            [],
-            {#config: config},
-          ),
-        ),
-        returnValueForMissingStub: _FakeUuidValue_0(
-          this,
-          Invocation.method(
-            #v7obj,
-            [],
-            {#config: config},
-          ),
-        ),
-      ) as _i2.UuidValue);
-
-  @override
-  String v8({_i7.V8Options? config}) => (super.noSuchMethod(
-        Invocation.method(
-          #v8,
-          [],
-          {#config: config},
-        ),
-        returnValue: _i8.dummyValue<String>(
-          this,
-          Invocation.method(
-            #v8,
-            [],
-            {#config: config},
-          ),
-        ),
-        returnValueForMissingStub: _i8.dummyValue<String>(
-          this,
-          Invocation.method(
-            #v8,
-            [],
-            {#config: config},
-          ),
-        ),
-      ) as String);
-
-  @override
-  List<int> v8buffer(
-    List<int>? buffer, {
-    _i7.V8Options? config,
-    int? offset = 0,
-  }) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #v8buffer,
-          [buffer],
-          {
-            #config: config,
-            #offset: offset,
-          },
-        ),
-        returnValue: <int>[],
-        returnValueForMissingStub: <int>[],
-      ) as List<int>);
-
-  @override
-  _i2.UuidValue v8obj({_i7.V8Options? config}) => (super.noSuchMethod(
-        Invocation.method(
-          #v8obj,
-          [],
-          {#config: config},
-        ),
-        returnValue: _FakeUuidValue_0(
-          this,
-          Invocation.method(
-            #v8obj,
-            [],
-            {#config: config},
-          ),
-        ),
-        returnValueForMissingStub: _FakeUuidValue_0(
-          this,
-          Invocation.method(
-            #v8obj,
-            [],
-            {#config: config},
-          ),
-        ),
-      ) as _i2.UuidValue);
-
-  @override
-  String v8g({_i7.V8GenericOptions? config}) => (super.noSuchMethod(
-        Invocation.method(
-          #v8g,
-          [],
-          {#config: config},
-        ),
-        returnValue: _i8.dummyValue<String>(
-          this,
-          Invocation.method(
-            #v8g,
-            [],
-            {#config: config},
-          ),
-        ),
-        returnValueForMissingStub: _i8.dummyValue<String>(
-          this,
-          Invocation.method(
-            #v8g,
-            [],
-            {#config: config},
-          ),
-        ),
-      ) as String);
-
-  @override
-  List<int> v8gbuffer(
-    List<int>? buffer, {
-    _i7.V8GenericOptions? config,
-    int? offset = 0,
-  }) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #v8gbuffer,
-          [buffer],
-          {
-            #config: config,
-            #offset: offset,
-          },
-        ),
-        returnValue: <int>[],
-        returnValueForMissingStub: <int>[],
-      ) as List<int>);
-
-  @override
-  _i2.UuidValue v8gobj({_i7.V8GenericOptions? config}) => (super.noSuchMethod(
-        Invocation.method(
-          #v8gobj,
-          [],
-          {#config: config},
-        ),
-        returnValue: _FakeUuidValue_0(
-          this,
-          Invocation.method(
-            #v8gobj,
-            [],
-            {#config: config},
-          ),
-        ),
-        returnValueForMissingStub: _FakeUuidValue_0(
-          this,
-          Invocation.method(
-            #v8gobj,
-            [],
-            {#config: config},
-          ),
-        ),
-      ) as _i2.UuidValue);
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
 }

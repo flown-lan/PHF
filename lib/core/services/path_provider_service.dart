@@ -44,6 +44,11 @@ class PathProviderService {
     _isInitialized = true;
   }
 
+  String get sandboxRoot {
+    _checkInitialized();
+    return _appDocDir.path;
+  }
+
   String get dbDirPath {
     _checkInitialized();
     return _dbDir.path;

@@ -131,4 +131,32 @@ class FileSecurityHelper {
 
     return File(destPath);
   }
+
+  /// 直接解密文件到内存
+  ///
+  /// [path]: 加密文件的绝对路径。
+  /// [base64Key]: 对应的 Base64 密钥。
+  ///
+  /// Returns: 解密后的原始数据。
+  Future<Uint8List> decryptDataFromFile(String path, String base64Key) async {
+    final file = File(path);
+    if (!await file.exists()) {
+      throw FileNotFoundException(path);
+    }
+    
+    final encryptedData = await file.readAsBytes();
+    final keyBytes = base64Decode(base64Key);
+
+    return _cryptoService.decrypt(
+      encryptedData: encryptedData, 
+      key: keyBytes,
+    );
+  }
+}
+
+class FileNotFoundException implements Exception {
+  final String path;
+  FileNotFoundException(this.path);
+  @override
+  String toString() => 'FileNotFoundException: $path';
 }
