@@ -5,7 +5,7 @@
 /// 仅包含 0-9 数字键和退格键，无系统键盘调用。
 
 import 'package:flutter/material.dart';
-import '../../theme/app_theme.dart';
+import '../theme/app_theme.dart';
 
 class PinKeyboard extends StatelessWidget {
   final Function(String) onInput;

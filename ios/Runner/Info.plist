@@ -8,6 +8,8 @@
 	<string>我们需要访问您的相机以拍摄病历。</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>我们需要访问麦克风以录制视频。</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>我们需要使用 FaceID 以保护您的隐私数据安全。</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>

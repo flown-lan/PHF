@@ -46,7 +46,7 @@ class ActiveButton extends StatelessWidget {
         onPressed: (isLoading || onPressed == null) ? null : onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: bgColor,
-          disabledBackgroundColor: bgColor.withOpacity(0.5),
+          disabledBackgroundColor: bgColor.withValues(alpha: 0.5),
           disabledForegroundColor: Colors.white,
         ),
         child: isLoading

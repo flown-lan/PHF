@@ -15,10 +15,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../logic/providers/core_providers.dart';
-import '../../presentation/theme/app_theme.dart';
-import '../widgets/pin_keyboard.dart';
-import '../../logic/services/security_service.dart';
+import '../../../logic/providers/core_providers.dart';
+import '../../theme/app_theme.dart';
+import '../../widgets/pin_keyboard.dart';
 
 class SecurityOnboardingPage extends ConsumerStatefulWidget {
   const SecurityOnboardingPage({super.key});

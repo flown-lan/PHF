@@ -27,7 +27,7 @@ class SecurityIndicator extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppTheme.bgGrey,
         borderRadius: BorderRadius.circular(20), // Pill shape
-        border: Border.all(color: Colors.grey.withOpacity(0.2)),
+        border: Border.all(color: Colors.grey.withValues(alpha: 0.2)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,

@@ -11,6 +11,7 @@
 ///    3. 保存 Record。
 ///    4. 触发 Timeline 刷新。
 
+import 'package:image_picker/image_picker.dart';
 import 'dart:convert';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
@@ -46,18 +47,39 @@ class IngestionController extends _$IngestionController {
     try {
       final gallery = ref.read(galleryServiceProvider);
       final files = await gallery.pickImages();
-      if (files.isNotEmpty) {
-        state = state.copyWith(
-          rawImages: [...state.rawImages, ...files],
-          status: IngestionStatus.idle,
-        );
+      _addFiles(files);
+    } catch (e) {
+      _setError(e);
+    }
+  }
+
+  /// 拍照
+  Future<void> takePhoto() async {
+    try {
+      final picker = ImagePicker();
+      final XFile? photo = await picker.pickImage(source: ImageSource.camera);
+      if (photo != null) {
+        _addFiles([photo]);
       }
     } catch (e) {
+      _setError(e);
+    }
+  }
+
+  void _addFiles(List<XFile> files) {
+    if (files.isNotEmpty) {
       state = state.copyWith(
-        status: IngestionStatus.error,
-        errorMessage: e.toString(),
+        rawImages: [...state.rawImages, ...files],
+        status: IngestionStatus.idle,
       );
     }
+  }
+
+  void _setError(Object e) {
+    state = state.copyWith(
+      status: IngestionStatus.error,
+      errorMessage: e.toString(),
+    );
   }
 
   /// 移除选中的图片

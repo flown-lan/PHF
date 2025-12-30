@@ -136,8 +136,8 @@ class EventCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       decoration: BoxDecoration(
-        color: AppTheme.primaryLight.withOpacity(0.1),
-        border: Border.all(color: AppTheme.primaryLight.withOpacity(0.3)),
+        color: AppTheme.primaryLight.withValues(alpha: 0.1),
+        border: Border.all(color: AppTheme.primaryLight.withValues(alpha: 0.3)),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Text(

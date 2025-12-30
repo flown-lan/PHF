@@ -18,7 +18,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:phf/data/models/image.dart';
-import 'package:phf/presentation/theme/app_theme.dart';
 import 'secure_image.dart';
 
 class FullImageViewer extends StatefulWidget {

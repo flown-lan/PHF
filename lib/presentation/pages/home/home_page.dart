@@ -1,18 +1,19 @@
-/// # Home Page
-///
-/// ## Description
-/// 主页容器，包含底部导航栏 (BottomNavigationBar) 和主要的页面切换。
-///
-/// ## Tabs
-/// - **Timeline**: 浏览记录 (`TimelinePage`).
-/// - **Settings**: (Phase 2).
-///
-/// ## FAB
-/// - 只有在 Timeline Tab 显示悬浮按钮，用于录入新记录。
+// # Home Page
+//
+// Description
+// 主页容器，包含底部导航栏 (BottomNavigationBar) 和主要的页面切换。
+//
+// Tabs
+// - Timeline: 浏览记录 (TimelinePage).
+// - Settings: (Phase 2).
+//
+// FAB
+// - 只有在 Timeline Tab 显示悬浮按钮，用于录入新记录。
 
 import 'package:flutter/material.dart';
-import '../theme/app_theme.dart';
-import '../pages/timeline/timeline_page.dart';
+import '../../theme/app_theme.dart';
+import '../timeline/timeline_page.dart';
+import '../ingestion/ingestion_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -30,9 +31,8 @@ class _HomePageState extends State<HomePage> {
   ];
 
   void _onFabPressed() {
-    // TODO: Navigate to Ingestion Flow (Camera/Gallery)
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Start Ingestion Flow')),
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => const IngestionPage()),
     );
   }
 
