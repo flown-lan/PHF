@@ -143,19 +143,19 @@
 - [x] **Review**: 走查组件点击反馈是否优雅。
 - [x] **Commit**: `feat(ui): develop structural UI components (topbar, fab)`
 
-### T13.3 UI Kit Complex: EventCard 开发 [中]
-- [ ] **Implement**: 封装 `SecureImage` 异步解密展示组件。实现 `EventCard` 并集成 `SecureImage` 展示 Record 的首张缩略图，显示去重后的标签列表。 (Ref: Spec#4.1)
-- [ ] **Document**: 记录 `tags_cache` 在 UI 层的解析示例。
-- [ ] **Test**: 验证长标签列表下的布局稳定性。
-- [ ] **Review**: 走查解密过程中的 UI 占位图效果。
-- [ ] **Commit**: `feat(ui): implement complex EventCard with decrypted thumbnail support`
+### T13.3 UI Kit Complex: EventCard 开发 [x]
+- [x] **Implement**: 封装 `SecureImage` 异步解密展示组件。实现 `EventCard` 并集成 `SecureImage` 展示 Record 的首张缩略图，显示去重后的标签列表。 (Ref: Spec#4.1)
+- [x] **Document**: 记录 `tags_cache` 在 UI 层的解析示例。
+- [x] **Test**: 验证长标签列表下的布局稳定性。
+- [x] **Review**: 走查解密过程中的 UI 占位图效果。
+- [x] **Commit**: `feat(ui): implement complex EventCard with decrypted thumbnail support`
 
-### T14: 安全引导与应用锁界面 (T1.5) [中]
-- [ ] **Implement**: 实现 `SecurityOnboardingPage`。提供 Pin 码设置/指纹启用引导。 (Ref: Spec#FR-001)
-- [ ] **Document**: 设置流程的逻辑分支图。
-- [ ] **Test**: 验证设置完成后，逻辑标识（如 `has_lock = true`）被正确存入数据库。
-- [ ] **Review**: 审查安全提示语是否足够醒目。
-- [ ] **Commit**: `feat(ui): implement application lock setup and onboarding experience`
+### T14: 安全引导与应用锁界面 (T1.5) [x]
+- [x] **Implement**: 实现 `SecurityOnboardingPage`。提供 Pin 码设置/指纹启用引导。 (Ref: Spec#FR-001)
+- [x] **Document**: 设置流程的逻辑分支图。
+- [x] **Test**: 验证设置完成后，逻辑标识（如 `has_lock = true`）被正确存入数据库。
+- [x] **Review**: 审查安全提示语是否足够醒目。
+- [x] **Commit**: `feat(ui): implement application lock setup and onboarding experience`
 
 ### T15: 首页 Timeline 与 详情解密展示 UI [高]
 - [ ] **Implement**: 完成首页 Timeline 列表及详情页。集成解密引擎大图浏览。 (Ref: Phase 1 Goal)
