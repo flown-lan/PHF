@@ -14,7 +14,10 @@ import '../../data/repositories/image_repository.dart';
 import '../../data/repositories/interfaces/image_repository.dart';
 import '../../data/repositories/interfaces/record_repository.dart';
 import '../../data/repositories/record_repository.dart';
+import '../../data/repositories/app_meta_repository.dart';
 import '../services/crypto_service.dart';
+import '../services/security_service.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../services/gallery_import_service.dart';
 import '../services/image_processing_service.dart';
 import '../services/interfaces/crypto_service.dart';
@@ -82,4 +85,19 @@ ICryptoService cryptoService(CryptoServiceRef ref) {
 IImageRepository imageRepository(ImageRepositoryRef ref) {
   final db = ref.watch(databaseServiceProvider);
   return ImageRepository(db);
+}
+
+@Riverpod(keepAlive: true)
+AppMetaRepository appMetaRepository(AppMetaRepositoryRef ref) {
+  final db = ref.watch(databaseServiceProvider);
+  return AppMetaRepository(db);
+}
+
+@Riverpod(keepAlive: true)
+SecurityService securityService(SecurityServiceRef ref) {
+  final metaRepo = ref.watch(appMetaRepositoryProvider);
+  return SecurityService(
+    secureStorage: const FlutterSecureStorage(), 
+    metaRepo: metaRepo,
+  );
 }

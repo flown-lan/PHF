@@ -179,5 +179,39 @@ final imageRepositoryProvider = Provider<IImageRepository>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef ImageRepositoryRef = ProviderRef<IImageRepository>;
+String _$appMetaRepositoryHash() => r'b7350a9d504ae1286b1efe34d5623412ebd43a70';
+
+/// See also [appMetaRepository].
+@ProviderFor(appMetaRepository)
+final appMetaRepositoryProvider = Provider<AppMetaRepository>.internal(
+  appMetaRepository,
+  name: r'appMetaRepositoryProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$appMetaRepositoryHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef AppMetaRepositoryRef = ProviderRef<AppMetaRepository>;
+String _$securityServiceHash() => r'7fbe42273a94f0cc5bd8307cdf1eb314a0f3c7cc';
+
+/// See also [securityService].
+@ProviderFor(securityService)
+final securityServiceProvider = Provider<SecurityService>.internal(
+  securityService,
+  name: r'securityServiceProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$securityServiceHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef SecurityServiceRef = ProviderRef<SecurityService>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
