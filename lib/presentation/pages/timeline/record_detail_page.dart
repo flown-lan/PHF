@@ -9,6 +9,7 @@ import '../../../data/models/tag.dart';
 import '../../../logic/providers/core_providers.dart';
 import '../../../logic/providers/timeline_provider.dart';
 import '../../../logic/providers/logging_provider.dart';
+import '../../../logic/providers/ocr_status_provider.dart';
 import '../../../logic/services/background_worker_service.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/secure_image.dart';
@@ -213,6 +214,15 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    // 监听 OCR 任务，如果当前图片正在被识别且识别完成，自动刷新数据
+    ref.listen(ocrPendingCountProvider, (previous, next) {
+      if (previous != null && next.hasValue && previous.hasValue) {
+         if (previous.value! > 0 && next.value == 0) {
+            _loadData();
+         }
+      }
+    });
+
     if (_isLoading) return const Scaffold(body: Center(child: CircularProgressIndicator()));
     if (_record == null || _images.isEmpty) return const Scaffold(body: Center(child: Text('记录不存在')));
 

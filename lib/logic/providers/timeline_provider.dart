@@ -16,6 +16,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../data/models/record.dart';
 import 'core_providers.dart';
 import 'states/home_state.dart';
+import 'ocr_status_provider.dart';
 
 part 'timeline_provider.g.dart';
 
@@ -23,6 +24,19 @@ part 'timeline_provider.g.dart';
 class TimelineController extends _$TimelineController {
   @override
   FutureOr<HomeState> build() async {
+    // 监听 OCR 任务状态，当所有任务处理完（从 >0 到 0）时，自动刷新
+    ref.listen(ocrPendingCountProvider, (previous, next) {
+      if (previous != null && next.hasValue && previous.hasValue) {
+        final prevCount = previous.value!;
+        final nextCount = next.value!;
+        
+        // 任务处理完，或者有新结果入库（针对待确认横幅的实时性）
+        if ((prevCount > 0 && nextCount == 0) || (nextCount != prevCount)) {
+          refresh();
+        }
+      }
+    });
+
     return _fetchRecords();
   }
 

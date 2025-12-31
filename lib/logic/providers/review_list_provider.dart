@@ -1,6 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../data/models/record.dart';
 import 'core_providers.dart';
+import 'ocr_status_provider.dart';
 
 part 'review_list_provider.g.dart';
 
@@ -8,6 +9,15 @@ part 'review_list_provider.g.dart';
 class ReviewListController extends _$ReviewListController {
   @override
   FutureOr<List<MedicalRecord>> build() async {
+    // 监听 OCR 任务，当有任务完成时，刷新待确认列表
+    ref.listen(ocrPendingCountProvider, (previous, next) {
+      if (previous != null && next.hasValue && previous.hasValue) {
+        if (next.value != previous.value) {
+          refresh();
+        }
+      }
+    });
+
     return _fetchRecords();
   }
 

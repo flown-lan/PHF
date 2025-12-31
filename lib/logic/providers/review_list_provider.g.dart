@@ -34,7 +34,7 @@ final class ReviewListControllerProvider
 }
 
 String _$reviewListControllerHash() =>
-    r'5b4d50992c52f6c6c2ae1b670992930300879d3f';
+    r'5410fadf0a4590de2ab5c9b464f68b2d49443629';
 
 abstract class _$ReviewListController
     extends $AsyncNotifier<List<MedicalRecord>> {
