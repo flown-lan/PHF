@@ -18,6 +18,7 @@ import 'package:phf/presentation/theme/app_theme.dart';
 import 'package:phf/presentation/widgets/event_card.dart';
 import 'widgets/pending_review_banner.dart';
 import 'record_detail_page.dart';
+import '../review/review_list_page.dart';
 
 class TimelinePage extends ConsumerWidget {
   const TimelinePage({super.key});
@@ -69,9 +70,9 @@ class TimelinePage extends ConsumerWidget {
                     child: PendingReviewBanner(
                       count: homeState.pendingCount,
                       onTap: () {
-                        // TODO: Navigate to ReviewListPage in T20.2
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('跳转至待确认列表 (T20.2 待实现)')),
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => const ReviewListPage()),
                         );
                       },
                     ),

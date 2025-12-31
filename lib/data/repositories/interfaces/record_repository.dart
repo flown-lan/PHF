@@ -42,4 +42,7 @@ abstract class IRecordRepository {
 
   /// 获取待确认（review 状态）的记录数量
   Future<int> getPendingCount(String personId);
+
+  /// 获取待确认列表
+  Future<List<MedicalRecord>> getReviewRecords(String personId);
 }

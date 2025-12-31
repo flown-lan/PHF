@@ -244,6 +244,43 @@ class RecordRepository extends BaseRepository implements IRecordRepository {
     return Sqflite.firstIntValue(result) ?? 0;
   }
 
+  @override
+  Future<List<MedicalRecord>> getReviewRecords(String personId) async {
+    final db = await dbService.database;
+
+    final List<Map<String, dynamic>> maps = await db.query(
+      'records',
+      where: 'person_id = ? AND status = ?',
+      whereArgs: [personId, 'review'],
+      orderBy: 'created_at_ms DESC', // Pending reviews typically in entry order
+    );
+
+    if (maps.isEmpty) return [];
+
+    final recordIds = maps.map((m) => m['id'] as String).toList();
+
+    // Fetch Images for N+1 optimization
+    final String placeholders = List.filled(recordIds.length, '?').join(',');
+    final List<Map<String, dynamic>> imageMaps = await db.query(
+      'images',
+      where: 'record_id IN ($placeholders)',
+      whereArgs: recordIds,
+      orderBy: 'page_index ASC',
+    );
+
+    final Map<String, List<MedicalImage>> imagesByRecord = {};
+    for (var imgMap in imageMaps) {
+      final rid = imgMap['record_id'] as String;
+      imagesByRecord.putIfAbsent(rid, () => []);
+      imagesByRecord[rid]!.add(_mapToImage(imgMap));
+    }
+
+    return maps.map((m) {
+      final rid = m['id'] as String;
+      return _mapToRecord(m, imagesByRecord[rid] ?? []);
+    }).toList();
+  }
+
   // --- Helpers ---
 
   MedicalRecord _mapToRecord(Map<String, dynamic> row, List<MedicalImage> images) {

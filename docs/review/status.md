@@ -1,7 +1,7 @@
 # Project Review Status Summary
 
 **Last Updated**: 2025-12-31
-**Coverage**: T0 - T20.1 (Home Banner & State)
+**Coverage**: T0 - T20.2 (OCR Review UI)
 
 ##  Approved Features (Highlights)
 - **Security Core**: AES-256-GCM encryption (T5), secure key management (T4), and random IV/path management (T6).
@@ -14,7 +14,7 @@
   - **Timeline**: Simplified navigation (AppBar-only settings), 4-6 image grid preview, and optimized data loading.
   - **Ingestion**: Streamlined "Capture -> Preview -> Save" flow.
   - **Detail View**: Split-view layout with per-image metadata (Hospital, Date, Tags) support and in-place editing. Fully enhanced Tag Selector with highlighting and drag-sort.
-  - **OCR Home Banner (T20.1)**: Added `pendingCount` to `HomeState` and implemented "Pending Review" banner for OCR results.
+  - **OCR Integration (T20)**: "Pending Review" banner, `ReviewListPage` for batch processing, and `ReviewEditPage` with **OCR Text Highlighting**.
 - **Components**: `EventCard` and `SecureImage` (T13.3) for secure in-memory media rendering.
 - **OCR (Phase 2)**: `IOCRService` (T18.1), `AndroidOCRService` (T18.2), and `IOSOCRService` (T18.3) reviewed and refactored.
 - **Intelligence (Phase 2)**: `SmartExtractor` (T19.1) and `OCRProcessor` (T19.2) reviewed. Core extraction and background orchestration logic verified.
@@ -23,7 +23,7 @@
 
 ## 🟡 Pending Issues / Technical Debt
 - **T10: Physical Wiping**: Reliance on OS file deletion.
-- **Phase 2 OCR Integration**: Review & Search UI (T20.2-20.4) are pending.
+- **Phase 2 OCR Integration**: Search UI (T20.4) pending.
 
 ## 🔴 Blockers
 - None.
