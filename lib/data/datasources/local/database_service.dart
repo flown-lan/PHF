@@ -22,6 +22,11 @@
 /// - `app_meta`: 应用元数据
 /// - `ocr_search_index`: FTS5 全文索引
 /// - `ocr_queue`: OCR 任务队列
+///
+/// ## Fix Record
+/// - **2025-12-31**: 
+///   1. 补全 `_onUpgrade` 中 v6 版本对 `images` 表的字段扩展 (`ocr_text` 等)。
+///   2. 重构构造函数支持注入 `DatabaseFactory`，以便进行 FFI 单元测试。
 library;
 
 import 'dart:convert';
@@ -37,6 +42,7 @@ class SQLCipherDatabaseService {
 
   final MasterKeyManager keyManager;
   final PathProviderService pathService;
+  final DatabaseFactory? _dbFactory;
 
   Database? _database;
   Future<Database>? _initFuture;
@@ -44,7 +50,8 @@ class SQLCipherDatabaseService {
   SQLCipherDatabaseService({
     required this.keyManager,
     required this.pathService,
-  });
+    DatabaseFactory? dbFactory,
+  }) : _dbFactory = dbFactory;
 
   /// 获取数据库实例
   ///
@@ -79,6 +86,18 @@ class SQLCipherDatabaseService {
     // 从安全存储获取 Master Key
     final rawKey = await keyManager.getMasterKey();
     final password = base64Encode(rawKey);
+
+    if (_dbFactory != null) {
+      return _dbFactory!.openDatabase(
+        dbPath,
+        options: OpenDatabaseOptions(
+          version: _dbVersion,
+          onConfigure: _onConfigure,
+          onCreate: onCreate,
+          onUpgrade: _onUpgrade,
+        ),
+      );
+    }
 
     return openDatabase(
       dbPath,
@@ -329,10 +348,15 @@ class SQLCipherDatabaseService {
     if (oldVersion < 6) {
       // Upgrade to v6: Phase 2.1 Schema (OCR & Queue)
       
-      // 1. records table default (Note: SQLite doesn't support ALTER COLUMN SET DEFAULT)
-      // For existing records, we can update them to 'archived' if they don't have a status.
-      // But they should already have 'archived' from previous versions.
-      
+      // 1. Add OCR columns to images table
+      try {
+        await db.execute('ALTER TABLE images ADD COLUMN ocr_text TEXT');
+        await db.execute('ALTER TABLE images ADD COLUMN ocr_raw_json TEXT');
+        await db.execute('ALTER TABLE images ADD COLUMN ocr_confidence REAL');
+      } catch (_) {
+        // Ignore if columns already exist (e.g. partial upgrade)
+      }
+
       // 2. ocr_queue table
       batch.execute('''
         CREATE TABLE IF NOT EXISTS ocr_queue (

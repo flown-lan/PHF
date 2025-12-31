@@ -5,9 +5,13 @@
 ///
 /// ## Security
 /// - 所有操作在 SQL 事务架构下进行，确保队列一致性。
+///
+/// ## Fix Record
+/// - **2025-12-31**: 修复了缺少 `sqflite` 包引用导致的编译错误 (Undefined name 'Sqflite')。
 library;
 
 import 'package:uuid/uuid.dart';
+import 'package:sqflite_sqlcipher/sqflite.dart';
 import '../models/ocr_queue_item.dart';
 import 'base_repository.dart';
 import 'interfaces/ocr_queue_repository.dart';
