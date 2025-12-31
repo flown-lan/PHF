@@ -285,12 +285,19 @@ class RecordRepository extends BaseRepository implements IRecordRepository {
 
   MedicalRecord _mapToRecord(Map<String, dynamic> row, List<MedicalImage> images) {
     // 还原 DateTime
-    final notedAt = DateTime.fromMillisecondsSinceEpoch(row['visit_date_ms'] as int);
+    final visitDateMs = row['visit_date_ms'] as int?;
+    final createdAtMs = row['created_at_ms'] as int;
+    final updatedAtMs = row['updated_at_ms'] as int;
+
+    final notedAt = visitDateMs != null 
+        ? DateTime.fromMillisecondsSinceEpoch(visitDateMs)
+        : DateTime.fromMillisecondsSinceEpoch(createdAtMs); // Fallback to creation date
+
     final visitEndDate = row['visit_end_date_ms'] != null 
         ? DateTime.fromMillisecondsSinceEpoch(row['visit_end_date_ms'] as int) 
         : null;
-    final createdAt = DateTime.fromMillisecondsSinceEpoch(row['created_at_ms'] as int);
-    final updatedAt = DateTime.fromMillisecondsSinceEpoch(row['updated_at_ms'] as int);
+    final createdAt = DateTime.fromMillisecondsSinceEpoch(createdAtMs);
+    final updatedAt = DateTime.fromMillisecondsSinceEpoch(updatedAtMs);
     
     // 还原 Status
     final statusStr = row['status'] as String;

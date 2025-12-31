@@ -18,6 +18,7 @@ import 'package:uuid/uuid.dart';
 import '../../data/models/image.dart';
 import '../../data/models/record.dart';
 import '../services/background_worker_service.dart';
+import '../providers/logging_provider.dart';
 import 'core_providers.dart';
 import 'states/ingestion_state.dart';
 import 'timeline_provider.dart';
@@ -224,7 +225,9 @@ class IngestionController extends _$IngestionController {
       await BackgroundWorkerService().triggerProcessing();
       // Start foreground processing immediately (fire-and-forget)
       // ignore: unawaited_futures
-      BackgroundWorkerService().startForegroundProcessing();
+      BackgroundWorkerService().startForegroundProcessing(
+        talker: ref.read(talkerProvider),
+      );
       
       // 10. Refresh Timeline & Reset State
       ref.invalidate(timelineControllerProvider);

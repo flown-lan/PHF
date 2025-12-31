@@ -37,6 +37,8 @@ dependencies:
   local_auth: ^3.0.0
 
   path: any
+  talker_flutter: ^4.5.1
+  talker_riverpod_logger: ^4.3.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

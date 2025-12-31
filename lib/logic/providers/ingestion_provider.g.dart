@@ -7,7 +7,7 @@ part of 'ingestion_provider.dart';
 // **************************************************************************
 
 String _$ingestionControllerHash() =>
-    r'd5547bf3dd91f606bf29773fdf4295c73a46a0e4';
+    r'43fa2f98c11ccd196336c80243a5e5bfffc32846';
 
 /// See also [IngestionController].
 @ProviderFor(IngestionController)

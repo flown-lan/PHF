@@ -15,6 +15,7 @@ library;
 
 import 'package:flutter/foundation.dart';
 import 'package:workmanager/workmanager.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 // Imports for DI reconstruction
 import '../../core/security/master_key_manager.dart';
@@ -40,9 +41,10 @@ const String _uniqueWorkName = 'PHF_OCR_WORKER';
 @pragma('vm:entry-point')
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
+    final talker = TalkerFlutter.init();
     try {
       if (task == _ocrTaskName) {
-        print('[BackgroundWorker] Started');
+        talker.info('[BackgroundWorker] Started');
         
         // 1. Rebuild Dependencies
         final pathService = PathProviderService();
@@ -71,7 +73,7 @@ void callbackDispatcher() {
         } else if (defaultTargetPlatform == TargetPlatform.iOS) {
           ocrService = IOSOCRService();
         } else {
-           print('[BackgroundWorker] Unsupported platform for Background OCR');
+           talker.warning('[BackgroundWorker] Unsupported platform');
            return Future.value(true);
         }
 
@@ -83,6 +85,7 @@ void callbackDispatcher() {
           searchRepository: searchRepo,
           ocrService: ocrService,
           securityHelper: fileSecurityHelper,
+          talker: talker,
         );
 
         // 2. Process Queue
@@ -97,12 +100,12 @@ void callbackDispatcher() {
           if (hasMore) processedCount++;
         }
 
-        print('[BackgroundWorker] Finished. Processed: $processedCount');
+        talker.info('[BackgroundWorker] Finished. Processed: $processedCount');
       }
       return Future.value(true);
       
     } catch (err, stack) {
-      print('[BackgroundWorker] Error: $err\n$stack');
+      talker.handle(err, stack, '[BackgroundWorker] Global Error');
       // Return false to indicate failure (may trigger retry based on constraints)
       return Future.value(false); 
     }
@@ -114,7 +117,12 @@ class BackgroundWorkerService {
   factory BackgroundWorkerService() => _instance;
   BackgroundWorkerService._internal();
 
+  Talker? _talker;
   bool _isProcessing = false;
+
+  void setTalker(Talker talker) {
+    _talker = talker;
+  }
 
   /// 初始化 WorkManager
   Future<void> initialize() async {
@@ -124,16 +132,19 @@ class BackgroundWorkerService {
         callbackDispatcher,
         isInDebugMode: kDebugMode, // Debug shows notifications
       );
-      print('[BackgroundWorkerService] Initialized for ${defaultTargetPlatform.name}');
+      _talker?.info('[BackgroundWorkerService] Initialized for ${defaultTargetPlatform.name}');
     }
   }
 
   /// 启动前台处理循环 (iOS 重点，确保立即执行)
-  Future<void> startForegroundProcessing() async {
+  Future<void> startForegroundProcessing({Talker? talker}) async {
+    // Override talker if provided
+    if (talker != null) _talker = talker;
+    
     if (_isProcessing) return;
     _isProcessing = true;
     
-    print('[BackgroundWorkerService] Starting Foreground OCR Loop');
+    _talker?.info('[BackgroundWorkerService] Starting Foreground OCR Loop');
 
     try {
       // 1. Rebuild Dependencies (Same logic as background for consistency)
@@ -164,6 +175,7 @@ class BackgroundWorkerService {
         searchRepository: searchRepo,
         ocrService: ocrService,
         securityHelper: fileSecurityHelper,
+        talker: _talker,
       );
 
       // 2. Process all pending items
@@ -171,9 +183,9 @@ class BackgroundWorkerService {
       while (await processor.processNextItem()) {
         count++;
       }
-      print('[BackgroundWorkerService] Foreground OCR Finished. Processed: $count');
-    } catch (e) {
-      print('[BackgroundWorkerService] Foreground OCR Error: $e');
+      _talker?.info('[BackgroundWorkerService] Foreground OCR Finished. Processed: $count');
+    } catch (e, stack) {
+      _talker?.handle(e, stack, '[BackgroundWorkerService] Foreground OCR Error');
     } finally {
       _isProcessing = false;
     }

@@ -21,9 +21,8 @@
 library;
 
 import 'dart:convert';
-import 'dart:typed_data';
-
-import '../../data/models/ocr_queue_item.dart';
+import 'package:talker_flutter/talker_flutter.dart';
+import '../../data/models/ocr_result.dart';
 import '../../data/models/record.dart';
 import '../../data/repositories/interfaces/ocr_queue_repository.dart';
 import '../../data/repositories/interfaces/image_repository.dart';
@@ -40,6 +39,7 @@ class OCRProcessor {
   final ISearchRepository _searchRepository;
   final IOCRService _ocrService;
   final FileSecurityHelper _securityHelper;
+  final Talker? _talker;
 
   static const double _highConfidenceThreshold = 0.9;
 
@@ -50,12 +50,14 @@ class OCRProcessor {
     required ISearchRepository searchRepository,
     required IOCRService ocrService,
     required FileSecurityHelper securityHelper,
+    Talker? talker,
   })  : _queueRepository = queueRepository,
         _imageRepository = imageRepository,
         _recordRepository = recordRepository,
         _searchRepository = searchRepository,
         _ocrService = ocrService,
-        _securityHelper = securityHelper;
+        _securityHelper = securityHelper,
+        _talker = talker;
 
   /// 处理队列中的下一个任务
   /// 返回 true 表示处理了一个任务，false 表示队列为空或处理失败
@@ -63,7 +65,9 @@ class OCRProcessor {
     final item = await _queueRepository.dequeue();
     if (item == null) return false;
 
-    print('[OCRProcessor] Processing Task: ${item.id} for Image: ${item.imageId}');
+    final msg = 'Processing Task: ${item.id} for Image: ${item.imageId}';
+    _talker?.info('[OCRProcessor] $msg');
+    if (_talker == null) print('[OCRProcessor] $msg');
 
     // Make local vars nullable to allow clearing
     Uint8List? decryptedBytes;
@@ -94,7 +98,9 @@ class OCRProcessor {
       // 4. 智能提取 (FR-203)
       final extracted = SmartExtractor.extract(ocrResult.text, ocrResult.confidence);
       
-      print('[OCRProcessor] Extracted: date=${extracted.visitDate}, hospital=${extracted.hospitalName}, score=${extracted.confidenceScore}');
+      final info = 'Extracted: date=${extracted.visitDate}, hospital=${extracted.hospitalName}, score=${extracted.confidenceScore}';
+      _talker?.info('[OCRProcessor] $info');
+      if (_talker == null) print('[OCRProcessor] $info');
 
       // 5. 持久化数据
       // 5.1 更新 Image OCR 数据
@@ -156,11 +162,13 @@ class OCRProcessor {
       // 6. 标记任务完成
       await _queueRepository.updateStatus(item.id, OCRJobStatus.completed);
       
-      print('[OCRProcessor] Processing Completed: ${item.id}');
+      _talker?.info('[OCRProcessor] Processing Completed: ${item.id}');
+      if (_talker == null) print('[OCRProcessor] Processing Completed: ${item.id}');
       return true;
 
-    } catch (e) {
-      print('[OCRProcessor] Processing Failed: ${item.id}. Error: $e');
+    } catch (e, stack) {
+      _talker?.handle(e, stack, '[OCRProcessor] Processing Failed: ${item.id}');
+      if (_talker == null) print('[OCRProcessor] Processing Failed: ${item.id}. Error: $e');
       decryptedBytes = null; // Ensure clear on error
 
       await _queueRepository.updateStatus(
