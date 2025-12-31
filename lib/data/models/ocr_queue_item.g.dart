@@ -6,8 +6,8 @@ part of 'ocr_queue_item.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$OCRQueueItemImpl _$$OCRQueueItemImplFromJson(Map<String, dynamic> json) =>
-    _$OCRQueueItemImpl(
+_OCRQueueItem _$OCRQueueItemFromJson(Map<String, dynamic> json) =>
+    _OCRQueueItem(
       id: json['id'] as String,
       imageId: json['imageId'] as String,
       status: $enumDecodeNullable(_$OCRJobStatusEnumMap, json['status']) ??
@@ -18,7 +18,7 @@ _$OCRQueueItemImpl _$$OCRQueueItemImplFromJson(Map<String, dynamic> json) =>
       updatedAt: DateTime.parse(json['updatedAt'] as String),
     );
 
-Map<String, dynamic> _$$OCRQueueItemImplToJson(_$OCRQueueItemImpl instance) =>
+Map<String, dynamic> _$OCRQueueItemToJson(_OCRQueueItem instance) =>
     <String, dynamic>{
       'id': instance.id,
       'imageId': instance.imageId,

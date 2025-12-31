@@ -31,7 +31,7 @@ part 'image.freezed.dart';
 part 'image.g.dart';
 
 @freezed
-class MedicalImage with _$MedicalImage {
+abstract class MedicalImage with _$MedicalImage {
   const factory MedicalImage({
     required String id,
     required String recordId,

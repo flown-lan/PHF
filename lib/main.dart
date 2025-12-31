@@ -43,8 +43,8 @@ Future<void> main() async {
   }
 
   runApp(
-    ProviderScope(
-      parent: container,
+    UncontrolledProviderScope(
+      container: container,
       child: const PaperHealthApp(),
     ),
   );

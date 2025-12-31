@@ -12,6 +12,7 @@ import 'package:phf/data/repositories/interfaces/image_repository.dart';
 import 'package:phf/data/repositories/interfaces/ocr_queue_repository.dart';
 import 'package:phf/data/repositories/interfaces/record_repository.dart';
 import 'package:phf/data/repositories/interfaces/search_repository.dart';
+import 'package:phf/core/services/path_provider_service.dart';
 import 'package:phf/logic/services/interfaces/ocr_service.dart';
 import 'package:phf/logic/services/ocr_processor.dart';
 
@@ -24,6 +25,7 @@ import 'ocr_processor_test.mocks.dart';
   MockSpec<ISearchRepository>(),
   MockSpec<IOCRService>(),
   MockSpec<FileSecurityHelper>(),
+  MockSpec<PathProviderService>(),
 ])
 void main() {
   late MockIOCRQueueRepository mockQueueRepo;
@@ -32,6 +34,7 @@ void main() {
   late MockISearchRepository mockSearchRepo;
   late MockIOCRService mockOcrService;
   late MockFileSecurityHelper mockSecurityHelper;
+  late MockPathProviderService mockPathService;
   late OCRProcessor processor;
 
   setUp(() {
@@ -41,6 +44,7 @@ void main() {
     mockSearchRepo = MockISearchRepository();
     mockOcrService = MockIOCRService();
     mockSecurityHelper = MockFileSecurityHelper();
+    mockPathService = MockPathProviderService();
 
     processor = OCRProcessor(
       queueRepository: mockQueueRepo,
@@ -49,6 +53,7 @@ void main() {
       searchRepository: mockSearchRepo,
       ocrService: mockOcrService,
       securityHelper: mockSecurityHelper,
+      pathService: mockPathService,
     );
   });
 

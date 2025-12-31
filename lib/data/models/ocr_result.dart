@@ -19,7 +19,7 @@ part 'ocr_result.freezed.dart';
 part 'ocr_result.g.dart';
 
 @freezed
-class OCRBlock with _$OCRBlock {
+abstract class OCRBlock with _$OCRBlock {
   const factory OCRBlock({
     required String text,
     required double left,
@@ -32,7 +32,7 @@ class OCRBlock with _$OCRBlock {
 }
 
 @freezed
-class OCRResult with _$OCRResult {
+abstract class OCRResult with _$OCRResult {
   @JsonSerializable(explicitToJson: true)
   const factory OCRResult({
     required String text,

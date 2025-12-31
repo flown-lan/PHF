@@ -35,7 +35,7 @@ enum OCRJobStatus {
 }
 
 @freezed
-class OCRQueueItem with _$OCRQueueItem {
+abstract class OCRQueueItem with _$OCRQueueItem {
   const factory OCRQueueItem({
     required String id,
     required String imageId,

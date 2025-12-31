@@ -1,7 +1,7 @@
 import Flutter
 import UIKit
 import Vision
-import workmanager
+import workmanager_apple
 
 @main
 @objc class AppDelegate: FlutterAppDelegate {
@@ -26,7 +26,7 @@ import workmanager
     
     // 3. Register Background Task Identifier
     // Handled by WorkmanagerPlugin to route BGTask to Dart callback
-    WorkmanagerPlugin.registerTask(withIdentifier: "com.example.phf.ocr.processing_task")
+    WorkmanagerPlugin.registerBGProcessingTask(withIdentifier: "com.example.phf.ocr.processing_task")
       
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }

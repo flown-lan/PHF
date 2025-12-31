@@ -8,8 +8,10 @@ import 'dart:io' as _i4;
 import 'dart:typed_data' as _i15;
 
 import 'package:mockito/mockito.dart' as _i1;
+import 'package:mockito/src/dummies.dart' as _i18;
 import 'package:phf/core/security/encrypted_file_result.dart' as _i3;
 import 'package:phf/core/security/file_security_helper.dart' as _i16;
+import 'package:phf/core/services/path_provider_service.dart' as _i17;
 import 'package:phf/data/models/image.dart' as _i9;
 import 'package:phf/data/models/ocr_queue_item.dart' as _i7;
 import 'package:phf/data/models/ocr_result.dart' as _i2;
@@ -37,6 +39,7 @@ import 'package:phf/logic/services/interfaces/ocr_service.dart' as _i14;
 // ignore_for_file: unnecessary_parenthesis
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
+// ignore_for_file: invalid_use_of_internal_member
 
 class _FakeOCRResult_0 extends _i1.SmartFake implements _i2.OCRResult {
   _FakeOCRResult_0(
@@ -592,4 +595,127 @@ class MockFileSecurityHelper extends _i1.Mock
         returnValueForMissingStub:
             _i6.Future<_i15.Uint8List>.value(_i15.Uint8List(0)),
       ) as _i6.Future<_i15.Uint8List>);
+}
+
+/// A class which mocks [PathProviderService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockPathProviderService extends _i1.Mock
+    implements _i17.PathProviderService {
+  @override
+  String get sandboxRoot => (super.noSuchMethod(
+        Invocation.getter(#sandboxRoot),
+        returnValue: _i18.dummyValue<String>(
+          this,
+          Invocation.getter(#sandboxRoot),
+        ),
+        returnValueForMissingStub: _i18.dummyValue<String>(
+          this,
+          Invocation.getter(#sandboxRoot),
+        ),
+      ) as String);
+
+  @override
+  String get dbDirPath => (super.noSuchMethod(
+        Invocation.getter(#dbDirPath),
+        returnValue: _i18.dummyValue<String>(
+          this,
+          Invocation.getter(#dbDirPath),
+        ),
+        returnValueForMissingStub: _i18.dummyValue<String>(
+          this,
+          Invocation.getter(#dbDirPath),
+        ),
+      ) as String);
+
+  @override
+  String get imagesDirPath => (super.noSuchMethod(
+        Invocation.getter(#imagesDirPath),
+        returnValue: _i18.dummyValue<String>(
+          this,
+          Invocation.getter(#imagesDirPath),
+        ),
+        returnValueForMissingStub: _i18.dummyValue<String>(
+          this,
+          Invocation.getter(#imagesDirPath),
+        ),
+      ) as String);
+
+  @override
+  String get tempDirPath => (super.noSuchMethod(
+        Invocation.getter(#tempDirPath),
+        returnValue: _i18.dummyValue<String>(
+          this,
+          Invocation.getter(#tempDirPath),
+        ),
+        returnValueForMissingStub: _i18.dummyValue<String>(
+          this,
+          Invocation.getter(#tempDirPath),
+        ),
+      ) as String);
+
+  @override
+  _i6.Future<void> initialize() => (super.noSuchMethod(
+        Invocation.method(
+          #initialize,
+          [],
+        ),
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
+
+  @override
+  String getDatabasePath(String? fileName) => (super.noSuchMethod(
+        Invocation.method(
+          #getDatabasePath,
+          [fileName],
+        ),
+        returnValue: _i18.dummyValue<String>(
+          this,
+          Invocation.method(
+            #getDatabasePath,
+            [fileName],
+          ),
+        ),
+        returnValueForMissingStub: _i18.dummyValue<String>(
+          this,
+          Invocation.method(
+            #getDatabasePath,
+            [fileName],
+          ),
+        ),
+      ) as String);
+
+  @override
+  _i6.Future<_i4.File> getSecureFile(String? relativePath) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getSecureFile,
+          [relativePath],
+        ),
+        returnValue: _i6.Future<_i4.File>.value(_FakeFile_2(
+          this,
+          Invocation.method(
+            #getSecureFile,
+            [relativePath],
+          ),
+        )),
+        returnValueForMissingStub: _i6.Future<_i4.File>.value(_FakeFile_2(
+          this,
+          Invocation.method(
+            #getSecureFile,
+            [relativePath],
+          ),
+        )),
+      ) as _i6.Future<_i4.File>);
+
+  @override
+  _i6.Future<void> clearTemp() => (super.noSuchMethod(
+        Invocation.method(
+          #clearTemp,
+          [],
+        ),
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
 }

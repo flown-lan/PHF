@@ -1,5 +1,5 @@
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -9,80 +9,55 @@ part of 'home_state.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$HomeState {
-  List<MedicalRecord> get records => throw _privateConstructorUsedError;
-  int get pendingCount => throw _privateConstructorUsedError;
+  List<MedicalRecord> get records;
+  int get pendingCount;
 
   /// Create a copy of HomeState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $HomeStateCopyWith<HomeState> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $HomeStateCopyWith<$Res> {
-  factory $HomeStateCopyWith(HomeState value, $Res Function(HomeState) then) =
-      _$HomeStateCopyWithImpl<$Res, HomeState>;
-  @useResult
-  $Res call({List<MedicalRecord> records, int pendingCount});
-}
-
-/// @nodoc
-class _$HomeStateCopyWithImpl<$Res, $Val extends HomeState>
-    implements $HomeStateCopyWith<$Res> {
-  _$HomeStateCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  /// Create a copy of HomeState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
+  $HomeStateCopyWith<HomeState> get copyWith =>
+      _$HomeStateCopyWithImpl<HomeState>(this as HomeState, _$identity);
+
   @override
-  $Res call({
-    Object? records = null,
-    Object? pendingCount = null,
-  }) {
-    return _then(_value.copyWith(
-      records: null == records
-          ? _value.records
-          : records // ignore: cast_nullable_to_non_nullable
-              as List<MedicalRecord>,
-      pendingCount: null == pendingCount
-          ? _value.pendingCount
-          : pendingCount // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is HomeState &&
+            const DeepCollectionEquality().equals(other.records, records) &&
+            (identical(other.pendingCount, pendingCount) ||
+                other.pendingCount == pendingCount));
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      runtimeType, const DeepCollectionEquality().hash(records), pendingCount);
+
+  @override
+  String toString() {
+    return 'HomeState(records: $records, pendingCount: $pendingCount)';
   }
 }
 
 /// @nodoc
-abstract class _$$HomeStateImplCopyWith<$Res>
-    implements $HomeStateCopyWith<$Res> {
-  factory _$$HomeStateImplCopyWith(
-          _$HomeStateImpl value, $Res Function(_$HomeStateImpl) then) =
-      __$$HomeStateImplCopyWithImpl<$Res>;
-  @override
+abstract mixin class $HomeStateCopyWith<$Res> {
+  factory $HomeStateCopyWith(HomeState value, $Res Function(HomeState) _then) =
+      _$HomeStateCopyWithImpl;
   @useResult
   $Res call({List<MedicalRecord> records, int pendingCount});
 }
 
 /// @nodoc
-class __$$HomeStateImplCopyWithImpl<$Res>
-    extends _$HomeStateCopyWithImpl<$Res, _$HomeStateImpl>
-    implements _$$HomeStateImplCopyWith<$Res> {
-  __$$HomeStateImplCopyWithImpl(
-      _$HomeStateImpl _value, $Res Function(_$HomeStateImpl) _then)
-      : super(_value, _then);
+class _$HomeStateCopyWithImpl<$Res> implements $HomeStateCopyWith<$Res> {
+  _$HomeStateCopyWithImpl(this._self, this._then);
+
+  final HomeState _self;
+  final $Res Function(HomeState) _then;
 
   /// Create a copy of HomeState
   /// with the given fields replaced by the non-null parameter values.
@@ -92,23 +67,180 @@ class __$$HomeStateImplCopyWithImpl<$Res>
     Object? records = null,
     Object? pendingCount = null,
   }) {
-    return _then(_$HomeStateImpl(
+    return _then(_self.copyWith(
       records: null == records
-          ? _value._records
+          ? _self.records
           : records // ignore: cast_nullable_to_non_nullable
               as List<MedicalRecord>,
       pendingCount: null == pendingCount
-          ? _value.pendingCount
+          ? _self.pendingCount
           : pendingCount // ignore: cast_nullable_to_non_nullable
               as int,
     ));
   }
 }
 
+/// Adds pattern-matching-related methods to [HomeState].
+extension HomeStatePatterns on HomeState {
+  /// A variant of `map` that fallback to returning `orElse`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_HomeState value)? $default, {
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _HomeState() when $default != null:
+        return $default(_that);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// Callbacks receives the raw object, upcasted.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case final Subclass2 value:
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_HomeState value) $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _HomeState():
+        return $default(_that);
+      case _:
+        throw StateError('Unexpected subclass');
+    }
+  }
+
+  /// A variant of `map` that fallback to returning `null`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_HomeState value)? $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _HomeState() when $default != null:
+        return $default(_that);
+      case _:
+        return null;
+    }
+  }
+
+  /// A variant of `when` that fallback to an `orElse` callback.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>(
+    TResult Function(List<MedicalRecord> records, int pendingCount)? $default, {
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _HomeState() when $default != null:
+        return $default(_that.records, _that.pendingCount);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// As opposed to `map`, this offers destructuring.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case Subclass2(:final field2):
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>(
+    TResult Function(List<MedicalRecord> records, int pendingCount) $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _HomeState():
+        return $default(_that.records, _that.pendingCount);
+      case _:
+        throw StateError('Unexpected subclass');
+    }
+  }
+
+  /// A variant of `when` that fallback to returning `null`
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>(
+    TResult? Function(List<MedicalRecord> records, int pendingCount)? $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _HomeState() when $default != null:
+        return $default(_that.records, _that.pendingCount);
+      case _:
+        return null;
+    }
+  }
+}
+
 /// @nodoc
 
-class _$HomeStateImpl implements _HomeState {
-  const _$HomeStateImpl(
+class _HomeState implements HomeState {
+  const _HomeState(
       {final List<MedicalRecord> records = const [], this.pendingCount = 0})
       : _records = records;
 
@@ -125,16 +257,19 @@ class _$HomeStateImpl implements _HomeState {
   @JsonKey()
   final int pendingCount;
 
+  /// Create a copy of HomeState
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  String toString() {
-    return 'HomeState(records: $records, pendingCount: $pendingCount)';
-  }
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$HomeStateCopyWith<_HomeState> get copyWith =>
+      __$HomeStateCopyWithImpl<_HomeState>(this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$HomeStateImpl &&
+            other is _HomeState &&
             const DeepCollectionEquality().equals(other._records, _records) &&
             (identical(other.pendingCount, pendingCount) ||
                 other.pendingCount == pendingCount));
@@ -144,29 +279,49 @@ class _$HomeStateImpl implements _HomeState {
   int get hashCode => Object.hash(
       runtimeType, const DeepCollectionEquality().hash(_records), pendingCount);
 
+  @override
+  String toString() {
+    return 'HomeState(records: $records, pendingCount: $pendingCount)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$HomeStateCopyWith<$Res>
+    implements $HomeStateCopyWith<$Res> {
+  factory _$HomeStateCopyWith(
+          _HomeState value, $Res Function(_HomeState) _then) =
+      __$HomeStateCopyWithImpl;
+  @override
+  @useResult
+  $Res call({List<MedicalRecord> records, int pendingCount});
+}
+
+/// @nodoc
+class __$HomeStateCopyWithImpl<$Res> implements _$HomeStateCopyWith<$Res> {
+  __$HomeStateCopyWithImpl(this._self, this._then);
+
+  final _HomeState _self;
+  final $Res Function(_HomeState) _then;
+
   /// Create a copy of HomeState
   /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$HomeStateImplCopyWith<_$HomeStateImpl> get copyWith =>
-      __$$HomeStateImplCopyWithImpl<_$HomeStateImpl>(this, _$identity);
+  $Res call({
+    Object? records = null,
+    Object? pendingCount = null,
+  }) {
+    return _then(_HomeState(
+      records: null == records
+          ? _self._records
+          : records // ignore: cast_nullable_to_non_nullable
+              as List<MedicalRecord>,
+      pendingCount: null == pendingCount
+          ? _self.pendingCount
+          : pendingCount // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
 }
 
-abstract class _HomeState implements HomeState {
-  const factory _HomeState(
-      {final List<MedicalRecord> records,
-      final int pendingCount}) = _$HomeStateImpl;
-
-  @override
-  List<MedicalRecord> get records;
-  @override
-  int get pendingCount;
-
-  /// Create a copy of HomeState
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$HomeStateImplCopyWith<_$HomeStateImpl> get copyWith =>
-      throw _privateConstructorUsedError;
-}
+// dart format on

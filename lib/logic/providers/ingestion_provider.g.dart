@@ -6,22 +6,55 @@ part of 'ingestion_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
+@ProviderFor(IngestionController)
+final ingestionControllerProvider = IngestionControllerProvider._();
+
+final class IngestionControllerProvider
+    extends $NotifierProvider<IngestionController, IngestionState> {
+  IngestionControllerProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'ingestionControllerProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$ingestionControllerHash();
+
+  @$internal
+  @override
+  IngestionController create() => IngestionController();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(IngestionState value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<IngestionState>(value),
+    );
+  }
+}
+
 String _$ingestionControllerHash() =>
     r'43fa2f98c11ccd196336c80243a5e5bfffc32846';
 
-/// See also [IngestionController].
-@ProviderFor(IngestionController)
-final ingestionControllerProvider =
-    AutoDisposeNotifierProvider<IngestionController, IngestionState>.internal(
-  IngestionController.new,
-  name: r'ingestionControllerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$ingestionControllerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$IngestionController = AutoDisposeNotifier<IngestionState>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$IngestionController extends $Notifier<IngestionState> {
+  IngestionState build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<IngestionState, IngestionState>;
+    final element = ref.element as $ClassProviderElement<
+        AnyNotifier<IngestionState, IngestionState>,
+        IngestionState,
+        Object?,
+        Object?>;
+    element.handleCreate(ref, build);
+  }
+}

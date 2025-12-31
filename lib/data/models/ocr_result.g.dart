@@ -6,8 +6,7 @@ part of 'ocr_result.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$OCRBlockImpl _$$OCRBlockImplFromJson(Map<String, dynamic> json) =>
-    _$OCRBlockImpl(
+_OCRBlock _$OCRBlockFromJson(Map<String, dynamic> json) => _OCRBlock(
       text: json['text'] as String,
       left: (json['left'] as num).toDouble(),
       top: (json['top'] as num).toDouble(),
@@ -15,8 +14,7 @@ _$OCRBlockImpl _$$OCRBlockImplFromJson(Map<String, dynamic> json) =>
       height: (json['height'] as num).toDouble(),
     );
 
-Map<String, dynamic> _$$OCRBlockImplToJson(_$OCRBlockImpl instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$OCRBlockToJson(_OCRBlock instance) => <String, dynamic>{
       'text': instance.text,
       'left': instance.left,
       'top': instance.top,
@@ -24,8 +22,7 @@ Map<String, dynamic> _$$OCRBlockImplToJson(_$OCRBlockImpl instance) =>
       'height': instance.height,
     };
 
-_$OCRResultImpl _$$OCRResultImplFromJson(Map<String, dynamic> json) =>
-    _$OCRResultImpl(
+_OCRResult _$OCRResultFromJson(Map<String, dynamic> json) => _OCRResult(
       text: json['text'] as String,
       blocks: (json['blocks'] as List<dynamic>?)
               ?.map((e) => OCRBlock.fromJson(e as Map<String, dynamic>))
@@ -34,7 +31,7 @@ _$OCRResultImpl _$$OCRResultImplFromJson(Map<String, dynamic> json) =>
       confidence: (json['confidence'] as num?)?.toDouble() ?? 0.0,
     );
 
-Map<String, dynamic> _$$OCRResultImplToJson(_$OCRResultImpl instance) =>
+Map<String, dynamic> _$OCRResultToJson(_OCRResult instance) =>
     <String, dynamic>{
       'text': instance.text,
       'blocks': instance.blocks.map((e) => e.toJson()).toList(),

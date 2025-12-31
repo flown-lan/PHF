@@ -4,7 +4,7 @@ part 'extracted_medical_data.freezed.dart';
 part 'extracted_medical_data.g.dart';
 
 @freezed
-class ExtractedMedicalData with _$ExtractedMedicalData {
+abstract class ExtractedMedicalData with _$ExtractedMedicalData {
   const factory ExtractedMedicalData({
     DateTime? visitDate,
     String? hospitalName,

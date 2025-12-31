@@ -6,8 +6,8 @@ part of 'image.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$MedicalImageImpl _$$MedicalImageImplFromJson(Map<String, dynamic> json) =>
-    _$MedicalImageImpl(
+_MedicalImage _$MedicalImageFromJson(Map<String, dynamic> json) =>
+    _MedicalImage(
       id: json['id'] as String,
       recordId: json['recordId'] as String,
       encryptionKey: json['encryptionKey'] as String,
@@ -33,7 +33,7 @@ _$MedicalImageImpl _$$MedicalImageImplFromJson(Map<String, dynamic> json) =>
           const [],
     );
 
-Map<String, dynamic> _$$MedicalImageImplToJson(_$MedicalImageImpl instance) =>
+Map<String, dynamic> _$MedicalImageToJson(_MedicalImage instance) =>
     <String, dynamic>{
       'id': instance.id,
       'recordId': instance.recordId,

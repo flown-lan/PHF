@@ -35,7 +35,7 @@ void main() {
 
     // Create Tables (simplified schema sufficient for repository testing)
     await db.execute('CREATE TABLE persons (id TEXT PRIMARY KEY, nickname TEXT, avatar_path TEXT, is_default INTEGER, created_at_ms INTEGER)');
-    await db.execute('CREATE TABLE records (id TEXT PRIMARY KEY, person_id TEXT, status TEXT, visit_date_ms INTEGER, visit_date_iso TEXT, hospital_name TEXT, notes TEXT, tags_cache TEXT, created_at_ms INTEGER, updated_at_ms INTEGER)');
+    await db.execute('CREATE TABLE records (id TEXT PRIMARY KEY, person_id TEXT, status TEXT, visit_date_ms INTEGER, visit_date_iso TEXT, hospital_name TEXT, notes TEXT, tags_cache TEXT, visit_end_date_ms INTEGER, created_at_ms INTEGER, updated_at_ms INTEGER)');
     await db.execute('CREATE TABLE images (id TEXT PRIMARY KEY, record_id TEXT, file_path TEXT, thumbnail_path TEXT, encryption_key TEXT, thumbnail_encryption_key TEXT, width INTEGER, height INTEGER, hospital_name TEXT, visit_date_ms INTEGER, mime_type TEXT, file_size INTEGER, page_index INTEGER, ocr_text TEXT, ocr_raw_json TEXT, ocr_confidence REAL, tags TEXT, created_at_ms INTEGER)');
     await db.execute('CREATE TABLE tags (id TEXT PRIMARY KEY, name TEXT UNIQUE, color TEXT, order_index INTEGER, person_id TEXT, is_custom INTEGER, created_at_ms INTEGER)');
     await db.execute('CREATE TABLE image_tags (image_id TEXT, tag_id TEXT, PRIMARY KEY (image_id, tag_id))');

@@ -233,6 +233,7 @@ class ImageRepository extends BaseRepository implements IImageRepository {
       'records',
       {'tags_cache': jsonEncode(tagNames)},
       where: 'id = ?',
+      whereArgs: [recordId],
     );
   }
 

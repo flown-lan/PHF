@@ -170,7 +170,7 @@ class BackgroundWorkerService {
         '$_uniqueWorkName-${DateTime.now().millisecondsSinceEpoch}',
         _ocrTaskName,
         constraints: Constraints(
-          networkType: NetworkType.not_required,
+          networkType: NetworkType.notRequired,
           requiresBatteryNotLow: true,
         ),
         existingWorkPolicy: ExistingWorkPolicy.append,
@@ -181,7 +181,7 @@ class BackgroundWorkerService {
         _ocrTaskName,
         existingWorkPolicy: ExistingWorkPolicy.append,
         constraints: Constraints(
-            networkType: NetworkType.not_required,
+            networkType: NetworkType.notRequired,
             requiresBatteryNotLow: true
         ), 
       );

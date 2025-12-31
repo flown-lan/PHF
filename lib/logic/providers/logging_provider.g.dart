@@ -6,21 +6,45 @@ part of 'logging_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$talkerHash() => r'eb376088db4c5d1bad2d332e8a80fe25544a71e6';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [talker].
 @ProviderFor(talker)
-final talkerProvider = Provider<Talker>.internal(
-  talker,
-  name: r'talkerProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$talkerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+final talkerProvider = TalkerProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef TalkerRef = ProviderRef<Talker>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class TalkerProvider extends $FunctionalProvider<Talker, Talker, Talker>
+    with $Provider<Talker> {
+  TalkerProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'talkerProvider',
+          isAutoDispose: false,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$talkerHash();
+
+  @$internal
+  @override
+  $ProviderElement<Talker> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  Talker create(Ref ref) {
+    return talker(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(Talker value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<Talker>(value),
+    );
+  }
+}
+
+String _$talkerHash() => r'0422d1ce42a724950582ee2b2c2a6f47494c6078';

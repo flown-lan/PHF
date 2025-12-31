@@ -38,7 +38,7 @@ enum RecordStatus {
 }
 
 @freezed
-class MedicalRecord with _$MedicalRecord {
+abstract class MedicalRecord with _$MedicalRecord {
   const factory MedicalRecord({
     required String id,
     required String personId,

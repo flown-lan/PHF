@@ -14,7 +14,7 @@ import 'record.dart';
 part 'search_result.freezed.dart';
 
 @freezed
-class SearchResult with _$SearchResult {
+abstract class SearchResult with _$SearchResult {
   const factory SearchResult({
     required MedicalRecord record,
     /// 包含高亮 HTML 标签的摘要

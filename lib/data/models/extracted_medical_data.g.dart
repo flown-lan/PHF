@@ -6,9 +6,9 @@ part of 'extracted_medical_data.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$ExtractedMedicalDataImpl _$$ExtractedMedicalDataImplFromJson(
+_ExtractedMedicalData _$ExtractedMedicalDataFromJson(
         Map<String, dynamic> json) =>
-    _$ExtractedMedicalDataImpl(
+    _ExtractedMedicalData(
       visitDate: json['visitDate'] == null
           ? null
           : DateTime.parse(json['visitDate'] as String),
@@ -16,8 +16,8 @@ _$ExtractedMedicalDataImpl _$$ExtractedMedicalDataImplFromJson(
       confidenceScore: (json['confidenceScore'] as num?)?.toDouble() ?? 0.0,
     );
 
-Map<String, dynamic> _$$ExtractedMedicalDataImplToJson(
-        _$ExtractedMedicalDataImpl instance) =>
+Map<String, dynamic> _$ExtractedMedicalDataToJson(
+        _ExtractedMedicalData instance) =>
     <String, dynamic>{
       'visitDate': instance.visitDate?.toIso8601String(),
       'hospitalName': instance.hospitalName,
