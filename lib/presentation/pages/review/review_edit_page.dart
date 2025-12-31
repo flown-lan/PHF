@@ -24,18 +24,38 @@ class _ReviewEditPageState extends ConsumerState<ReviewEditPage> {
   late TextEditingController _hospitalController;
   DateTime? _visitDate;
   int _currentImageIndex = 0;
+  late PageController _pageController;
 
   @override
   void initState() {
     super.initState();
-    _hospitalController = TextEditingController(text: widget.record.hospitalName);
-    _visitDate = widget.record.notedAt;
+    _pageController = PageController();
+    _hospitalController = TextEditingController();
+    _updateControllersForIndex(0);
   }
 
   @override
   void dispose() {
     _hospitalController.dispose();
+    _pageController.dispose();
     super.dispose();
+  }
+
+  void _updateControllersForIndex(int index) {
+    final images = widget.record.images;
+    if (index < 0 || index >= images.length) return;
+    
+    final img = images[index];
+    // 优先显示图片特有的信息，如果没有则回退到 Record 级别
+    _hospitalController.text = img.hospitalName ?? widget.record.hospitalName ?? '';
+    _visitDate = img.visitDate ?? widget.record.notedAt;
+  }
+
+  void _onImageChanged(int index) {
+    setState(() {
+      _currentImageIndex = index;
+      _updateControllersForIndex(index);
+    });
   }
 
   Future<void> _approve() async {
@@ -101,22 +121,36 @@ class _ReviewEditPageState extends ConsumerState<ReviewEditPage> {
               color: Colors.black87,
               child: Stack(
                 children: [
-                   Center(
-                     child: SecureImage(
-                       imagePath: currentImage.filePath,
-                       encryptionKey: currentImage.encryptionKey,
-                       width: null, // Let layout handle constraint or pass specific
-                       fit: BoxFit.contain,
-                       builder: (BuildContext context, ImageProvider<Object> imageProvider) {
-                         return OCRHighlightView(
-                           imageProvider: imageProvider,
-                           ocrResult: ocrResult,
-                           actualImageSize: (currentImage.width != null && currentImage.height != null) 
-                               ? Size(currentImage.width!.toDouble(), currentImage.height!.toDouble())
-                               : null,
-                         );
-                       },
-                     ),
+                   PageView.builder(
+                     controller: _pageController,
+                     itemCount: images.length,
+                     onPageChanged: _onImageChanged,
+                     itemBuilder: (context, index) {
+                       final img = images[index];
+                       OCRResult? currentOcr;
+                       if (img.ocrRawJson != null) {
+                         try {
+                           currentOcr = OCRResult.fromJson(jsonDecode(img.ocrRawJson!) as Map<String, dynamic>);
+                         } catch (_) {}
+                       }
+                       
+                       return Center(
+                         child: SecureImage(
+                           imagePath: img.filePath,
+                           encryptionKey: img.encryptionKey,
+                           fit: BoxFit.contain,
+                           builder: (BuildContext context, ImageProvider<Object> imageProvider) {
+                             return OCRHighlightView(
+                               imageProvider: imageProvider,
+                               ocrResult: currentOcr,
+                               actualImageSize: (img.width != null && img.height != null) 
+                                   ? Size(img.width!.toDouble(), img.height!.toDouble())
+                                   : null,
+                             );
+                           },
+                         ),
+                       );
+                     },
                    ),
                    // Navigation Arrows
                    if (images.length > 1) ...[
@@ -125,7 +159,7 @@ class _ReviewEditPageState extends ConsumerState<ReviewEditPage> {
                          left: 8, top: 0, bottom: 0,
                          child: IconButton(
                            icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
-                           onPressed: () => setState(() => _currentImageIndex--),
+                           onPressed: () => _pageController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut),
                          ),
                        ),
                      if (_currentImageIndex < images.length - 1)
@@ -133,10 +167,21 @@ class _ReviewEditPageState extends ConsumerState<ReviewEditPage> {
                          right: 8, top: 0, bottom: 0,
                          child: IconButton(
                            icon: const Icon(Icons.arrow_forward_ios, color: Colors.white),
-                           onPressed: () => setState(() => _currentImageIndex++),
+                           onPressed: () => _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut),
                          ),
                        ),
                    ],
+                   // Page Indicator
+                   Positioned(
+                     bottom: 16, left: 0, right: 0,
+                     child: Center(
+                       child: Container(
+                         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                         decoration: BoxDecoration(color: Colors.black54, borderRadius: BorderRadius.circular(16)),
+                         child: Text('${_currentImageIndex + 1} / ${images.length}', style: const TextStyle(color: Colors.white, fontSize: 12)),
+                       ),
+                     ),
+                   ),
                 ],
               ),
             ),

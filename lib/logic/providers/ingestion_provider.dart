@@ -37,8 +37,10 @@ class IngestionController extends _$IngestionController {
   @override
   IngestionState build() {
     // 确保在 Provider 销毁时清理所有未提交的临时文件
+    // 注意：必须通过闭包捕获当时的列表，不能在 onDispose 内部访问 state
     ref.onDispose(() {
-      _cleanup();
+      final imagesToCleanup = state.rawImages;
+      _cleanupFiles(imagesToCleanup);
     });
     return const IngestionState();
   }
@@ -249,20 +251,20 @@ class IngestionController extends _$IngestionController {
       ref.invalidate(ocrPendingCountProvider); // 强制立即重新开始轮询探测
       
       // 11. Secure Wipe raw images
-      await _cleanup();
+      await _cleanupFiles(state.rawImages);
       
       state = const IngestionState(status: IngestionStatus.success);
       
     } catch (e) {
       state = state.copyWith(status: IngestionStatus.error, errorMessage: e.toString());
       // Cleanup even on error
-      await _cleanup();
+      await _cleanupFiles(state.rawImages);
     }
   }
 
   /// 物理擦除所有已加载的原始临时图片
-  Future<void> _cleanup() async {
-    for (final xFile in state.rawImages) {
+  Future<void> _cleanupFiles(List<XFile> images) async {
+    for (final xFile in images) {
       try {
         await SecureWipeHelper.wipe(File(xFile.path));
       } catch (_) {
