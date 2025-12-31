@@ -158,6 +158,19 @@ class ImageRepository extends BaseRepository implements IImageRepository {
   }
 
   @override
+  Future<MedicalImage?> getImageById(String id) async {
+    final db = await dbService.database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'images',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+
+    if (maps.isEmpty) return null;
+    return _mapToImage(maps.first);
+  }
+
+  @override
   Future<void> updateImageMetadata(String imageId, {String? hospitalName, DateTime? visitDate}) async {
     final db = await dbService.database;
 
@@ -184,6 +197,21 @@ class ImageRepository extends BaseRepository implements IImageRepository {
 
       await _syncRecordMetadataCache(txn, recordId);
     });
+  }
+
+  @override
+  Future<void> updateOCRData(String imageId, String text, {String? rawJson, double confidence = 0.0}) async {
+    final db = await dbService.database;
+    await db.update(
+      'images',
+      {
+        'ocr_text': text,
+        'ocr_raw_json': rawJson,
+        'ocr_confidence': confidence,
+      },
+      where: 'id = ?',
+      whereArgs: [imageId],
+    );
   }
 
   Future<void> _syncRecordTagsCache(Transaction txn, String recordId) async {

@@ -29,6 +29,8 @@ part 'record.g.dart';
 enum RecordStatus {
   @JsonValue('processing')
   processing,
+  @JsonValue('review')
+  review, // Confident check required (pending user review)
   @JsonValue('archived')
   archived,
   @JsonValue('deleted')

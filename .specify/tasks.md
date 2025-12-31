@@ -230,7 +230,7 @@
 ### T19: 业务逻辑与后台队列 (Phase 2.3)
 - [x] **Implement (T19.1)**: 创建 `SmartExtractor` 工具类。实现日期 (`RegExp`) 和医院名称 (关键词/正则) 的提取策略。 (Complexity: Low)
     - *Ref: Spec#FR-203 Intelligent Extraction*
-- [ ] **Implement (T19.2)**: 实现 `OCRProcessor` 核心服务。串联 `Queue -> OCR -> Extraction -> DB` 流程。包含置信度评分逻辑。 (Complexity: High)
+- [x] **Implement (T19.2)**: 实现 `OCRProcessor` 核心服务。串联 `Queue -> OCR -> Extraction -> DB` 流程。包含置信度评分逻辑。 (Complexity: High)
     - *Ref: Spec#FR-203 Confidence Strategy*
 - [ ] **Implement (T19.3 - Android)**: 配置 `WorkManager`。实现 `OCRWorker`，确保后台任务保活与执行。 (Complexity: Medium)
 - [ ] **Implement (T19.4 - iOS)**: 配置 `BGTaskScheduler`。在 `AppDelegate.swift` 中注册后台任务标识，处理后台执行时间窗口。 (Complexity: High)
