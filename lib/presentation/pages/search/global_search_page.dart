@@ -4,7 +4,6 @@ import 'package:intl/intl.dart';
 import '../../../data/models/search_result.dart';
 import '../../../logic/providers/search_provider.dart';
 import '../../theme/app_theme.dart';
-import '../../widgets/event_card.dart';
 import '../timeline/record_detail_page.dart';
 
 class GlobalSearchPage extends ConsumerStatefulWidget {
@@ -125,7 +124,7 @@ class _SearchResultCard extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (_) => RecordDetailPage(recordId: result.record.id)),
+          MaterialPageRoute<void>(builder: (_) => RecordDetailPage(recordId: result.record.id)),
         );
       },
       child: Container(

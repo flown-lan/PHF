@@ -5,15 +5,16 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i6;
 import 'dart:io' as _i4;
-import 'dart:typed_data' as _i14;
+import 'dart:typed_data' as _i15;
 
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:phf/core/security/encrypted_file_result.dart' as _i3;
-import 'package:phf/core/security/file_security_helper.dart' as _i15;
+import 'package:phf/core/security/file_security_helper.dart' as _i16;
 import 'package:phf/data/models/image.dart' as _i9;
 import 'package:phf/data/models/ocr_queue_item.dart' as _i7;
 import 'package:phf/data/models/ocr_result.dart' as _i2;
 import 'package:phf/data/models/record.dart' as _i11;
+import 'package:phf/data/models/search_result.dart' as _i13;
 import 'package:phf/data/repositories/interfaces/image_repository.dart' as _i8;
 import 'package:phf/data/repositories/interfaces/ocr_queue_repository.dart'
     as _i5;
@@ -21,7 +22,7 @@ import 'package:phf/data/repositories/interfaces/record_repository.dart'
     as _i10;
 import 'package:phf/data/repositories/interfaces/search_repository.dart'
     as _i12;
-import 'package:phf/logic/services/interfaces/ocr_service.dart' as _i13;
+import 'package:phf/logic/services/interfaces/ocr_service.dart' as _i14;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -368,7 +369,7 @@ class MockIRecordRepository extends _i1.Mock implements _i10.IRecordRepository {
 /// See the documentation for Mockito's code generation for more information.
 class MockISearchRepository extends _i1.Mock implements _i12.ISearchRepository {
   @override
-  _i6.Future<List<_i11.MedicalRecord>> search(
+  _i6.Future<List<_i13.SearchResult>> search(
     String? query,
     String? personId,
   ) =>
@@ -381,10 +382,10 @@ class MockISearchRepository extends _i1.Mock implements _i12.ISearchRepository {
           ],
         ),
         returnValue:
-            _i6.Future<List<_i11.MedicalRecord>>.value(<_i11.MedicalRecord>[]),
+            _i6.Future<List<_i13.SearchResult>>.value(<_i13.SearchResult>[]),
         returnValueForMissingStub:
-            _i6.Future<List<_i11.MedicalRecord>>.value(<_i11.MedicalRecord>[]),
-      ) as _i6.Future<List<_i11.MedicalRecord>>);
+            _i6.Future<List<_i13.SearchResult>>.value(<_i13.SearchResult>[]),
+      ) as _i6.Future<List<_i13.SearchResult>>);
 
   @override
   _i6.Future<void> updateIndex(
@@ -417,10 +418,10 @@ class MockISearchRepository extends _i1.Mock implements _i12.ISearchRepository {
 /// A class which mocks [IOCRService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockIOCRService extends _i1.Mock implements _i13.IOCRService {
+class MockIOCRService extends _i1.Mock implements _i14.IOCRService {
   @override
   _i6.Future<_i2.OCRResult> recognizeText(
-    _i14.Uint8List? imageBytes, {
+    _i15.Uint8List? imageBytes, {
     String? mimeType,
   }) =>
       (super.noSuchMethod(
@@ -463,7 +464,7 @@ class MockIOCRService extends _i1.Mock implements _i13.IOCRService {
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockFileSecurityHelper extends _i1.Mock
-    implements _i15.FileSecurityHelper {
+    implements _i16.FileSecurityHelper {
   @override
   _i6.Future<_i3.EncryptedFileResult> encryptMedia(
     _i4.File? sourceFile, {
@@ -497,7 +498,7 @@ class MockFileSecurityHelper extends _i1.Mock
 
   @override
   _i6.Future<_i3.EncryptedFileResult> saveEncryptedFile({
-    required _i14.Uint8List? data,
+    required _i15.Uint8List? data,
     required String? targetDir,
   }) =>
       (super.noSuchMethod(
@@ -575,7 +576,7 @@ class MockFileSecurityHelper extends _i1.Mock
       ) as _i6.Future<_i4.File>);
 
   @override
-  _i6.Future<_i14.Uint8List> decryptDataFromFile(
+  _i6.Future<_i15.Uint8List> decryptDataFromFile(
     String? path,
     String? base64Key,
   ) =>
@@ -587,8 +588,8 @@ class MockFileSecurityHelper extends _i1.Mock
             base64Key,
           ],
         ),
-        returnValue: _i6.Future<_i14.Uint8List>.value(_i14.Uint8List(0)),
+        returnValue: _i6.Future<_i15.Uint8List>.value(_i15.Uint8List(0)),
         returnValueForMissingStub:
-            _i6.Future<_i14.Uint8List>.value(_i14.Uint8List(0)),
-      ) as _i6.Future<_i14.Uint8List>);
+            _i6.Future<_i15.Uint8List>.value(_i15.Uint8List(0)),
+      ) as _i6.Future<_i15.Uint8List>);
 }
