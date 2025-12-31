@@ -87,6 +87,8 @@ class SearchRepository extends BaseRepository implements ISearchRepository {
         'width': imgRow['width'],
         'height': imgRow['height'],
         'ocrText': imgRow['ocr_text'],
+        'ocrRawJson': imgRow['ocr_raw_json'],
+        'ocrConfidence': imgRow['ocr_confidence'],
         'hospitalName': imgRow['hospital_name'],
         'visitDate': imgRow['visit_date_ms'] != null 
             ? DateTime.fromMillisecondsSinceEpoch(imgRow['visit_date_ms'] as int).toIso8601String() 

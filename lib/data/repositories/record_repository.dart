@@ -360,6 +360,9 @@ class RecordRepository extends BaseRepository implements IRecordRepository {
       'displayOrder': row['page_index'],
       'width': row['width'],
       'height': row['height'],
+      'ocrText': row['ocr_text'],
+      'ocrRawJson': row['ocr_raw_json'],
+      'ocrConfidence': row['ocr_confidence'],
       'hospitalName': row['hospital_name'],
       'visitDate': row['visit_date_ms'] != null 
           ? DateTime.fromMillisecondsSinceEpoch(row['visit_date_ms'] as int).toIso8601String() 

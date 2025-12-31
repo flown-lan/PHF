@@ -354,6 +354,9 @@ class ImageRepository extends BaseRepository implements IImageRepository {
       'displayOrder': row['page_index'],
       'width': row['width'],
       'height': row['height'],
+      'ocrText': row['ocr_text'],
+      'ocrRawJson': row['ocr_raw_json'],
+      'ocrConfidence': row['ocr_confidence'],
       'createdAt': DateTime.fromMillisecondsSinceEpoch(row['created_at_ms'] as int).toIso8601String(),
       'hospitalName': row['hospital_name'],
       'visitDate': row['visit_date_ms'] != null 
