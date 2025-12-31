@@ -21,7 +21,6 @@
 library;
 
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:typed_data';
 
 import '../../data/models/ocr_queue_item.dart';
@@ -64,7 +63,7 @@ class OCRProcessor {
     final item = await _queueRepository.dequeue();
     if (item == null) return false;
 
-    log('Processing OCR Task: ${item.id} for Image: ${item.imageId}', name: 'OCRProcessor');
+    print('[OCRProcessor] Processing Task: ${item.id} for Image: ${item.imageId}');
 
     // Make local vars nullable to allow clearing
     Uint8List? decryptedBytes;
@@ -95,7 +94,7 @@ class OCRProcessor {
       // 4. 智能提取 (FR-203)
       final extracted = SmartExtractor.extract(ocrResult.text, ocrResult.confidence);
       
-      log('OCR Extracted: date=${extracted.visitDate}, hospital=${extracted.hospitalName}, score=${extracted.confidenceScore}', name: 'OCRProcessor');
+      print('[OCRProcessor] Extracted: date=${extracted.visitDate}, hospital=${extracted.hospitalName}, score=${extracted.confidenceScore}');
 
       // 5. 持久化数据
       // 5.1 更新 Image OCR 数据
@@ -157,11 +156,11 @@ class OCRProcessor {
       // 6. 标记任务完成
       await _queueRepository.updateStatus(item.id, OCRJobStatus.completed);
       
-      log('OCR Processing Completed: ${item.id}', name: 'OCRProcessor');
+      print('[OCRProcessor] Processing Completed: ${item.id}');
       return true;
 
-    } catch (e, stack) {
-      log('OCR Processing Failed: ${item.id}', error: e, stackTrace: stack);
+    } catch (e) {
+      print('[OCRProcessor] Processing Failed: ${item.id}. Error: $e');
       decryptedBytes = null; // Ensure clear on error
 
       await _queueRepository.updateStatus(

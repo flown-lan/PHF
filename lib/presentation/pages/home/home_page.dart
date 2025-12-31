@@ -39,7 +39,7 @@ class HomePage extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => const GlobalSearchPage()),
+                MaterialPageRoute<void>(builder: (_) => const GlobalSearchPage()),
               );
             },
           ),

@@ -13,7 +13,6 @@
 /// - 依赖 `MasterKeyManager` 获取密钥。如果设备锁定导致 Keychain 不可读，任务将捕获异常并返回重试状态。
 library;
 
-import 'dart:developer';
 import 'package:flutter/foundation.dart';
 import 'package:workmanager/workmanager.dart';
 
@@ -43,7 +42,7 @@ void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     try {
       if (task == _ocrTaskName) {
-        log('Background OCR Worker Started', name: 'BackgroundWorker');
+        print('[BackgroundWorker] Started');
         
         // 1. Rebuild Dependencies
         final pathService = PathProviderService();
@@ -72,7 +71,7 @@ void callbackDispatcher() {
         } else if (defaultTargetPlatform == TargetPlatform.iOS) {
           ocrService = IOSOCRService();
         } else {
-           log('Unsupported platform for Background OCR', name: 'BackgroundWorker');
+           print('[BackgroundWorker] Unsupported platform for Background OCR');
            return Future.value(true);
         }
 
@@ -98,12 +97,12 @@ void callbackDispatcher() {
           if (hasMore) processedCount++;
         }
 
-        log('Background OCR Worker Finished. Processed: $processedCount', name: 'BackgroundWorker');
+        print('[BackgroundWorker] Finished. Processed: $processedCount');
       }
       return Future.value(true);
       
     } catch (err, stack) {
-      log('Background OCR Worker Error', error: err, stackTrace: stack, name: 'BackgroundWorker');
+      print('[BackgroundWorker] Error: $err\n$stack');
       // Return false to indicate failure (may trigger retry based on constraints)
       return Future.value(false); 
     }
@@ -115,6 +114,8 @@ class BackgroundWorkerService {
   factory BackgroundWorkerService() => _instance;
   BackgroundWorkerService._internal();
 
+  bool _isProcessing = false;
+
   /// 初始化 WorkManager
   Future<void> initialize() async {
     // 仅在 Android/iOS 上初始化
@@ -123,7 +124,58 @@ class BackgroundWorkerService {
         callbackDispatcher,
         isInDebugMode: kDebugMode, // Debug shows notifications
       );
-      log('WorkManager Initialized for ${defaultTargetPlatform.name}', name: 'BackgroundWorkerService');
+      print('[BackgroundWorkerService] Initialized for ${defaultTargetPlatform.name}');
+    }
+  }
+
+  /// 启动前台处理循环 (iOS 重点，确保立即执行)
+  Future<void> startForegroundProcessing() async {
+    if (_isProcessing) return;
+    _isProcessing = true;
+    
+    print('[BackgroundWorkerService] Starting Foreground OCR Loop');
+
+    try {
+      // 1. Rebuild Dependencies (Same logic as background for consistency)
+      final pathService = PathProviderService();
+      final keyManager = MasterKeyManager();
+      final dbService = SQLCipherDatabaseService(keyManager: keyManager, pathService: pathService);
+      final cryptoService = CryptoService();
+      final fileSecurityHelper = FileSecurityHelper(cryptoService: cryptoService);
+
+      final ocrQueueRepo = OCRQueueRepository(dbService);
+      final imageRepo = ImageRepository(dbService);
+      final recordRepo = RecordRepository(dbService);
+      final searchRepo = SearchRepository(dbService);
+
+      IOCRService ocrService;
+      if (defaultTargetPlatform == TargetPlatform.android) {
+        ocrService = AndroidOCRService();
+      } else if (defaultTargetPlatform == TargetPlatform.iOS) {
+        ocrService = IOSOCRService();
+      } else {
+        return;
+      }
+
+      final processor = OCRProcessor(
+        queueRepository: ocrQueueRepo,
+        imageRepository: imageRepo,
+        recordRepository: recordRepo,
+        searchRepository: searchRepo,
+        ocrService: ocrService,
+        securityHelper: fileSecurityHelper,
+      );
+
+      // 2. Process all pending items
+      int count = 0;
+      while (await processor.processNextItem()) {
+        count++;
+      }
+      print('[BackgroundWorkerService] Foreground OCR Finished. Processed: $count');
+    } catch (e) {
+      print('[BackgroundWorkerService] Foreground OCR Error: $e');
+    } finally {
+      _isProcessing = false;
     }
   }
 
@@ -141,9 +193,11 @@ class BackgroundWorkerService {
       );
     } else if (defaultTargetPlatform == TargetPlatform.iOS) {
       // iOS specific trigger
+      // On iOS, the first argument (uniqueName) acts as the BGTask identifier.
+      // It MUST match what is registered in Info.plist.
       await Workmanager().registerOneOffTask(
-        '$_uniqueWorkName-${DateTime.now().millisecondsSinceEpoch}',
-        _ocrTaskName, // Must match BGTaskSchedulerPermittedIdentifiers in Info.plist
+        _ocrTaskName, // uniqueName = Identifier
+        _ocrTaskName, // taskName (used for dispatching)
         existingWorkPolicy: ExistingWorkPolicy.append,
         constraints: Constraints(
             networkType: NetworkType.not_required,

@@ -136,7 +136,6 @@ class IngestionController extends _$IngestionController {
       final imageRepo = ref.read(imageRepositoryProvider);
       final ocrQueueRepo = ref.read(ocrQueueRepositoryProvider); // T17.4
       final fileSecurity = ref.read(fileSecurityHelperProvider);
-      final cryptoService = ref.read(cryptoServiceProvider);
       final imageProcessing = ref.read(imageProcessingServiceProvider);
       final pathService = ref.read(pathProviderServiceProvider);
       
@@ -221,8 +220,11 @@ class IngestionController extends _$IngestionController {
         await ocrQueueRepo.enqueue(img.id);
       }
 
-      // 9. Phase 2: Trigger Background Worker
+      // 9. Phase 2: Trigger Background Worker & Foreground processing
       await BackgroundWorkerService().triggerProcessing();
+      // Start foreground processing immediately (fire-and-forget)
+      // ignore: unawaited_futures
+      BackgroundWorkerService().startForegroundProcessing();
       
       // 10. Refresh Timeline & Reset State
       ref.invalidate(timelineControllerProvider);
