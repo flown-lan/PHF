@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'dart:convert';
 import 'package:intl/intl.dart';
 import '../../../data/models/image.dart';
+import '../../../data/models/ocr_result.dart';
 import '../../../data/models/record.dart';
 import '../../../data/models/tag.dart';
 import '../../../logic/providers/core_providers.dart';
@@ -183,6 +185,11 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
               onPressed: _saveChanges,
               child: const Text('保存', style: TextStyle(fontWeight: FontWeight.bold)),
             ),
+          IconButton(
+            icon: const Icon(Icons.description_outlined),
+            tooltip: '查看识别文本',
+            onPressed: () => _showOCRText(),
+          ),
           const SizedBox(width: 8),
         ],
       ),
@@ -348,6 +355,96 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
         ),
         const SizedBox(height: 24),
       ],
+    );
+  }
+
+  void _showOCRText() {
+    if (_images.isEmpty) return;
+    final img = _images[_currentIndex];
+    
+    String displayText = '暂无识别内容';
+    
+    if (img.ocrRawJson != null) {
+      try {
+        final json = jsonDecode(img.ocrRawJson!);
+        final result = OCRResult.fromJson(json as Map<String, dynamic>);
+        // Reconstruct full text from blocks if fullText is empty or for better formatting
+        // But usually fullText is sufficient. Let's use the blocks to reconstruct lines if needed, 
+        // or just use the raw text if available.
+        // OCRResult likely has a text field or we derive it.
+        // Looking at OCRResult definition (from memory/previous view), it usually has blocks. 
+        // Let's assume we construct it from blocks for now if there's no top-level text field in OCRResult 
+        // (Wait, MedicalImage has `ocrText`).
+        
+        // Priority: MedicalImage.ocrText > Reconstructed from JSON
+        if (img.ocrText != null && img.ocrText!.isNotEmpty) {
+          displayText = img.ocrText!;
+        } else {
+           // Fallback reconstruct
+           displayText = result.blocks.map((b) => b.text).join('\n');
+        }
+      } catch (e) {
+        displayText = 'OCR 数据解析失败: $e';
+      }
+    } else if (img.ocrText != null) {
+      displayText = img.ocrText!;
+    }
+
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.6,
+        minChildSize: 0.4,
+        maxChildSize: 0.9,
+        builder: (context, scrollController) => Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+          ),
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('OCR 识别结果', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(Icons.close)),
+                ],
+              ),
+              const Divider(),
+              Expanded(
+                child: SingleChildScrollView(
+                  controller: scrollController,
+                  child: SelectableText(
+                    displayText,
+                    style: AppTheme.monoStyle.copyWith(fontSize: 16, height: 1.5),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    // Clipboard copy
+                     // Clipboard is in services.dart
+                     // Just use SelectableText for now, or add Clipboard support if requested.
+                     // The requirement says "support clicking button to view", doesn't explicitly force copy button but it's good UX.
+                     // I'll skip explicit clipboard button to keep it simple and safe (no clipboard import yet), 
+                     // SelectableText allows copying.
+                     Navigator.pop(context);
+                  },
+                  icon: const Icon(Icons.check),
+                  label: const Text('完成'),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 

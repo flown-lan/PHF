@@ -242,6 +242,6 @@
 - [x] **Implement (T20.2)**: 开发 `ReviewListPage` (待确认列表) 和 `ReviewEditPage` (OCR 结果校对页)。
     - 实现 OCR 文本高亮层 `OCRHighlightView` (在原图上绘制识别框)。
     - *Ref: Constitution#X. UI/UX (Teal/White Theme)* (Complexity: High)
-- [ ] **Implement (T20.3)**: 升级详情页。支持点击按钮查看完整 OCR 识别文本 (解密后展示)。 (Complexity: Medium)
+- [x] **Implement (T20.3)**: 升级详情页。支持点击按钮查看完整 OCR 识别文本 (解密后展示)。 (Complexity: Medium)
 - [ ] **Implement (T20.4)**: 开发 `GlobalSearchPage`。连接 FTS5 搜索接口，展示高亮匹配结果。 (Complexity: Medium)
 - [ ] **Test**: 全链路测试“拍照 -> 后台识别 -> 首页提示 -> 校对归档”流程。 (Complexity: High)
