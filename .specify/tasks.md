@@ -201,20 +201,20 @@
 
 ## Phase 2: On-Device OCR & Intelligence (智能录入层)
 
-### T17: 基础设施与 Schema 升级 (Phase 2.1)
-- [ ] **Implement (T17.1)**: 在 `pubspec.yaml` 中添加 `google_mlkit_text_recognition`, `workmanager`, `sqflite_common_ffi` (用于 FTS5 测试) 等依赖。 (Complexity: Low)
+### T17: 基础设施与 Schema 升级 (Phase 2.1) [x]
+- [x] **Implement (T17.1)**: 在 `pubspec.yaml` 中添加 `google_mlkit_text_recognition`, `workmanager`, `sqflite_common_ffi` (用于 FTS5 测试) 等依赖。 (Complexity: Low)
     - *Ref: Constitution#III. Intelligent Digitization (Offline dependencies)*
-- [ ] **Implement (T17.2)**: 更新 `Image` (增加 ocr_data) 实体类，新建 `OCRQueueItem` 实体。运行 `build_runner`。 (Complexity: Low)
+- [x] **Implement (T17.2)**: 更新 `Image` (增加 ocr_data) 实体类，新建 `OCRQueueItem` 实体. 运行 `build_runner`。 (Complexity: Low)
     - *Ref: Constitution#VII. Coding Standards (Immutable Entities)*
-- [ ] **Implement (T17.3)**: 编写 SQL 迁移脚本 `migration_v2.sql`。
+- [x] **Implement (T17.3)**: 编写 SQL 迁移脚本 `migration_v2.sql`。
     - 1. `ALTER TABLE records ALTER COLUMN status SET DEFAULT 'processing'`.
     - 2. `ALTER TABLE images ADD COLUMN ocr_text TEXT`. (以及其他字段)
     - 3. `CREATE TABLE ocr_queue`.
     - 4. `CREATE VIRTUAL TABLE ocr_search_index USING fts5`.
     - *Ref: Constitution#VI. Security (SQLCipher Schema)* (Complexity: Medium)
-- [ ] **Implement (T17.4)**: 实现 `OCRQueueRepository` (入队/出队/状态更新) 及 `SearchRepository` (FTS5 查询)。 (Complexity: Medium)
+- [x] **Implement (T17.4)**: 实现 `OCRQueueRepository` (入队/出队/状态更新) 及 `SearchRepository` (FTS5 查询)。 (Complexity: Medium)
     - *Ref: Constitution#II. Architecture (Repository Pattern)*
-- [ ] **Test**: 编写单元测试验证 Schema 升级后的数据读写兼容性及 FTS5 搜索基础功能。 (Complexity: Medium)
+- [x] **Test**: 编写单元测试验证 Schema 升级后的数据读写兼容性及 FTS5 搜索基础功能。 (Complexity: Medium)
 
 ### T18: OCR 引擎集成 (Phase 2.2)
 - [ ] **Implement (T18.1)**: 定义 `IOCRService` 抽象接口及 `OCRResult` 数据结构 (包含 text, blocks, confidence)。 (Complexity: Low)
