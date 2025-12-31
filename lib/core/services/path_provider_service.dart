@@ -18,6 +18,10 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 class PathProviderService {
+  static final PathProviderService _instance = PathProviderService._internal();
+  factory PathProviderService() => _instance;
+  PathProviderService._internal();
+
   late final Directory _appDocDir;
   late final Directory _dbDir;
   late final Directory _imagesDir;

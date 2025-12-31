@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:phf/logic/providers/core_providers.dart';
 import 'logic/providers/auth_provider.dart';
 import 'logic/services/background_worker_service.dart';
-import 'logic/providers/logging_provider.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 import 'package:talker_riverpod_logger/talker_riverpod_logger.dart';
 
 Future<void> main() async {
@@ -34,7 +34,9 @@ Future<void> main() async {
     await container.read(pathProviderServiceProvider).initialize();
 
     // 初始化后台任务处理器 (OCR Worker)
-    await BackgroundWorkerService().initialize();
+    final worker = BackgroundWorkerService();
+    worker.setTalker(talker);
+    await worker.initialize();
     talker.info('App Bootstrap Completed');
   } catch (e, stack) {
     talker.handle(e, stack, 'Bootstrap Error');

@@ -46,52 +46,9 @@ void callbackDispatcher() {
       if (task == _ocrTaskName) {
         talker.info('[BackgroundWorker] Started');
         
-        // 1. Rebuild Dependencies
-        final pathService = PathProviderService();
-        final keyManager = MasterKeyManager();
-        
-        // Database
-        final dbService = SQLCipherDatabaseService(
-          keyManager: keyManager, 
-          pathService: pathService
-        );
-
-        // Basic Services
-        final cryptoService = CryptoService();
-        final fileSecurityHelper = FileSecurityHelper(cryptoService: cryptoService);
-
-        // Repositories
-        final ocrQueueRepo = OCRQueueRepository(dbService);
-        final imageRepo = ImageRepository(dbService);
-        final recordRepo = RecordRepository(dbService);
-        final searchRepo = SearchRepository(dbService);
-
-        // OCR Service (Platform Specific)
-        IOCRService ocrService;
-        if (defaultTargetPlatform == TargetPlatform.android) {
-          ocrService = AndroidOCRService();
-        } else if (defaultTargetPlatform == TargetPlatform.iOS) {
-          ocrService = IOSOCRService();
-        } else {
-           talker.warning('[BackgroundWorker] Unsupported platform');
-           return Future.value(true);
-        }
-
-        // Processor
-        final processor = OCRProcessor(
-          queueRepository: ocrQueueRepo,
-          imageRepository: imageRepo,
-          recordRepository: recordRepo,
-          searchRepository: searchRepo,
-          ocrService: ocrService,
-          securityHelper: fileSecurityHelper,
-          talker: talker,
-        );
+        final processor = await BackgroundWorkerService()._buildProcessor(talker: talker);
 
         // 2. Process Queue
-        // Keep processing until queue empty or timeout risk? 
-        // WorkManager allows ~10 mins. We process a batch.
-        // Let's try processing up to 5 items to be safe.
         int processedCount = 0;
         bool hasMore = true;
         
@@ -106,7 +63,6 @@ void callbackDispatcher() {
       
     } catch (err, stack) {
       talker.handle(err, stack, '[BackgroundWorker] Global Error');
-      // Return false to indicate failure (may trigger retry based on constraints)
       return Future.value(false); 
     }
   });
@@ -124,13 +80,56 @@ class BackgroundWorkerService {
     _talker = talker;
   }
 
+  /// 内部依赖构建逻辑 (Isolate 安全)
+  Future<OCRProcessor> _buildProcessor({Talker? talker}) async {
+    final pathService = PathProviderService();
+    
+    talker?.info('[BackgroundWorkerService] Initializing dependencies...');
+    // CRITICAL: Ensure path service is initialized
+    await pathService.initialize();
+    talker?.info('[BackgroundWorkerService] PathProvider initialized.');
+    
+    final keyManager = MasterKeyManager();
+    final dbService = SQLCipherDatabaseService(
+      keyManager: keyManager, 
+      pathService: pathService,
+    );
+    
+    final cryptoService = CryptoService();
+    final fileSecurityHelper = FileSecurityHelper(cryptoService: cryptoService);
+
+    final ocrQueueRepo = OCRQueueRepository(dbService);
+    final imageRepo = ImageRepository(dbService);
+    final recordRepo = RecordRepository(dbService);
+    final searchRepo = SearchRepository(dbService);
+
+    IOCRService ocrService;
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      ocrService = AndroidOCRService();
+    } else if (defaultTargetPlatform == TargetPlatform.iOS) {
+      ocrService = IOSOCRService();
+    } else {
+      throw UnsupportedError('Unsupported platform');
+    }
+
+    return OCRProcessor(
+      queueRepository: ocrQueueRepo,
+      imageRepository: imageRepo,
+      recordRepository: recordRepo,
+      searchRepository: searchRepo,
+      ocrService: ocrService,
+      securityHelper: fileSecurityHelper,
+      pathService: pathService,
+      talker: talker,
+    );
+  }
+
   /// 初始化 WorkManager
   Future<void> initialize() async {
-    // 仅在 Android/iOS 上初始化
     if (defaultTargetPlatform == TargetPlatform.android || defaultTargetPlatform == TargetPlatform.iOS) {
       await Workmanager().initialize(
         callbackDispatcher,
-        isInDebugMode: kDebugMode, // Debug shows notifications
+        isInDebugMode: kDebugMode, 
       );
       _talker?.info('[BackgroundWorkerService] Initialized for ${defaultTargetPlatform.name}');
     }
@@ -138,52 +137,25 @@ class BackgroundWorkerService {
 
   /// 启动前台处理循环 (iOS 重点，确保立即执行)
   Future<void> startForegroundProcessing({Talker? talker}) async {
-    // Override talker if provided
     if (talker != null) _talker = talker;
     
-    if (_isProcessing) return;
-    _isProcessing = true;
+    if (_isProcessing) {
+       _talker?.info('[BackgroundWorkerService] Already processing, skipping...');
+       return;
+    }
     
+    _isProcessing = true;
     _talker?.info('[BackgroundWorkerService] Starting Foreground OCR Loop');
 
     try {
-      // 1. Rebuild Dependencies (Same logic as background for consistency)
-      final pathService = PathProviderService();
-      final keyManager = MasterKeyManager();
-      final dbService = SQLCipherDatabaseService(keyManager: keyManager, pathService: pathService);
-      final cryptoService = CryptoService();
-      final fileSecurityHelper = FileSecurityHelper(cryptoService: cryptoService);
-
-      final ocrQueueRepo = OCRQueueRepository(dbService);
-      final imageRepo = ImageRepository(dbService);
-      final recordRepo = RecordRepository(dbService);
-      final searchRepo = SearchRepository(dbService);
-
-      IOCRService ocrService;
-      if (defaultTargetPlatform == TargetPlatform.android) {
-        ocrService = AndroidOCRService();
-      } else if (defaultTargetPlatform == TargetPlatform.iOS) {
-        ocrService = IOSOCRService();
-      } else {
-        return;
-      }
-
-      final processor = OCRProcessor(
-        queueRepository: ocrQueueRepo,
-        imageRepository: imageRepo,
-        recordRepository: recordRepo,
-        searchRepository: searchRepo,
-        ocrService: ocrService,
-        securityHelper: fileSecurityHelper,
-        talker: _talker,
-      );
+      final processor = await _buildProcessor(talker: _talker);
 
       // 2. Process all pending items
       int count = 0;
       while (await processor.processNextItem()) {
         count++;
       }
-      _talker?.info('[BackgroundWorkerService] Foreground OCR Finished. Processed: $count');
+      _talker?.info('[BackgroundWorkerService] Foreground OCR Finished. Total processed: $count');
     } catch (e, stack) {
       _talker?.handle(e, stack, '[BackgroundWorkerService] Foreground OCR Error');
     } finally {
@@ -191,25 +163,22 @@ class BackgroundWorkerService {
     }
   }
 
-  /// 触发一次性立即执行的任务 (例如：用户添加图片后)
+  /// 触发一次性立即执行的任务
   Future<void> triggerProcessing() async {
     if (defaultTargetPlatform == TargetPlatform.android) {
       await Workmanager().registerOneOffTask(
         '$_uniqueWorkName-${DateTime.now().millisecondsSinceEpoch}',
         _ocrTaskName,
         constraints: Constraints(
-          networkType: NetworkType.not_required, // 本地 OCR，无需网络
+          networkType: NetworkType.not_required,
           requiresBatteryNotLow: true,
         ),
-        existingWorkPolicy: ExistingWorkPolicy.append, // Append new requests
+        existingWorkPolicy: ExistingWorkPolicy.append,
       );
     } else if (defaultTargetPlatform == TargetPlatform.iOS) {
-      // iOS specific trigger
-      // On iOS, the first argument (uniqueName) acts as the BGTask identifier.
-      // It MUST match what is registered in Info.plist.
       await Workmanager().registerOneOffTask(
-        _ocrTaskName, // uniqueName = Identifier
-        _ocrTaskName, // taskName (used for dispatching)
+        _ocrTaskName,
+        _ocrTaskName,
         existingWorkPolicy: ExistingWorkPolicy.append,
         constraints: Constraints(
             networkType: NetworkType.not_required,

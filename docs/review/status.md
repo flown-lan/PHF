@@ -1,9 +1,13 @@
+```
 # Project Review Status Summary
 
 **Last Updated**: 2025-12-31
 **Coverage**: T0 - T20.2 (OCR Review UI)
 
-##  Approved Features (Highlights)
+## Approved Features (Highlights)
+- [x] **T20.4**: 全局搜索 (FTS5 + Highlight).
+- [x] **T20.6**: 修复 iOS 后台 OCR 调度及延迟 bug.
+- [x] **T21**: 修复图片删除崩溃并集成 `talker` 日志系统.
 - **Security Core**: AES-256-GCM encryption (T5), secure key management (T4), and random IV/path management (T6).
 - **Hardening (T16)**: Mandatory app lock on re-entry, independent thumbnail encryption keys, and optimized database configuration (Page Size = 4096).
 - **Onboarding & Auth**: Security Onboarding (T14) with PIN setup (SHA-256) and optional biometric authentication.

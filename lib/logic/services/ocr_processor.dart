@@ -21,14 +21,16 @@
 library;
 
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:talker_flutter/talker_flutter.dart';
-import '../../data/models/ocr_result.dart';
+import '../../data/models/ocr_queue_item.dart';
 import '../../data/models/record.dart';
 import '../../data/repositories/interfaces/ocr_queue_repository.dart';
 import '../../data/repositories/interfaces/image_repository.dart';
 import '../../data/repositories/interfaces/record_repository.dart';
 import '../../data/repositories/interfaces/search_repository.dart';
 import '../../core/security/file_security_helper.dart';
+import '../../core/services/path_provider_service.dart';
 import '../utils/smart_extractor.dart';
 import 'interfaces/ocr_service.dart';
 
@@ -39,6 +41,7 @@ class OCRProcessor {
   final ISearchRepository _searchRepository;
   final IOCRService _ocrService;
   final FileSecurityHelper _securityHelper;
+  final PathProviderService _pathService;
   final Talker? _talker;
 
   static const double _highConfidenceThreshold = 0.9;
@@ -50,6 +53,7 @@ class OCRProcessor {
     required ISearchRepository searchRepository,
     required IOCRService ocrService,
     required FileSecurityHelper securityHelper,
+    required PathProviderService pathService,
     Talker? talker,
   })  : _queueRepository = queueRepository,
         _imageRepository = imageRepository,
@@ -57,6 +61,7 @@ class OCRProcessor {
         _searchRepository = searchRepository,
         _ocrService = ocrService,
         _securityHelper = securityHelper,
+        _pathService = pathService,
         _talker = talker;
 
   /// 处理队列中的下一个任务
@@ -80,9 +85,14 @@ class OCRProcessor {
       }
 
       // 2. 解密图片 (Into Memory)
+      // Resolve absolute path from stored relative path
+      final fullPath = image.filePath.startsWith('/')
+          ? image.filePath
+          : '${_pathService.sandboxRoot}/${image.filePath}';
+
       // IOCRService 需要 Uint8List
       decryptedBytes = await _securityHelper.decryptDataFromFile(
-        image.filePath,
+        fullPath,
         image.encryptionKey, 
       );
 

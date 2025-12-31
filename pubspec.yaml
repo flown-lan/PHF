@@ -23,7 +23,7 @@ dependencies:
   image: ^4.2.0
   image_picker: ^1.1.2
   path_provider: ^2.1.3
-  google_mlkit_text_recognition: ^0.13.0
+  google_mlkit_text_recognition: ^0.15.0
   workmanager: ^0.5.2
   
   # Utils
@@ -39,6 +39,7 @@ dependencies:
   path: any
   talker_flutter: ^4.5.1
   talker_riverpod_logger: ^4.3.1
+  google_mlkit_commons: ^0.11.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -60,6 +61,10 @@ dev_dependencies:
   local_auth_windows: any
   image_picker_platform_interface: any
   sqflite_common: any
+
+dependency_overrides:
+  sqlite3: 2.5.0
+
 flutter:
   uses-material-design: true
   fonts:

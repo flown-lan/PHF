@@ -17,7 +17,7 @@ import '../ingestion/ingestion_page.dart';
 import '../search/global_search_page.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:talker_flutter/talker_flutter.dart';
-import '../../logic/providers/logging_provider.dart';
+import '../../../logic/providers/logging_provider.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
