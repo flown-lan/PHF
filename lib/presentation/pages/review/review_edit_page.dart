@@ -156,18 +156,34 @@ class _ReviewEditPageState extends ConsumerState<ReviewEditPage> {
                    if (images.length > 1) ...[
                      if (_currentImageIndex > 0)
                        Positioned(
-                         left: 8, top: 0, bottom: 0,
-                         child: IconButton(
-                           icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
-                           onPressed: () => _pageController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut),
+                         left: 12, top: 0, bottom: 0,
+                         child: Center(
+                           child: Container(
+                             decoration: BoxDecoration(
+                               color: Colors.black.withValues(alpha: 0.3),
+                               shape: BoxShape.circle,
+                             ),
+                             child: IconButton(
+                               icon: const Icon(Icons.chevron_left, color: Colors.white, size: 28),
+                               onPressed: () => _pageController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut),
+                             ),
+                           ),
                          ),
                        ),
                      if (_currentImageIndex < images.length - 1)
                        Positioned(
-                         right: 8, top: 0, bottom: 0,
-                         child: IconButton(
-                           icon: const Icon(Icons.arrow_forward_ios, color: Colors.white),
-                           onPressed: () => _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut),
+                         right: 12, top: 0, bottom: 0,
+                         child: Center(
+                           child: Container(
+                             decoration: BoxDecoration(
+                               color: Colors.black.withValues(alpha: 0.3),
+                               shape: BoxShape.circle,
+                             ),
+                             child: IconButton(
+                               icon: const Icon(Icons.chevron_right, color: Colors.white, size: 28),
+                               onPressed: () => _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut),
+                             ),
+                           ),
                          ),
                        ),
                    ],
@@ -176,9 +192,16 @@ class _ReviewEditPageState extends ConsumerState<ReviewEditPage> {
                      bottom: 16, left: 0, right: 0,
                      child: Center(
                        child: Container(
-                         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                         decoration: BoxDecoration(color: Colors.black54, borderRadius: BorderRadius.circular(16)),
-                         child: Text('${_currentImageIndex + 1} / ${images.length}', style: const TextStyle(color: Colors.white, fontSize: 12)),
+                         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                         decoration: BoxDecoration(
+                           color: Colors.black.withValues(alpha: 0.5), 
+                           borderRadius: BorderRadius.circular(20),
+                           border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
+                         ),
+                         child: Text(
+                           '图片 ${_currentImageIndex + 1} / ${images.length} (请核对每页信息)', 
+                           style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
+                         ),
                        ),
                      ),
                    ),
