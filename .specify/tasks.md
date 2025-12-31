@@ -219,7 +219,7 @@
 ### T18: OCR 引擎集成 (Phase 2.2)
 - [x] **Implement (T18.1)**: 定义 `IOCRService` 抽象接口及 `OCRResult` 数据结构 (包含 text, blocks, confidence)。 (Complexity: Low)
     - *Ref: Constitution#II. Architecture (Facade Pattern)*
-- [ ] **Implement (T18.2 - Android)**: 实现 `AndroidOCRService`，集成 `google_mlkit_text_recognition`。配置 `android/build.gradle`。 (Complexity: Medium)
+- [x] **Implement (T18.2 - Android)**: 实现 `AndroidOCRService`，集成 `google_mlkit_text_recognition`。配置 `android/build.gradle`。 (Complexity: Medium)
     - *Ref: Constitution#II. Local-First (Offline ML Kit)*
 - [ ] **Implement (T18.3 - iOS)**: 实现 `IOSOCRService`。
     - 编写 iOS 端 `OCRPlugin.swift` (利用 Vision Framework `VNRecognizeTextRequest`)。

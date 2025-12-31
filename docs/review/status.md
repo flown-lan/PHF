@@ -1,7 +1,7 @@
 # Project Review Status Summary
 
 **Last Updated**: 2025-12-31
-**Coverage**: T0 - T18 (Base Interface)
+**Coverage**: T0 - T18.2 (Android OCR)
 
 ## �� Approved Features (Highlights)
 - **Security Core**: AES-256-GCM encryption (T5), secure key management (T4), and random IV/path management (T6).
@@ -18,7 +18,7 @@
 
 ## 🟡 Pending Issues / Technical Debt
 - **T10: Physical Wiping**: Reliance on OS file deletion.
-- **Phase 2 OCR Integration**: Infrastructure and schema are ready (T17). `IOCRService` base interface and `OCRResult` models are defined (T18.1). Background processing logic and UI layers are pending.
+- **Phase 2 OCR Integration**: Infrastructure and schema are ready (T17). `IOCRService` defined (T18.1) and Android implementation ready (T18.2). iOS implementation and background logic are pending.
 
 ## 🔴 Blockers
 - None.
