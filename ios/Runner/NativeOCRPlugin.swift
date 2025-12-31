@@ -1,10 +1,44 @@
+import Flutter
 import UIKit
 import Vision
 
 /// 负责调用 Vision Framework 进行文字识别的插件逻辑
 /// 
 /// Ref: Constitution#II. Local-First (Native Vision Framework)
-class NativeOCRPlugin {
+public class NativeOCRPlugin: NSObject, FlutterPlugin {
+    
+    public static func register(with registrar: FlutterPluginRegistrar) {
+        let channel = FlutterMethodChannel(name: "com.example.phf/ocr", binaryMessenger: registrar.messenger())
+        let instance = NativeOCRPlugin()
+        registrar.addMethodCallDelegate(instance, channel: channel)
+    }
+
+    public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if call.method == "recognizeText" {
+            guard let args = call.arguments as? [String: Any],
+                  let imagePath = args["imagePath"] as? String else {
+                result(FlutterError(code: "INVALID_ARGUMENT", message: "imagePath is required", details: nil))
+                return
+            }
+            
+            self.analyzeImage(at: imagePath) { ocrResult in
+                switch ocrResult {
+                case .success(let data):
+                    do {
+                        let jsonData = try JSONSerialization.data(withJSONObject: data, options: [])
+                        let jsonString = String(data: jsonData, encoding: .utf8)
+                        result(jsonString)
+                    } catch {
+                        result(FlutterError(code: "JSON_ERROR", message: "Failed to serialize OCR result", details: error.localizedDescription))
+                    }
+                case .failure(let error):
+                    result(FlutterError(code: "OCR_ERROR", message: error.localizedDescription, details: nil))
+                }
+            }
+        } else {
+            result(FlutterMethodNotImplemented)
+        }
+    }
     
     /// 执行图片 OCR
     /// - Parameters:

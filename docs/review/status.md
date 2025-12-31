@@ -17,7 +17,8 @@
 - **Components**: `EventCard` and `SecureImage` (T13.3) for secure in-memory media rendering.
 - **OCR (Phase 2)**: `IOCRService` (T18.1), `AndroidOCRService` (T18.2), and `IOSOCRService` (T18.3) reviewed and refactored.
 - **Intelligence (Phase 2)**: `SmartExtractor` (T19.1) and `OCRProcessor` (T19.2) reviewed. Core extraction and background orchestration logic verified.
-- **Background (Phase 2)**: `BackgroundWorkerService` (T19.3/T19.4) implemented for Android & iOS.
+- **Background (Phase 2)**: `BackgroundWorkerService` (T19.3 - Android) implemented and verified.
+- **Background (Phase 2)**: iOS `BGTaskScheduler` & Headless Plugin Registry (T19.4) implemented and verified.
 
 ## 🟡 Pending Issues / Technical Debt
 - **T10: Physical Wiping**: Reliance on OS file deletion.

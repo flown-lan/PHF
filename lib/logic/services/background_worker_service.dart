@@ -27,6 +27,8 @@ import '../../data/repositories/ocr_queue_repository.dart';
 import '../../data/repositories/record_repository.dart';
 import '../../data/repositories/search_repository.dart';
 import '../services/android_ocr_service.dart';
+import '../services/ios_ocr_service.dart';
+import '../services/interfaces/ocr_service.dart';
 import '../services/ocr_processor.dart';
 
 // CryptoService implementation for DI
@@ -44,14 +46,7 @@ void callbackDispatcher() {
         log('Background OCR Worker Started', name: 'BackgroundWorker');
         
         // 1. Rebuild Dependencies
-        // SecureStorage is handled internally by MasterKeyManager default constructor
-        // PathProvider needed only for standard paths if MasterKeyManager needed? 
-        // No, MasterKeyManager uses storage. PathProvider is for DatabaseService.
-        
         final pathService = PathProviderService();
-        // Initialize path provider? Note: PathProviderService might rely on getApplicationDocumentsDirectory
-        // which works in background via MethodChannel.
-        
         final keyManager = MasterKeyManager();
         
         // Database
@@ -70,10 +65,16 @@ void callbackDispatcher() {
         final recordRepo = RecordRepository(dbService);
         final searchRepo = SearchRepository(dbService);
 
-        // OCR Service (Platform Specific - assuming Android per task scope)
-        // If running on iOS via workmanager, this might need check, but T19.4 is separate.
-        // T19.3 is Android focused.
-        final ocrService = AndroidOCRService();
+        // OCR Service (Platform Specific)
+        IOCRService ocrService;
+        if (defaultTargetPlatform == TargetPlatform.android) {
+          ocrService = AndroidOCRService();
+        } else if (defaultTargetPlatform == TargetPlatform.iOS) {
+          ocrService = IOSOCRService();
+        } else {
+           log('Unsupported platform for Background OCR', name: 'BackgroundWorker');
+           return Future.value(true);
+        }
 
         // Processor
         final processor = OCRProcessor(

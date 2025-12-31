@@ -71,7 +71,7 @@ void main() {
       debugDefaultTargetPlatformOverride = null;
     });
 
-    testWidgets('initialize skips on iOS (handled by separate logic or native)', (tester) async {
+    testWidgets('initialize registers dispatcher on iOS', (tester) async {
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
       
       final service = BackgroundWorkerService();
@@ -84,7 +84,30 @@ void main() {
 
       await service.initialize();
       
-      expect(log, isEmpty); // Should not call Android Workmanager init
+      expect(log, isNotEmpty);
+      expect(log.first.method, 'initialize');
+      
+      debugDefaultTargetPlatformOverride = null;
+    });
+
+    testWidgets('triggerProcessing registers task on iOS', (tester) async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      
+      final service = BackgroundWorkerService();
+      final log = <MethodCall>[];
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(const MethodChannel('be.tramckrijte.workmanager/foreground_channel_work_manager'), (methodCall) async {
+        log.add(methodCall);
+        return true;
+      });
+
+      await service.triggerProcessing();
+      
+      expect(log, isNotEmpty);
+      expect(log.first.method, 'registerOneOffTask');
+      final args = log.first.arguments as Map;
+      // iOS doesn't use uniqueWorkName in the same way, but registerOneOffTask maps to BGTask
+      expect(args['taskName'], 'com.example.phf.ocr.processing_task'); 
       
       debugDefaultTargetPlatformOverride = null;
     });
