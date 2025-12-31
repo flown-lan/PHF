@@ -20,6 +20,8 @@ import '../../data/repositories/interfaces/tag_repository.dart';
 import '../../data/repositories/tag_repository.dart';
 import '../../data/repositories/interfaces/search_repository.dart';
 import '../../data/repositories/search_repository.dart';
+import '../../data/repositories/interfaces/ocr_queue_repository.dart';
+import '../../data/repositories/ocr_queue_repository.dart';
 import '../../data/models/tag.dart';
 import '../services/crypto_service.dart';
 import '../services/security_service.dart';
@@ -117,6 +119,12 @@ ITagRepository tagRepository(TagRepositoryRef ref) {
 ISearchRepository searchRepository(SearchRepositoryRef ref) {
   final db = ref.watch(databaseServiceProvider);
   return SearchRepository(db);
+}
+
+@Riverpod(keepAlive: true)
+IOCRQueueRepository ocrQueueRepository(OcrQueueRepositoryRef ref) {
+  final db = ref.watch(databaseServiceProvider);
+  return OCRQueueRepository(db);
 }
 
 @riverpod

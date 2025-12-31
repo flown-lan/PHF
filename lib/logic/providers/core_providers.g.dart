@@ -247,6 +247,24 @@ final searchRepositoryProvider = Provider<ISearchRepository>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef SearchRepositoryRef = ProviderRef<ISearchRepository>;
+String _$ocrQueueRepositoryHash() =>
+    r'51ffda68483ba7261db2e4d115d7051d32053ae1';
+
+/// See also [ocrQueueRepository].
+@ProviderFor(ocrQueueRepository)
+final ocrQueueRepositoryProvider = Provider<IOCRQueueRepository>.internal(
+  ocrQueueRepository,
+  name: r'ocrQueueRepositoryProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$ocrQueueRepositoryHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef OcrQueueRepositoryRef = ProviderRef<IOCRQueueRepository>;
 String _$allTagsHash() => r'2da877478590ccc47192cb22afe601e3bda15acf';
 
 /// See also [allTags].
