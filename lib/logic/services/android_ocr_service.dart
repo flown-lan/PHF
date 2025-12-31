@@ -13,6 +13,7 @@
 ///   识别完成后立即销毁。
 library;
 
+import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
@@ -30,6 +31,8 @@ class AndroidOCRService implements IOCRService {
   Future<OCRResult> recognizeText(Uint8List imageBytes, {String? mimeType}) async {
     File? tempFile;
     try {
+      log('Starting OCR for image size: ${imageBytes.length} bytes', name: 'AndroidOCRService');
+      
       // 1. Create secure temp file
       final tempDir = await getTemporaryDirectory();
       final uuid = const Uuid().v4();
@@ -42,16 +45,20 @@ class AndroidOCRService implements IOCRService {
 
       // 3. Process
       final RecognizedText recognizedText = await _textRecognizer.processImage(inputImage);
+      
+      log('OCR completed. Found ${recognizedText.blocks.length} blocks.', name: 'AndroidOCRService');
 
       // 4. Map to Domain Model
       return _mapToOCRResult(recognizedText);
-    } catch (e) {
+    } catch (e, stack) {
+      log('OCR Failed: $e', name: 'AndroidOCRService', error: e, stackTrace: stack);
       // Re-throw or handle specific ML Kit errors
       throw Exception('OCR Logic Error: $e');
     } finally {
       // 5. Secure Wipe (Crucial)
       if (tempFile != null && await tempFile.exists()) {
         await tempFile.delete();
+        log('Secure wipe of temp OCR file completed.', name: 'AndroidOCRService');
       }
     }
   }

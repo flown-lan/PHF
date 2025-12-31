@@ -33,6 +33,7 @@ class OCRBlock with _$OCRBlock {
 
 @freezed
 class OCRResult with _$OCRResult {
+  @JsonSerializable(explicitToJson: true)
   const factory OCRResult({
     required String text,
     @Default([]) List<OCRBlock> blocks,

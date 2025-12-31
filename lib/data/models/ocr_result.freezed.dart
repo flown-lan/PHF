@@ -348,7 +348,8 @@ class __$$OCRResultImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(explicitToJson: true)
 class _$OCRResultImpl implements _OCRResult {
   const _$OCRResultImpl(
       {required this.text,

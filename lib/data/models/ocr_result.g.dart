@@ -37,6 +37,6 @@ _$OCRResultImpl _$$OCRResultImplFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$$OCRResultImplToJson(_$OCRResultImpl instance) =>
     <String, dynamic>{
       'text': instance.text,
-      'blocks': instance.blocks,
+      'blocks': instance.blocks.map((e) => e.toJson()).toList(),
       'confidence': instance.confidence,
     };
