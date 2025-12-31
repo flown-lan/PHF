@@ -1,14 +1,14 @@
 # Project Review Status Summary
 
 **Last Updated**: 2025-12-31
-**Coverage**: T0 - T16
+**Coverage**: T0 - T17
 
 ## �� Approved Features (Highlights)
 - **Security Core**: AES-256-GCM encryption (T5), secure key management (T4), and random IV/path management (T6).
 - **Hardening (T16)**: Mandatory app lock on re-entry, independent thumbnail encryption keys, and optimized database configuration (Page Size = 4096).
 - **Onboarding & Auth**: Security Onboarding (T14) with PIN setup (SHA-256) and optional biometric authentication.
 - **Data Persistence**: Encrypted SQLCipher database (T8) with FTS5. Initial Schema and Seed Data (T9) deployed.
-- **Repository Layer**: Type-safe `RecordRepository` and `ImageRepository` (T12) with automated tag cache synchronization. Optimized batch querying for images (T16).
+- **Repository Layer**: Type-safe `RecordRepository`, `ImageRepository` (T12), `OCRQueueRepository`, and `SearchRepository` (T17). Automated tag cache synchronization and OCR task management.
 - **Image Handling**: WebP compression (T16), basic processing (T10), and Gallery/Camera integration (T11).
 - **UI & UX (T16 Overhaul)**: 
   - **Timeline**: Simplified navigation (AppBar-only settings), 4-6 image grid preview, and optimized data loading.
@@ -18,7 +18,7 @@
 
 ## 🟡 Pending Issues / Technical Debt
 - **T10: Physical Wiping**: Reliance on OS file deletion.
-- **Phase 2 OCR Integration**: Ingestion flow is ready, but background processing logic is pending.
+- **Phase 2 OCR Integration**: Infrastructure and schema are ready (T17). OCR background processing logic and UI confirmation layers are pending.
 
 ## 🔴 Blockers
 - None.

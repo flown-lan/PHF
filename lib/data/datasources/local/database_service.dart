@@ -21,6 +21,7 @@
 /// - `hospitals`: 医院数据
 /// - `app_meta`: 应用元数据
 /// - `ocr_search_index`: FTS5 全文索引
+/// - `ocr_queue`: OCR 任务队列
 library;
 
 import 'dart:convert';
@@ -32,7 +33,7 @@ import 'seeds/database_seeder.dart';
 
 class SQLCipherDatabaseService {
   static const String _dbName = 'phf_encrypted.db';
-  static const int _dbVersion = 5;
+  static const int _dbVersion = 6;
 
   final MasterKeyManager keyManager;
   final PathProviderService pathService;
@@ -128,12 +129,12 @@ class SQLCipherDatabaseService {
     ''');
 
     // 3. Records (就诊事件)
-    // 状态管理: 'archived' (默认/已归档), 'processing', 'review', 'deleted'
+    // 状态管理: 'processing' (待OCR), 'archived' (已归档/OCR完成), 'deleted'
     batch.execute('''
       CREATE TABLE records (
         id              TEXT PRIMARY KEY,
         person_id       TEXT NOT NULL REFERENCES persons(id) ON DELETE CASCADE,
-        status          TEXT NOT NULL DEFAULT 'archived',
+        status          TEXT NOT NULL DEFAULT 'processing',
         visit_date_ms   INTEGER,
         visit_date_iso  TEXT,
         hospital_name   TEXT,
@@ -201,10 +202,23 @@ class SQLCipherDatabaseService {
       )
     ''');
 
-    // 8. FTS5 Search Index (OCR 全文检索)
+    // 8. OCR Queue (异步任务队列)
+    batch.execute('''
+      CREATE TABLE ocr_queue (
+        id              TEXT PRIMARY KEY,
+        image_id        TEXT NOT NULL REFERENCES images(id) ON DELETE CASCADE,
+        status          TEXT NOT NULL DEFAULT 'pending',
+        retry_count     INTEGER DEFAULT 0,
+        last_error      TEXT,
+        created_at_ms   INTEGER NOT NULL,
+        updated_at_ms   INTEGER NOT NULL
+      )
+    ''');
+
+    // 9. FTS5 Search Index (OCR 全文检索)
     // UNINDEXED: record_id 不参与分词，但可以被取回
     batch.execute('''
-      CREATE VIRTUAL TABLE ocr_search_index USING fts5(
+      CREATE VIRTUAL TABLE IF NOT EXISTS ocr_search_index USING fts5(
         record_id UNINDEXED, 
         content
       )
@@ -214,8 +228,9 @@ class SQLCipherDatabaseService {
     batch.execute('CREATE INDEX idx_records_visit_date ON records(visit_date_ms)');
     batch.execute('CREATE INDEX idx_records_person_status ON records(person_id, status)');
     batch.execute('CREATE INDEX idx_images_record_order ON images(record_id, page_index)');
+    batch.execute('CREATE INDEX idx_ocr_queue_status ON ocr_queue(status)');
 
-    // 9. 执行种子数据填充
+    // 10. 执行种子数据填充
     DatabaseSeeder.run(batch);
 
     await batch.commit();
@@ -228,19 +243,14 @@ class SQLCipherDatabaseService {
       // Upgrade to v2: Add Tags Schema
       
       // 1. Add 'tags_cache' to records table
-      // SQLite 'ADD COLUMN' adds it as NULLable.
       try {
         await db.execute('ALTER TABLE records ADD COLUMN tags_cache TEXT');
-      } catch (_) {
-        // Ignore if column exists (though unlikely in verified upgrade path)
-      }
+      } catch (_) {}
 
       // 2. Add 'tags' to images table
       try {
         await db.execute('ALTER TABLE images ADD COLUMN tags TEXT');
-      } catch (_) {
-        // Ignore
-      }
+      } catch (_) {}
 
       // 3. Create 'tags' table
       batch.execute('''
@@ -264,7 +274,7 @@ class SQLCipherDatabaseService {
         )
       ''');
 
-      // 5. Seed System Tags (Copied from DatabaseSeeder logic)
+      // 5. Seed System Tags
       final now = DateTime.now().millisecondsSinceEpoch;
       final tags = [
         {'id': 'sys_tag_1', 'name': '检验', 'color': '#009688', 'order_index': 1}, 
@@ -289,12 +299,8 @@ class SQLCipherDatabaseService {
       // Upgrade to v3: Add thumbnail_encryption_key to images
       try {
         await db.execute('ALTER TABLE images ADD COLUMN thumbnail_encryption_key TEXT');
-        // For existing rows, we can't easily generate new random keys here without business logic,
-        // so we migrate by copying encryption_key (which was the previous workaround).
         await db.execute('UPDATE images SET thumbnail_encryption_key = encryption_key WHERE thumbnail_encryption_key IS NULL');
-      } catch (_) {
-        // Ignore
-      }
+      } catch (_) {}
     }
 
     if (oldVersion < 4) {
@@ -303,7 +309,6 @@ class SQLCipherDatabaseService {
         await db.execute('ALTER TABLE images ADD COLUMN hospital_name TEXT');
         await db.execute('ALTER TABLE images ADD COLUMN visit_date_ms INTEGER');
         
-        // Migrate data from parent record to existing images
         await db.execute('''
           UPDATE images 
           SET hospital_name = (SELECT hospital_name FROM records WHERE records.id = images.record_id),
@@ -317,10 +322,40 @@ class SQLCipherDatabaseService {
       // Upgrade to v5: Add visit_end_date_ms to records
       try {
         await db.execute('ALTER TABLE records ADD COLUMN visit_end_date_ms INTEGER');
-        
-        // Initialize visit_end_date_ms with the same value as visit_date_ms for existing records
         await db.execute('UPDATE records SET visit_end_date_ms = visit_date_ms WHERE visit_end_date_ms IS NULL');
       } catch (_) {}
+    }
+
+    if (oldVersion < 6) {
+      // Upgrade to v6: Phase 2.1 Schema (OCR & Queue)
+      
+      // 1. records table default (Note: SQLite doesn't support ALTER COLUMN SET DEFAULT)
+      // For existing records, we can update them to 'archived' if they don't have a status.
+      // But they should already have 'archived' from previous versions.
+      
+      // 2. ocr_queue table
+      batch.execute('''
+        CREATE TABLE IF NOT EXISTS ocr_queue (
+          id              TEXT PRIMARY KEY,
+          image_id        TEXT NOT NULL REFERENCES images(id) ON DELETE CASCADE,
+          status          TEXT NOT NULL DEFAULT 'pending',
+          retry_count     INTEGER DEFAULT 0,
+          last_error      TEXT,
+          created_at_ms   INTEGER NOT NULL,
+          updated_at_ms   INTEGER NOT NULL
+        )
+      ''');
+
+      // 3. FTS5 Index (Ensure it exists)
+      batch.execute('''
+        CREATE VIRTUAL TABLE IF NOT EXISTS ocr_search_index USING fts5(
+          record_id UNINDEXED, 
+          content
+        )
+      ''');
+
+      // 4. Index for queue
+      batch.execute('CREATE INDEX IF NOT EXISTS idx_ocr_queue_status ON ocr_queue(status)');
     }
     
     await batch.commit();

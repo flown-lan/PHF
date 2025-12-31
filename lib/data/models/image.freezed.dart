@@ -30,7 +30,10 @@ mixin _$MedicalImage {
   int get fileSize => throw _privateConstructorUsedError;
   int get displayOrder => throw _privateConstructorUsedError;
   int? get width => throw _privateConstructorUsedError;
-  int? get height => throw _privateConstructorUsedError;
+  int? get height => throw _privateConstructorUsedError; // OCR Results
+  String? get ocrText => throw _privateConstructorUsedError;
+  String? get ocrRawJson => throw _privateConstructorUsedError;
+  double? get ocrConfidence => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
   String? get hospitalName => throw _privateConstructorUsedError;
   DateTime? get visitDate => throw _privateConstructorUsedError;
@@ -70,6 +73,9 @@ abstract class $MedicalImageCopyWith<$Res> {
       int displayOrder,
       int? width,
       int? height,
+      String? ocrText,
+      String? ocrRawJson,
+      double? ocrConfidence,
       DateTime createdAt,
       String? hospitalName,
       DateTime? visitDate,
@@ -103,6 +109,9 @@ class _$MedicalImageCopyWithImpl<$Res, $Val extends MedicalImage>
     Object? displayOrder = null,
     Object? width = freezed,
     Object? height = freezed,
+    Object? ocrText = freezed,
+    Object? ocrRawJson = freezed,
+    Object? ocrConfidence = freezed,
     Object? createdAt = null,
     Object? hospitalName = freezed,
     Object? visitDate = freezed,
@@ -154,6 +163,18 @@ class _$MedicalImageCopyWithImpl<$Res, $Val extends MedicalImage>
           ? _value.height
           : height // ignore: cast_nullable_to_non_nullable
               as int?,
+      ocrText: freezed == ocrText
+          ? _value.ocrText
+          : ocrText // ignore: cast_nullable_to_non_nullable
+              as String?,
+      ocrRawJson: freezed == ocrRawJson
+          ? _value.ocrRawJson
+          : ocrRawJson // ignore: cast_nullable_to_non_nullable
+              as String?,
+      ocrConfidence: freezed == ocrConfidence
+          ? _value.ocrConfidence
+          : ocrConfidence // ignore: cast_nullable_to_non_nullable
+              as double?,
       createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -198,6 +219,9 @@ abstract class _$$MedicalImageImplCopyWith<$Res>
       int displayOrder,
       int? width,
       int? height,
+      String? ocrText,
+      String? ocrRawJson,
+      double? ocrConfidence,
       DateTime createdAt,
       String? hospitalName,
       DateTime? visitDate,
@@ -229,6 +253,9 @@ class __$$MedicalImageImplCopyWithImpl<$Res>
     Object? displayOrder = null,
     Object? width = freezed,
     Object? height = freezed,
+    Object? ocrText = freezed,
+    Object? ocrRawJson = freezed,
+    Object? ocrConfidence = freezed,
     Object? createdAt = null,
     Object? hospitalName = freezed,
     Object? visitDate = freezed,
@@ -280,6 +307,18 @@ class __$$MedicalImageImplCopyWithImpl<$Res>
           ? _value.height
           : height // ignore: cast_nullable_to_non_nullable
               as int?,
+      ocrText: freezed == ocrText
+          ? _value.ocrText
+          : ocrText // ignore: cast_nullable_to_non_nullable
+              as String?,
+      ocrRawJson: freezed == ocrRawJson
+          ? _value.ocrRawJson
+          : ocrRawJson // ignore: cast_nullable_to_non_nullable
+              as String?,
+      ocrConfidence: freezed == ocrConfidence
+          ? _value.ocrConfidence
+          : ocrConfidence // ignore: cast_nullable_to_non_nullable
+              as double?,
       createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -319,6 +358,9 @@ class _$MedicalImageImpl implements _MedicalImage {
       this.displayOrder = 0,
       this.width,
       this.height,
+      this.ocrText,
+      this.ocrRawJson,
+      this.ocrConfidence,
       required this.createdAt,
       this.hospitalName,
       this.visitDate,
@@ -356,6 +398,13 @@ class _$MedicalImageImpl implements _MedicalImage {
   final int? width;
   @override
   final int? height;
+// OCR Results
+  @override
+  final String? ocrText;
+  @override
+  final String? ocrRawJson;
+  @override
+  final double? ocrConfidence;
   @override
   final DateTime createdAt;
   @override
@@ -389,7 +438,7 @@ class _$MedicalImageImpl implements _MedicalImage {
 
   @override
   String toString() {
-    return 'MedicalImage(id: $id, recordId: $recordId, encryptionKey: $encryptionKey, thumbnailEncryptionKey: $thumbnailEncryptionKey, filePath: $filePath, thumbnailPath: $thumbnailPath, mimeType: $mimeType, fileSize: $fileSize, displayOrder: $displayOrder, width: $width, height: $height, createdAt: $createdAt, hospitalName: $hospitalName, visitDate: $visitDate, tagIds: $tagIds, tags: $tags)';
+    return 'MedicalImage(id: $id, recordId: $recordId, encryptionKey: $encryptionKey, thumbnailEncryptionKey: $thumbnailEncryptionKey, filePath: $filePath, thumbnailPath: $thumbnailPath, mimeType: $mimeType, fileSize: $fileSize, displayOrder: $displayOrder, width: $width, height: $height, ocrText: $ocrText, ocrRawJson: $ocrRawJson, ocrConfidence: $ocrConfidence, createdAt: $createdAt, hospitalName: $hospitalName, visitDate: $visitDate, tagIds: $tagIds, tags: $tags)';
   }
 
   @override
@@ -416,6 +465,11 @@ class _$MedicalImageImpl implements _MedicalImage {
                 other.displayOrder == displayOrder) &&
             (identical(other.width, width) || other.width == width) &&
             (identical(other.height, height) || other.height == height) &&
+            (identical(other.ocrText, ocrText) || other.ocrText == ocrText) &&
+            (identical(other.ocrRawJson, ocrRawJson) ||
+                other.ocrRawJson == ocrRawJson) &&
+            (identical(other.ocrConfidence, ocrConfidence) ||
+                other.ocrConfidence == ocrConfidence) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.hospitalName, hospitalName) ||
@@ -428,24 +482,28 @@ class _$MedicalImageImpl implements _MedicalImage {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      recordId,
-      encryptionKey,
-      thumbnailEncryptionKey,
-      filePath,
-      thumbnailPath,
-      mimeType,
-      fileSize,
-      displayOrder,
-      width,
-      height,
-      createdAt,
-      hospitalName,
-      visitDate,
-      const DeepCollectionEquality().hash(_tagIds),
-      const DeepCollectionEquality().hash(_tags));
+  int get hashCode => Object.hashAll([
+        runtimeType,
+        id,
+        recordId,
+        encryptionKey,
+        thumbnailEncryptionKey,
+        filePath,
+        thumbnailPath,
+        mimeType,
+        fileSize,
+        displayOrder,
+        width,
+        height,
+        ocrText,
+        ocrRawJson,
+        ocrConfidence,
+        createdAt,
+        hospitalName,
+        visitDate,
+        const DeepCollectionEquality().hash(_tagIds),
+        const DeepCollectionEquality().hash(_tags)
+      ]);
 
   /// Create a copy of MedicalImage
   /// with the given fields replaced by the non-null parameter values.
@@ -476,6 +534,9 @@ abstract class _MedicalImage implements MedicalImage {
       final int displayOrder,
       final int? width,
       final int? height,
+      final String? ocrText,
+      final String? ocrRawJson,
+      final double? ocrConfidence,
       required final DateTime createdAt,
       final String? hospitalName,
       final DateTime? visitDate,
@@ -507,7 +568,13 @@ abstract class _MedicalImage implements MedicalImage {
   @override
   int? get width;
   @override
-  int? get height;
+  int? get height; // OCR Results
+  @override
+  String? get ocrText;
+  @override
+  String? get ocrRawJson;
+  @override
+  double? get ocrConfidence;
   @override
   DateTime get createdAt;
   @override

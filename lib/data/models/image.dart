@@ -13,6 +13,9 @@
 /// - `fileSize`: 文件大小 (字节).
 /// - `displayOrder`: 在 Record 中的显示顺序.
 /// - `width`, `height`: 原始图像素尺寸.
+/// - `ocrText`: OCR 识别出的全文文本.
+/// - `ocrRawJson`: OCR 识别的原始结构化数据 (JSON).
+/// - `ocrConfidence`: OCR 识别的置信度评分.
 /// - `createdAt`: 图片录入时间.
 /// - `tags`: 该图片关联的标签列表 (非数据库字段, 内存聚合).
 ///
@@ -41,6 +44,11 @@ class MedicalImage with _$MedicalImage {
     @Default(0) int displayOrder,
     int? width,
     int? height,
+    
+    // OCR Results
+    String? ocrText,
+    String? ocrRawJson,
+    double? ocrConfidence,
 
     required DateTime createdAt,
     String? hospitalName,

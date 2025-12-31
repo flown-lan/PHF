@@ -251,7 +251,7 @@ class _$MedicalRecordImpl implements _MedicalRecord {
       this.visitEndDate,
       required this.createdAt,
       required this.updatedAt,
-      this.status = RecordStatus.archived,
+      this.status = RecordStatus.processing,
       this.tagsCache,
       @JsonKey(includeFromJson: false, includeToJson: false)
       final List<MedicalImage> images = const []})

@@ -19,7 +19,7 @@ _$MedicalRecordImpl _$$MedicalRecordImplFromJson(Map<String, dynamic> json) =>
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
       status: $enumDecodeNullable(_$RecordStatusEnumMap, json['status']) ??
-          RecordStatus.archived,
+          RecordStatus.processing,
       tagsCache: json['tagsCache'] as String?,
     );
 
@@ -38,6 +38,7 @@ Map<String, dynamic> _$$MedicalRecordImplToJson(_$MedicalRecordImpl instance) =>
     };
 
 const _$RecordStatusEnumMap = {
+  RecordStatus.processing: 'processing',
   RecordStatus.archived: 'archived',
   RecordStatus.deleted: 'deleted',
 };
