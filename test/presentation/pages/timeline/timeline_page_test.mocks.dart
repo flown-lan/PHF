@@ -82,6 +82,37 @@ class MockIRecordRepository extends _i1.Mock implements _i2.IRecordRepository {
       ) as _i3.Future<void>);
 
   @override
+  _i3.Future<void> updateRecordMetadata(
+    String? id, {
+    String? hospitalName,
+    DateTime? visitDate,
+    String? notes,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #updateRecordMetadata,
+          [id],
+          {
+            #hospitalName: hospitalName,
+            #visitDate: visitDate,
+            #notes: notes,
+          },
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
+
+  @override
+  _i3.Future<void> hardDeleteRecord(String? id) => (super.noSuchMethod(
+        Invocation.method(
+          #hardDeleteRecord,
+          [id],
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
+
+  @override
   _i3.Future<List<_i4.MedicalRecord>> searchRecords({
     required String? personId,
     String? query,

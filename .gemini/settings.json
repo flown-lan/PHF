@@ -4,7 +4,8 @@
             "command": "dart",
             "args": [
                 "mcp-server",
-                "--force-roots-fallback"
+                "--force-roots-fallback",
+                "/Users/lanzf/Projects/PHF"
             ]
         }
     }

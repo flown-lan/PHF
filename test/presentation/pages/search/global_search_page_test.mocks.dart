@@ -65,6 +65,16 @@ class MockISearchRepository extends _i1.Mock implements _i2.ISearchRepository {
       ) as _i3.Future<void>);
 
   @override
+  _i3.Future<void> syncRecordIndex(String? recordId) => (super.noSuchMethod(
+        Invocation.method(
+          #syncRecordIndex,
+          [recordId],
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
+
+  @override
   _i3.Future<void> deleteIndex(String? recordId) => (super.noSuchMethod(
         Invocation.method(
           #deleteIndex,
