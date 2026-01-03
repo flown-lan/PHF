@@ -38,6 +38,7 @@ dependencies:
   path: any
   talker_flutter: ^5.1.9
   talker_riverpod_logger: ^5.1.9
+  meta: ^1.15.0
 
 dev_dependencies:
   flutter_test:
@@ -60,6 +61,7 @@ dev_dependencies:
   image_picker_platform_interface: any
   sqflite_common: any
   dart_code_linter: ^3.2.1
+  workmanager_platform_interface: ^0.9.1+1
 
 flutter:
   uses-material-design: true
