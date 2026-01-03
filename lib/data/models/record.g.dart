@@ -18,7 +18,8 @@ _MedicalRecord _$MedicalRecordFromJson(Map<String, dynamic> json) =>
           : DateTime.parse(json['visitEndDate'] as String),
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
-      status: $enumDecodeNullable(_$RecordStatusEnumMap, json['status']) ??
+      status:
+          $enumDecodeNullable(_$RecordStatusEnumMap, json['status']) ??
           RecordStatus.processing,
       tagsCache: json['tagsCache'] as String?,
     );

@@ -15,15 +15,15 @@ final searchControllerProvider = SearchControllerProvider._();
 final class SearchControllerProvider
     extends $AsyncNotifierProvider<SearchController, List<SearchResult>> {
   SearchControllerProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'searchControllerProvider',
-          isAutoDispose: true,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'searchControllerProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$searchControllerHash();
@@ -42,11 +42,14 @@ abstract class _$SearchController extends $AsyncNotifier<List<SearchResult>> {
   void runBuild() {
     final ref =
         this.ref as $Ref<AsyncValue<List<SearchResult>>, List<SearchResult>>;
-    final element = ref.element as $ClassProviderElement<
-        AnyNotifier<AsyncValue<List<SearchResult>>, List<SearchResult>>,
-        AsyncValue<List<SearchResult>>,
-        Object?,
-        Object?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<List<SearchResult>>, List<SearchResult>>,
+              AsyncValue<List<SearchResult>>,
+              Object?,
+              Object?
+            >;
     element.handleCreate(ref, build);
   }
 }

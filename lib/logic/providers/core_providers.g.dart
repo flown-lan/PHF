@@ -12,20 +12,24 @@ part of 'core_providers.dart';
 @ProviderFor(pathProviderService)
 final pathProviderServiceProvider = PathProviderServiceProvider._();
 
-final class PathProviderServiceProvider extends $FunctionalProvider<
-    PathProviderService,
-    PathProviderService,
-    PathProviderService> with $Provider<PathProviderService> {
+final class PathProviderServiceProvider
+    extends
+        $FunctionalProvider<
+          PathProviderService,
+          PathProviderService,
+          PathProviderService
+        >
+    with $Provider<PathProviderService> {
   PathProviderServiceProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'pathProviderServiceProvider',
-          isAutoDispose: false,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'pathProviderServiceProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$pathProviderServiceHash();
@@ -33,8 +37,8 @@ final class PathProviderServiceProvider extends $FunctionalProvider<
   @$internal
   @override
   $ProviderElement<PathProviderService> $createElement(
-          $ProviderPointer pointer) =>
-      $ProviderElement(pointer);
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
 
   @override
   PathProviderService create(Ref ref) {
@@ -56,20 +60,24 @@ String _$pathProviderServiceHash() =>
 @ProviderFor(permissionService)
 final permissionServiceProvider = PermissionServiceProvider._();
 
-final class PermissionServiceProvider extends $FunctionalProvider<
-    PermissionService,
-    PermissionService,
-    PermissionService> with $Provider<PermissionService> {
+final class PermissionServiceProvider
+    extends
+        $FunctionalProvider<
+          PermissionService,
+          PermissionService,
+          PermissionService
+        >
+    with $Provider<PermissionService> {
   PermissionServiceProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'permissionServiceProvider',
-          isAutoDispose: false,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'permissionServiceProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$permissionServiceHash();
@@ -77,8 +85,8 @@ final class PermissionServiceProvider extends $FunctionalProvider<
   @$internal
   @override
   $ProviderElement<PermissionService> $createElement(
-          $ProviderPointer pointer) =>
-      $ProviderElement(pointer);
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
 
   @override
   PermissionService create(Ref ref) {
@@ -99,20 +107,24 @@ String _$permissionServiceHash() => r'c2d80eefe41d876497606e2f7f35e68b50a5d1d7';
 @ProviderFor(masterKeyManager)
 final masterKeyManagerProvider = MasterKeyManagerProvider._();
 
-final class MasterKeyManagerProvider extends $FunctionalProvider<
-    MasterKeyManager,
-    MasterKeyManager,
-    MasterKeyManager> with $Provider<MasterKeyManager> {
+final class MasterKeyManagerProvider
+    extends
+        $FunctionalProvider<
+          MasterKeyManager,
+          MasterKeyManager,
+          MasterKeyManager
+        >
+    with $Provider<MasterKeyManager> {
   MasterKeyManagerProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'masterKeyManagerProvider',
-          isAutoDispose: false,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'masterKeyManagerProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$masterKeyManagerHash();
@@ -141,20 +153,24 @@ String _$masterKeyManagerHash() => r'baa610668f63a9468e933fa5de2e59faceeebbae';
 @ProviderFor(databaseService)
 final databaseServiceProvider = DatabaseServiceProvider._();
 
-final class DatabaseServiceProvider extends $FunctionalProvider<
-    SQLCipherDatabaseService,
-    SQLCipherDatabaseService,
-    SQLCipherDatabaseService> with $Provider<SQLCipherDatabaseService> {
+final class DatabaseServiceProvider
+    extends
+        $FunctionalProvider<
+          SQLCipherDatabaseService,
+          SQLCipherDatabaseService,
+          SQLCipherDatabaseService
+        >
+    with $Provider<SQLCipherDatabaseService> {
   DatabaseServiceProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'databaseServiceProvider',
-          isAutoDispose: false,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'databaseServiceProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$databaseServiceHash();
@@ -162,8 +178,8 @@ final class DatabaseServiceProvider extends $FunctionalProvider<
   @$internal
   @override
   $ProviderElement<SQLCipherDatabaseService> $createElement(
-          $ProviderPointer pointer) =>
-      $ProviderElement(pointer);
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
 
   @override
   SQLCipherDatabaseService create(Ref ref) {
@@ -184,20 +200,24 @@ String _$databaseServiceHash() => r'4a6397efd932ef53bd6e69e8e7484d7973edaae7';
 @ProviderFor(fileSecurityHelper)
 final fileSecurityHelperProvider = FileSecurityHelperProvider._();
 
-final class FileSecurityHelperProvider extends $FunctionalProvider<
-    FileSecurityHelper,
-    FileSecurityHelper,
-    FileSecurityHelper> with $Provider<FileSecurityHelper> {
+final class FileSecurityHelperProvider
+    extends
+        $FunctionalProvider<
+          FileSecurityHelper,
+          FileSecurityHelper,
+          FileSecurityHelper
+        >
+    with $Provider<FileSecurityHelper> {
   FileSecurityHelperProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'fileSecurityHelperProvider',
-          isAutoDispose: false,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'fileSecurityHelperProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$fileSecurityHelperHash();
@@ -205,8 +225,8 @@ final class FileSecurityHelperProvider extends $FunctionalProvider<
   @$internal
   @override
   $ProviderElement<FileSecurityHelper> $createElement(
-          $ProviderPointer pointer) =>
-      $ProviderElement(pointer);
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
 
   @override
   FileSecurityHelper create(Ref ref) {
@@ -232,15 +252,15 @@ final class ImageProcessingServiceProvider
     extends $FunctionalProvider<IImageService, IImageService, IImageService>
     with $Provider<IImageService> {
   ImageProcessingServiceProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'imageProcessingServiceProvider',
-          isAutoDispose: false,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'imageProcessingServiceProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$imageProcessingServiceHash();
@@ -270,18 +290,20 @@ String _$imageProcessingServiceHash() =>
 @ProviderFor(galleryService)
 final galleryServiceProvider = GalleryServiceProvider._();
 
-final class GalleryServiceProvider extends $FunctionalProvider<IGalleryService,
-    IGalleryService, IGalleryService> with $Provider<IGalleryService> {
+final class GalleryServiceProvider
+    extends
+        $FunctionalProvider<IGalleryService, IGalleryService, IGalleryService>
+    with $Provider<IGalleryService> {
   GalleryServiceProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'galleryServiceProvider',
-          isAutoDispose: false,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'galleryServiceProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$galleryServiceHash();
@@ -310,20 +332,24 @@ String _$galleryServiceHash() => r'c27c171329bb2a913915c82476b8287feacbbc3f';
 @ProviderFor(recordRepository)
 final recordRepositoryProvider = RecordRepositoryProvider._();
 
-final class RecordRepositoryProvider extends $FunctionalProvider<
-    IRecordRepository,
-    IRecordRepository,
-    IRecordRepository> with $Provider<IRecordRepository> {
+final class RecordRepositoryProvider
+    extends
+        $FunctionalProvider<
+          IRecordRepository,
+          IRecordRepository,
+          IRecordRepository
+        >
+    with $Provider<IRecordRepository> {
   RecordRepositoryProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'recordRepositoryProvider',
-          isAutoDispose: false,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'recordRepositoryProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$recordRepositoryHash();
@@ -331,8 +357,8 @@ final class RecordRepositoryProvider extends $FunctionalProvider<
   @$internal
   @override
   $ProviderElement<IRecordRepository> $createElement(
-          $ProviderPointer pointer) =>
-      $ProviderElement(pointer);
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
 
   @override
   IRecordRepository create(Ref ref) {
@@ -357,15 +383,15 @@ final class CryptoServiceProvider
     extends $FunctionalProvider<ICryptoService, ICryptoService, ICryptoService>
     with $Provider<ICryptoService> {
   CryptoServiceProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'cryptoServiceProvider',
-          isAutoDispose: false,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'cryptoServiceProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$cryptoServiceHash();
@@ -394,20 +420,24 @@ String _$cryptoServiceHash() => r'7bf1c14754df33bf2bac1d9430f02e51b3c70e8d';
 @ProviderFor(imageRepository)
 final imageRepositoryProvider = ImageRepositoryProvider._();
 
-final class ImageRepositoryProvider extends $FunctionalProvider<
-    IImageRepository,
-    IImageRepository,
-    IImageRepository> with $Provider<IImageRepository> {
+final class ImageRepositoryProvider
+    extends
+        $FunctionalProvider<
+          IImageRepository,
+          IImageRepository,
+          IImageRepository
+        >
+    with $Provider<IImageRepository> {
   ImageRepositoryProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'imageRepositoryProvider',
-          isAutoDispose: false,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'imageRepositoryProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$imageRepositoryHash();
@@ -436,20 +466,24 @@ String _$imageRepositoryHash() => r'a818f6f215615efc5cc70caac9292da693082327';
 @ProviderFor(appMetaRepository)
 final appMetaRepositoryProvider = AppMetaRepositoryProvider._();
 
-final class AppMetaRepositoryProvider extends $FunctionalProvider<
-    AppMetaRepository,
-    AppMetaRepository,
-    AppMetaRepository> with $Provider<AppMetaRepository> {
+final class AppMetaRepositoryProvider
+    extends
+        $FunctionalProvider<
+          AppMetaRepository,
+          AppMetaRepository,
+          AppMetaRepository
+        >
+    with $Provider<AppMetaRepository> {
   AppMetaRepositoryProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'appMetaRepositoryProvider',
-          isAutoDispose: false,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'appMetaRepositoryProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$appMetaRepositoryHash();
@@ -457,8 +491,8 @@ final class AppMetaRepositoryProvider extends $FunctionalProvider<
   @$internal
   @override
   $ProviderElement<AppMetaRepository> $createElement(
-          $ProviderPointer pointer) =>
-      $ProviderElement(pointer);
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
 
   @override
   AppMetaRepository create(Ref ref) {
@@ -479,18 +513,20 @@ String _$appMetaRepositoryHash() => r'e9091b67401ef415be39f15a9daf4ab9414b92ed';
 @ProviderFor(securityService)
 final securityServiceProvider = SecurityServiceProvider._();
 
-final class SecurityServiceProvider extends $FunctionalProvider<SecurityService,
-    SecurityService, SecurityService> with $Provider<SecurityService> {
+final class SecurityServiceProvider
+    extends
+        $FunctionalProvider<SecurityService, SecurityService, SecurityService>
+    with $Provider<SecurityService> {
   SecurityServiceProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'securityServiceProvider',
-          isAutoDispose: false,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'securityServiceProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$securityServiceHash();
@@ -523,15 +559,15 @@ final class TagRepositoryProvider
     extends $FunctionalProvider<ITagRepository, ITagRepository, ITagRepository>
     with $Provider<ITagRepository> {
   TagRepositoryProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'tagRepositoryProvider',
-          isAutoDispose: false,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'tagRepositoryProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$tagRepositoryHash();
@@ -560,20 +596,24 @@ String _$tagRepositoryHash() => r'93305b9c45a923381656be0c101fcbd6339d8d48';
 @ProviderFor(searchRepository)
 final searchRepositoryProvider = SearchRepositoryProvider._();
 
-final class SearchRepositoryProvider extends $FunctionalProvider<
-    ISearchRepository,
-    ISearchRepository,
-    ISearchRepository> with $Provider<ISearchRepository> {
+final class SearchRepositoryProvider
+    extends
+        $FunctionalProvider<
+          ISearchRepository,
+          ISearchRepository,
+          ISearchRepository
+        >
+    with $Provider<ISearchRepository> {
   SearchRepositoryProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'searchRepositoryProvider',
-          isAutoDispose: false,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'searchRepositoryProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$searchRepositoryHash();
@@ -581,8 +621,8 @@ final class SearchRepositoryProvider extends $FunctionalProvider<
   @$internal
   @override
   $ProviderElement<ISearchRepository> $createElement(
-          $ProviderPointer pointer) =>
-      $ProviderElement(pointer);
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
 
   @override
   ISearchRepository create(Ref ref) {
@@ -603,20 +643,24 @@ String _$searchRepositoryHash() => r'1fcc9063bbf4a2b83823d515e9c69d41088307f6';
 @ProviderFor(ocrQueueRepository)
 final ocrQueueRepositoryProvider = OcrQueueRepositoryProvider._();
 
-final class OcrQueueRepositoryProvider extends $FunctionalProvider<
-    IOCRQueueRepository,
-    IOCRQueueRepository,
-    IOCRQueueRepository> with $Provider<IOCRQueueRepository> {
+final class OcrQueueRepositoryProvider
+    extends
+        $FunctionalProvider<
+          IOCRQueueRepository,
+          IOCRQueueRepository,
+          IOCRQueueRepository
+        >
+    with $Provider<IOCRQueueRepository> {
   OcrQueueRepositoryProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'ocrQueueRepositoryProvider',
-          isAutoDispose: false,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'ocrQueueRepositoryProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$ocrQueueRepositoryHash();
@@ -624,8 +668,8 @@ final class OcrQueueRepositoryProvider extends $FunctionalProvider<
   @$internal
   @override
   $ProviderElement<IOCRQueueRepository> $createElement(
-          $ProviderPointer pointer) =>
-      $ProviderElement(pointer);
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
 
   @override
   IOCRQueueRepository create(Ref ref) {
@@ -647,19 +691,24 @@ String _$ocrQueueRepositoryHash() =>
 @ProviderFor(allTags)
 final allTagsProvider = AllTagsProvider._();
 
-final class AllTagsProvider extends $FunctionalProvider<AsyncValue<List<Tag>>,
-        List<Tag>, FutureOr<List<Tag>>>
+final class AllTagsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<Tag>>,
+          List<Tag>,
+          FutureOr<List<Tag>>
+        >
     with $FutureModifier<List<Tag>>, $FutureProvider<List<Tag>> {
   AllTagsProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'allTagsProvider',
-          isAutoDispose: true,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'allTagsProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$allTagsHash();

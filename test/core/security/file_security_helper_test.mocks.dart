@@ -29,14 +29,13 @@ import 'package:phf/logic/services/interfaces/crypto_service.dart' as _i2;
 /// See the documentation for Mockito's code generation for more information.
 class MockICryptoService extends _i1.Mock implements _i2.ICryptoService {
   @override
-  _i3.Uint8List generateRandomKey() => (super.noSuchMethod(
-        Invocation.method(
-          #generateRandomKey,
-          [],
-        ),
-        returnValue: _i3.Uint8List(0),
-        returnValueForMissingStub: _i3.Uint8List(0),
-      ) as _i3.Uint8List);
+  _i3.Uint8List generateRandomKey() =>
+      (super.noSuchMethod(
+            Invocation.method(#generateRandomKey, []),
+            returnValue: _i3.Uint8List(0),
+            returnValueForMissingStub: _i3.Uint8List(0),
+          )
+          as _i3.Uint8List);
 
   @override
   _i4.Future<_i3.Uint8List> encrypt({
@@ -45,19 +44,17 @@ class MockICryptoService extends _i1.Mock implements _i2.ICryptoService {
     _i3.Uint8List? associatedData,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #encrypt,
-          [],
-          {
-            #data: data,
-            #key: key,
-            #associatedData: associatedData,
-          },
-        ),
-        returnValue: _i4.Future<_i3.Uint8List>.value(_i3.Uint8List(0)),
-        returnValueForMissingStub:
-            _i4.Future<_i3.Uint8List>.value(_i3.Uint8List(0)),
-      ) as _i4.Future<_i3.Uint8List>);
+            Invocation.method(#encrypt, [], {
+              #data: data,
+              #key: key,
+              #associatedData: associatedData,
+            }),
+            returnValue: _i4.Future<_i3.Uint8List>.value(_i3.Uint8List(0)),
+            returnValueForMissingStub: _i4.Future<_i3.Uint8List>.value(
+              _i3.Uint8List(0),
+            ),
+          )
+          as _i4.Future<_i3.Uint8List>);
 
   @override
   _i4.Future<_i3.Uint8List> decrypt({
@@ -66,19 +63,17 @@ class MockICryptoService extends _i1.Mock implements _i2.ICryptoService {
     _i3.Uint8List? associatedData,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #decrypt,
-          [],
-          {
-            #encryptedData: encryptedData,
-            #key: key,
-            #associatedData: associatedData,
-          },
-        ),
-        returnValue: _i4.Future<_i3.Uint8List>.value(_i3.Uint8List(0)),
-        returnValueForMissingStub:
-            _i4.Future<_i3.Uint8List>.value(_i3.Uint8List(0)),
-      ) as _i4.Future<_i3.Uint8List>);
+            Invocation.method(#decrypt, [], {
+              #encryptedData: encryptedData,
+              #key: key,
+              #associatedData: associatedData,
+            }),
+            returnValue: _i4.Future<_i3.Uint8List>.value(_i3.Uint8List(0)),
+            returnValueForMissingStub: _i4.Future<_i3.Uint8List>.value(
+              _i3.Uint8List(0),
+            ),
+          )
+          as _i4.Future<_i3.Uint8List>);
 
   @override
   _i4.Future<void> encryptFile({
@@ -87,18 +82,15 @@ class MockICryptoService extends _i1.Mock implements _i2.ICryptoService {
     required _i3.Uint8List? key,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #encryptFile,
-          [],
-          {
-            #sourcePath: sourcePath,
-            #destPath: destPath,
-            #key: key,
-          },
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+            Invocation.method(#encryptFile, [], {
+              #sourcePath: sourcePath,
+              #destPath: destPath,
+              #key: key,
+            }),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   _i4.Future<void> decryptFile({
@@ -107,16 +99,13 @@ class MockICryptoService extends _i1.Mock implements _i2.ICryptoService {
     required _i3.Uint8List? key,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #decryptFile,
-          [],
-          {
-            #sourcePath: sourcePath,
-            #destPath: destPath,
-            #key: key,
-          },
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+            Invocation.method(#decryptFile, [], {
+              #sourcePath: sourcePath,
+              #destPath: destPath,
+              #key: key,
+            }),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 }

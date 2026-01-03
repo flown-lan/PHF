@@ -28,13 +28,8 @@ import 'package:phf/core/services/path_provider_service.dart' as _i6;
 // ignore_for_file: invalid_use_of_internal_member
 
 class _FakeFile_0 extends _i1.SmartFake implements _i2.File {
-  _FakeFile_0(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeFile_0(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 /// A class which mocks [MasterKeyManager].
@@ -42,36 +37,35 @@ class _FakeFile_0 extends _i1.SmartFake implements _i2.File {
 /// See the documentation for Mockito's code generation for more information.
 class MockMasterKeyManager extends _i1.Mock implements _i3.MasterKeyManager {
   @override
-  _i4.Future<_i5.Uint8List> getMasterKey() => (super.noSuchMethod(
-        Invocation.method(
-          #getMasterKey,
-          [],
-        ),
-        returnValue: _i4.Future<_i5.Uint8List>.value(_i5.Uint8List(0)),
-        returnValueForMissingStub:
-            _i4.Future<_i5.Uint8List>.value(_i5.Uint8List(0)),
-      ) as _i4.Future<_i5.Uint8List>);
+  _i4.Future<_i5.Uint8List> getMasterKey() =>
+      (super.noSuchMethod(
+            Invocation.method(#getMasterKey, []),
+            returnValue: _i4.Future<_i5.Uint8List>.value(_i5.Uint8List(0)),
+            returnValueForMissingStub: _i4.Future<_i5.Uint8List>.value(
+              _i5.Uint8List(0),
+            ),
+          )
+          as _i4.Future<_i5.Uint8List>);
 
   @override
-  _i4.Future<_i5.Uint8List> getUserSalt() => (super.noSuchMethod(
-        Invocation.method(
-          #getUserSalt,
-          [],
-        ),
-        returnValue: _i4.Future<_i5.Uint8List>.value(_i5.Uint8List(0)),
-        returnValueForMissingStub:
-            _i4.Future<_i5.Uint8List>.value(_i5.Uint8List(0)),
-      ) as _i4.Future<_i5.Uint8List>);
+  _i4.Future<_i5.Uint8List> getUserSalt() =>
+      (super.noSuchMethod(
+            Invocation.method(#getUserSalt, []),
+            returnValue: _i4.Future<_i5.Uint8List>.value(_i5.Uint8List(0)),
+            returnValueForMissingStub: _i4.Future<_i5.Uint8List>.value(
+              _i5.Uint8List(0),
+            ),
+          )
+          as _i4.Future<_i5.Uint8List>);
 
   @override
-  _i4.Future<void> wipeAll() => (super.noSuchMethod(
-        Invocation.method(
-          #wipeAll,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> wipeAll() =>
+      (super.noSuchMethod(
+            Invocation.method(#wipeAll, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 }
 
 /// A class which mocks [PathProviderService].
@@ -80,119 +74,114 @@ class MockMasterKeyManager extends _i1.Mock implements _i3.MasterKeyManager {
 class MockPathProviderService extends _i1.Mock
     implements _i6.PathProviderService {
   @override
-  String get sandboxRoot => (super.noSuchMethod(
-        Invocation.getter(#sandboxRoot),
-        returnValue: _i7.dummyValue<String>(
-          this,
-          Invocation.getter(#sandboxRoot),
-        ),
-        returnValueForMissingStub: _i7.dummyValue<String>(
-          this,
-          Invocation.getter(#sandboxRoot),
-        ),
-      ) as String);
+  String get sandboxRoot =>
+      (super.noSuchMethod(
+            Invocation.getter(#sandboxRoot),
+            returnValue: _i7.dummyValue<String>(
+              this,
+              Invocation.getter(#sandboxRoot),
+            ),
+            returnValueForMissingStub: _i7.dummyValue<String>(
+              this,
+              Invocation.getter(#sandboxRoot),
+            ),
+          )
+          as String);
 
   @override
-  String get dbDirPath => (super.noSuchMethod(
-        Invocation.getter(#dbDirPath),
-        returnValue: _i7.dummyValue<String>(
-          this,
-          Invocation.getter(#dbDirPath),
-        ),
-        returnValueForMissingStub: _i7.dummyValue<String>(
-          this,
-          Invocation.getter(#dbDirPath),
-        ),
-      ) as String);
+  String get dbDirPath =>
+      (super.noSuchMethod(
+            Invocation.getter(#dbDirPath),
+            returnValue: _i7.dummyValue<String>(
+              this,
+              Invocation.getter(#dbDirPath),
+            ),
+            returnValueForMissingStub: _i7.dummyValue<String>(
+              this,
+              Invocation.getter(#dbDirPath),
+            ),
+          )
+          as String);
 
   @override
-  String get imagesDirPath => (super.noSuchMethod(
-        Invocation.getter(#imagesDirPath),
-        returnValue: _i7.dummyValue<String>(
-          this,
-          Invocation.getter(#imagesDirPath),
-        ),
-        returnValueForMissingStub: _i7.dummyValue<String>(
-          this,
-          Invocation.getter(#imagesDirPath),
-        ),
-      ) as String);
+  String get imagesDirPath =>
+      (super.noSuchMethod(
+            Invocation.getter(#imagesDirPath),
+            returnValue: _i7.dummyValue<String>(
+              this,
+              Invocation.getter(#imagesDirPath),
+            ),
+            returnValueForMissingStub: _i7.dummyValue<String>(
+              this,
+              Invocation.getter(#imagesDirPath),
+            ),
+          )
+          as String);
 
   @override
-  String get tempDirPath => (super.noSuchMethod(
-        Invocation.getter(#tempDirPath),
-        returnValue: _i7.dummyValue<String>(
-          this,
-          Invocation.getter(#tempDirPath),
-        ),
-        returnValueForMissingStub: _i7.dummyValue<String>(
-          this,
-          Invocation.getter(#tempDirPath),
-        ),
-      ) as String);
+  String get tempDirPath =>
+      (super.noSuchMethod(
+            Invocation.getter(#tempDirPath),
+            returnValue: _i7.dummyValue<String>(
+              this,
+              Invocation.getter(#tempDirPath),
+            ),
+            returnValueForMissingStub: _i7.dummyValue<String>(
+              this,
+              Invocation.getter(#tempDirPath),
+            ),
+          )
+          as String);
 
   @override
-  _i4.Future<void> initialize() => (super.noSuchMethod(
-        Invocation.method(
-          #initialize,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> initialize() =>
+      (super.noSuchMethod(
+            Invocation.method(#initialize, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  String getDatabasePath(String? fileName) => (super.noSuchMethod(
-        Invocation.method(
-          #getDatabasePath,
-          [fileName],
-        ),
-        returnValue: _i7.dummyValue<String>(
-          this,
-          Invocation.method(
-            #getDatabasePath,
-            [fileName],
-          ),
-        ),
-        returnValueForMissingStub: _i7.dummyValue<String>(
-          this,
-          Invocation.method(
-            #getDatabasePath,
-            [fileName],
-          ),
-        ),
-      ) as String);
+  String getDatabasePath(String? fileName) =>
+      (super.noSuchMethod(
+            Invocation.method(#getDatabasePath, [fileName]),
+            returnValue: _i7.dummyValue<String>(
+              this,
+              Invocation.method(#getDatabasePath, [fileName]),
+            ),
+            returnValueForMissingStub: _i7.dummyValue<String>(
+              this,
+              Invocation.method(#getDatabasePath, [fileName]),
+            ),
+          )
+          as String);
 
   @override
   _i4.Future<_i2.File> getSecureFile(String? relativePath) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getSecureFile,
-          [relativePath],
-        ),
-        returnValue: _i4.Future<_i2.File>.value(_FakeFile_0(
-          this,
-          Invocation.method(
-            #getSecureFile,
-            [relativePath],
-          ),
-        )),
-        returnValueForMissingStub: _i4.Future<_i2.File>.value(_FakeFile_0(
-          this,
-          Invocation.method(
-            #getSecureFile,
-            [relativePath],
-          ),
-        )),
-      ) as _i4.Future<_i2.File>);
+            Invocation.method(#getSecureFile, [relativePath]),
+            returnValue: _i4.Future<_i2.File>.value(
+              _FakeFile_0(
+                this,
+                Invocation.method(#getSecureFile, [relativePath]),
+              ),
+            ),
+            returnValueForMissingStub: _i4.Future<_i2.File>.value(
+              _FakeFile_0(
+                this,
+                Invocation.method(#getSecureFile, [relativePath]),
+              ),
+            ),
+          )
+          as _i4.Future<_i2.File>);
 
   @override
-  _i4.Future<void> clearTemp() => (super.noSuchMethod(
-        Invocation.method(
-          #clearTemp,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> clearTemp() =>
+      (super.noSuchMethod(
+            Invocation.method(#clearTemp, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 }

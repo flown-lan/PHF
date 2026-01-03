@@ -15,15 +15,15 @@ final talkerProvider = TalkerProvider._();
 final class TalkerProvider extends $FunctionalProvider<Talker, Talker, Talker>
     with $Provider<Talker> {
   TalkerProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'talkerProvider',
-          isAutoDispose: false,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'talkerProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$talkerHash();

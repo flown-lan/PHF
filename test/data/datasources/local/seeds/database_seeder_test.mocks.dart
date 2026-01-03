@@ -29,11 +29,13 @@ import 'package:sqflite_common/sqlite_api.dart' as _i2;
 /// See the documentation for Mockito's code generation for more information.
 class MockBatch extends _i1.Mock implements _i2.Batch {
   @override
-  int get length => (super.noSuchMethod(
-        Invocation.getter(#length),
-        returnValue: 0,
-        returnValueForMissingStub: 0,
-      ) as int);
+  int get length =>
+      (super.noSuchMethod(
+            Invocation.getter(#length),
+            returnValue: 0,
+            returnValueForMissingStub: 0,
+          )
+          as int);
 
   @override
   _i3.Future<List<Object?>> commit({
@@ -42,52 +44,37 @@ class MockBatch extends _i1.Mock implements _i2.Batch {
     bool? continueOnError,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #commit,
-          [],
-          {
-            #exclusive: exclusive,
-            #noResult: noResult,
-            #continueOnError: continueOnError,
-          },
-        ),
-        returnValue: _i3.Future<List<Object?>>.value(<Object?>[]),
-        returnValueForMissingStub: _i3.Future<List<Object?>>.value(<Object?>[]),
-      ) as _i3.Future<List<Object?>>);
+            Invocation.method(#commit, [], {
+              #exclusive: exclusive,
+              #noResult: noResult,
+              #continueOnError: continueOnError,
+            }),
+            returnValue: _i3.Future<List<Object?>>.value(<Object?>[]),
+            returnValueForMissingStub: _i3.Future<List<Object?>>.value(
+              <Object?>[],
+            ),
+          )
+          as _i3.Future<List<Object?>>);
 
   @override
-  _i3.Future<List<Object?>> apply({
-    bool? noResult,
-    bool? continueOnError,
-  }) =>
+  _i3.Future<List<Object?>> apply({bool? noResult, bool? continueOnError}) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #apply,
-          [],
-          {
-            #noResult: noResult,
-            #continueOnError: continueOnError,
-          },
-        ),
-        returnValue: _i3.Future<List<Object?>>.value(<Object?>[]),
-        returnValueForMissingStub: _i3.Future<List<Object?>>.value(<Object?>[]),
-      ) as _i3.Future<List<Object?>>);
+            Invocation.method(#apply, [], {
+              #noResult: noResult,
+              #continueOnError: continueOnError,
+            }),
+            returnValue: _i3.Future<List<Object?>>.value(<Object?>[]),
+            returnValueForMissingStub: _i3.Future<List<Object?>>.value(
+              <Object?>[],
+            ),
+          )
+          as _i3.Future<List<Object?>>);
 
   @override
-  void rawInsert(
-    String? sql, [
-    List<Object?>? arguments,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #rawInsert,
-          [
-            sql,
-            arguments,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void rawInsert(String? sql, [List<Object?>? arguments]) => super.noSuchMethod(
+    Invocation.method(#rawInsert, [sql, arguments]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void insert(
@@ -95,37 +82,20 @@ class MockBatch extends _i1.Mock implements _i2.Batch {
     Map<String, Object?>? values, {
     String? nullColumnHack,
     _i4.ConflictAlgorithm? conflictAlgorithm,
-  }) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #insert,
-          [
-            table,
-            values,
-          ],
-          {
-            #nullColumnHack: nullColumnHack,
-            #conflictAlgorithm: conflictAlgorithm,
-          },
-        ),
-        returnValueForMissingStub: null,
-      );
+  }) => super.noSuchMethod(
+    Invocation.method(
+      #insert,
+      [table, values],
+      {#nullColumnHack: nullColumnHack, #conflictAlgorithm: conflictAlgorithm},
+    ),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void rawUpdate(
-    String? sql, [
-    List<Object?>? arguments,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #rawUpdate,
-          [
-            sql,
-            arguments,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void rawUpdate(String? sql, [List<Object?>? arguments]) => super.noSuchMethod(
+    Invocation.method(#rawUpdate, [sql, arguments]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void update(
@@ -134,72 +104,41 @@ class MockBatch extends _i1.Mock implements _i2.Batch {
     String? where,
     List<Object?>? whereArgs,
     _i4.ConflictAlgorithm? conflictAlgorithm,
-  }) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #update,
-          [
-            table,
-            values,
-          ],
-          {
-            #where: where,
-            #whereArgs: whereArgs,
-            #conflictAlgorithm: conflictAlgorithm,
-          },
-        ),
-        returnValueForMissingStub: null,
-      );
+  }) => super.noSuchMethod(
+    Invocation.method(
+      #update,
+      [table, values],
+      {
+        #where: where,
+        #whereArgs: whereArgs,
+        #conflictAlgorithm: conflictAlgorithm,
+      },
+    ),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void rawDelete(
-    String? sql, [
-    List<Object?>? arguments,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #rawDelete,
-          [
-            sql,
-            arguments,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void rawDelete(String? sql, [List<Object?>? arguments]) => super.noSuchMethod(
+    Invocation.method(#rawDelete, [sql, arguments]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void delete(
-    String? table, {
-    String? where,
-    List<Object?>? whereArgs,
-  }) =>
+  void delete(String? table, {String? where, List<Object?>? whereArgs}) =>
       super.noSuchMethod(
         Invocation.method(
           #delete,
           [table],
-          {
-            #where: where,
-            #whereArgs: whereArgs,
-          },
+          {#where: where, #whereArgs: whereArgs},
         ),
         returnValueForMissingStub: null,
       );
 
   @override
-  void execute(
-    String? sql, [
-    List<Object?>? arguments,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #execute,
-          [
-            sql,
-            arguments,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void execute(String? sql, [List<Object?>? arguments]) => super.noSuchMethod(
+    Invocation.method(#execute, [sql, arguments]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void query(
@@ -213,39 +152,28 @@ class MockBatch extends _i1.Mock implements _i2.Batch {
     String? orderBy,
     int? limit,
     int? offset,
-  }) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #query,
-          [table],
-          {
-            #distinct: distinct,
-            #columns: columns,
-            #where: where,
-            #whereArgs: whereArgs,
-            #groupBy: groupBy,
-            #having: having,
-            #orderBy: orderBy,
-            #limit: limit,
-            #offset: offset,
-          },
-        ),
-        returnValueForMissingStub: null,
-      );
+  }) => super.noSuchMethod(
+    Invocation.method(
+      #query,
+      [table],
+      {
+        #distinct: distinct,
+        #columns: columns,
+        #where: where,
+        #whereArgs: whereArgs,
+        #groupBy: groupBy,
+        #having: having,
+        #orderBy: orderBy,
+        #limit: limit,
+        #offset: offset,
+      },
+    ),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void rawQuery(
-    String? sql, [
-    List<Object?>? arguments,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #rawQuery,
-          [
-            sql,
-            arguments,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void rawQuery(String? sql, [List<Object?>? arguments]) => super.noSuchMethod(
+    Invocation.method(#rawQuery, [sql, arguments]),
+    returnValueForMissingStub: null,
+  );
 }

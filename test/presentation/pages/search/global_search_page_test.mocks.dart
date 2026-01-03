@@ -29,58 +29,42 @@ import 'package:phf/data/repositories/interfaces/search_repository.dart' as _i2;
 /// See the documentation for Mockito's code generation for more information.
 class MockISearchRepository extends _i1.Mock implements _i2.ISearchRepository {
   @override
-  _i3.Future<List<_i4.SearchResult>> search(
-    String? query,
-    String? personId,
-  ) =>
+  _i3.Future<List<_i4.SearchResult>> search(String? query, String? personId) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #search,
-          [
-            query,
-            personId,
-          ],
-        ),
-        returnValue:
-            _i3.Future<List<_i4.SearchResult>>.value(<_i4.SearchResult>[]),
-        returnValueForMissingStub:
-            _i3.Future<List<_i4.SearchResult>>.value(<_i4.SearchResult>[]),
-      ) as _i3.Future<List<_i4.SearchResult>>);
+            Invocation.method(#search, [query, personId]),
+            returnValue: _i3.Future<List<_i4.SearchResult>>.value(
+              <_i4.SearchResult>[],
+            ),
+            returnValueForMissingStub: _i3.Future<List<_i4.SearchResult>>.value(
+              <_i4.SearchResult>[],
+            ),
+          )
+          as _i3.Future<List<_i4.SearchResult>>);
 
   @override
-  _i3.Future<void> updateIndex(
-    String? recordId,
-    String? content,
-  ) =>
+  _i3.Future<void> updateIndex(String? recordId, String? content) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #updateIndex,
-          [
-            recordId,
-            content,
-          ],
-        ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+            Invocation.method(#updateIndex, [recordId, content]),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
 
   @override
-  _i3.Future<void> syncRecordIndex(String? recordId) => (super.noSuchMethod(
-        Invocation.method(
-          #syncRecordIndex,
-          [recordId],
-        ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+  _i3.Future<void> syncRecordIndex(String? recordId) =>
+      (super.noSuchMethod(
+            Invocation.method(#syncRecordIndex, [recordId]),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
 
   @override
-  _i3.Future<void> deleteIndex(String? recordId) => (super.noSuchMethod(
-        Invocation.method(
-          #deleteIndex,
-          [recordId],
-        ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+  _i3.Future<void> deleteIndex(String? recordId) =>
+      (super.noSuchMethod(
+            Invocation.method(#deleteIndex, [recordId]),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
 }
