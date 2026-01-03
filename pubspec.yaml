@@ -60,6 +60,7 @@ dev_dependencies:
   local_auth_windows: any
   image_picker_platform_interface: any
   sqflite_common: any
+  dart_code_linter: ^3.2.1
 
 flutter:
   uses-material-design: true

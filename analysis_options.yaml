@@ -29,3 +29,25 @@ linter:
     - avoid_print
     - avoid_web_libraries_in_flutter
     - no_logic_in_create_state
+
+analyzer_plugin:
+  - dart_code_linter
+
+dart_code_linter:
+  metrics:
+    cyclomatic-complexity: 20
+    maximum-nesting-level: 5
+    number-of-parameters: 5
+    source-lines-of-code: 50
+  metrics-exclude:
+    - test/**
+  rules:
+    - no-equal-then-else
+    - no-object-declaration
+    - member-ordering:
+        order:
+          - public-fields
+          - private-fields
+          - constructors
+          - public-methods
+          - private-methods

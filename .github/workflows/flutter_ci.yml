@@ -1,0 +1,68 @@
+name: Flutter CI
+
+on:
+  push:
+    branches: [ feat/phase3 ]
+  pull_request:
+    branches: [ feat/phase3 ]
+
+jobs:
+  quality-check:
+    name: Lint & Test
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📚 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🐧 Install Linux dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libsqlite3-dev libsqlcipher-dev
+
+      - name: 🚀 Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: 📦 Install dependencies
+        run: flutter pub get
+
+      - name: 🛠️ Verify Generated Code
+        run: |
+          dart run build_runner build --delete-conflicting-outputs
+          git diff --exit-code
+
+      - name: 🎨 Check Formatting
+        run: dart format --set-exit-if-changed .
+
+      - name: 🔍 Static Analysis
+        run: flutter analyze
+
+      - name: 📊 Check Code Metrics
+        run: dart run dart_code_linter:metrics analyze lib
+
+      - name: 🧪 Run Unit Tests
+        run: flutter test
+
+  analyze:
+    name: CodeQL Analysis
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    steps:
+      - name: 📚 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🛠️ Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: javascript-typescript # CodeQL supports JS/TS, Python, Go, etc. 
+          # Note: Dart/Flutter support in CodeQL is currently limited but can analyze underlying native code.
+
+      - name: 🔍 Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
