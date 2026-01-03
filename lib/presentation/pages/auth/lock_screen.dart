@@ -5,16 +5,13 @@ import '../../theme/app_theme.dart';
 import '../../widgets/pin_keyboard.dart';
 
 /// # LockScreen
-/// 
+///
 /// ## Description
 /// 应用锁界面。在冷启动或从后台恢复时显示，要求用户进行身份验证。
 class LockScreen extends ConsumerStatefulWidget {
   final VoidCallback onAuthenticated;
 
-  const LockScreen({
-    super.key,
-    required this.onAuthenticated,
-  });
+  const LockScreen({super.key, required this.onAuthenticated});
 
   @override
   ConsumerState<LockScreen> createState() => _LockScreenState();
@@ -34,7 +31,8 @@ class _LockScreenState extends ConsumerState<LockScreen> {
     final securityService = ref.read(securityServiceProvider);
     final isEnabled = await securityService.isBiometricsEnabled();
     if (isEnabled) {
-      final success = await securityService.enableBiometrics(); // Reuse existing method or create authenticateBiometrics
+      final success = await securityService
+          .enableBiometrics(); // Reuse existing method or create authenticateBiometrics
       if (success) {
         widget.onAuthenticated();
       }
@@ -63,7 +61,7 @@ class _LockScreenState extends ConsumerState<LockScreen> {
     setState(() => _isProcessing = true);
     final securityService = ref.read(securityServiceProvider);
     final isValid = await securityService.validatePin(_pin);
-    
+
     if (isValid) {
       widget.onAuthenticated();
     } else {
@@ -72,9 +70,9 @@ class _LockScreenState extends ConsumerState<LockScreen> {
         _isProcessing = false;
       });
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('PIN 码错误，请重新输入')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('PIN 码错误，请重新输入')));
       }
     }
   }
@@ -123,10 +121,7 @@ class _LockScreenState extends ConsumerState<LockScreen> {
 
             // Keyboard
             if (!_isProcessing)
-              PinKeyboard(
-                onInput: _onPinInput,
-                onDelete: _onDelete,
-              ),
+              PinKeyboard(onInput: _onPinInput, onDelete: _onDelete),
             const SizedBox(height: 32),
           ],
         ),

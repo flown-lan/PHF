@@ -23,7 +23,9 @@ void main() {
     final container = ProviderContainer(
       overrides: [
         // We override databaseService to avoid real DB init and KeyManager dependency for this simple test
-        databaseServiceProvider.overrideWith((ref) => MockSQLCipherDatabaseService()),
+        databaseServiceProvider.overrideWith(
+          (ref) => MockSQLCipherDatabaseService(),
+        ),
       ],
     );
 
@@ -33,7 +35,7 @@ void main() {
     // Repos
     expect(container.read(recordRepositoryProvider), isNotNull);
     expect(container.read(imageRepositoryProvider), isNotNull);
-    
+
     // Services
     expect(container.read(cryptoServiceProvider), isNotNull);
     expect(container.read(fileSecurityHelperProvider), isNotNull);

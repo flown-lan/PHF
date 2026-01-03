@@ -16,7 +16,9 @@ class OCRHighlightView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (ocrResult == null || ocrResult!.blocks.isEmpty || actualImageSize == null) {
+    if (ocrResult == null ||
+        ocrResult!.blocks.isEmpty ||
+        actualImageSize == null) {
       return Image(image: imageProvider, fit: BoxFit.contain);
     }
 
@@ -28,10 +30,7 @@ class OCRHighlightView extends StatelessWidget {
             actualImageSize!,
             BoxFit.contain, // Default fit
           ),
-          child: Image(
-            image: imageProvider,
-            fit: BoxFit.contain,
-          ),
+          child: Image(image: imageProvider, fit: BoxFit.contain),
         );
       },
     );
@@ -50,14 +49,16 @@ class _OCRHighlightPainter extends CustomPainter {
     // 1. Calculate scaling factors
     final double scaleX = size.width / actualImageSize.width;
     final double scaleY = size.height / actualImageSize.height;
-    
+
     // For BoxFit.contain, we need to respect aspect ratio
     double scale = 1.0;
     double offsetX = 0.0;
     double offsetY = 0.0;
 
     if (fit == BoxFit.contain) {
-      scale = scaleX < scaleY ? scaleX : scaleY; // fit width or height (smaller scale)
+      scale = scaleX < scaleY
+          ? scaleX
+          : scaleY; // fit width or height (smaller scale)
       // Center the image in the drawing area
       final double drawnWidth = actualImageSize.width * scale;
       final double drawnHeight = actualImageSize.height * scale;
@@ -76,7 +77,7 @@ class _OCRHighlightPainter extends CustomPainter {
     final paintFill = Paint()
       ..color = AppTheme.secondaryTeal.withValues(alpha: 0.1)
       ..style = PaintingStyle.fill;
-      
+
     for (final block in result.blocks) {
       // 2. Transform coordinates
       // Block coordinates are typically raw pixel values from ML Kit
@@ -95,6 +96,7 @@ class _OCRHighlightPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _OCRHighlightPainter oldDelegate) {
-    return oldDelegate.result != result || oldDelegate.actualImageSize != actualImageSize;
+    return oldDelegate.result != result ||
+        oldDelegate.actualImageSize != actualImageSize;
   }
 }

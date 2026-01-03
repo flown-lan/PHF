@@ -2,7 +2,7 @@
 ///
 /// ## Description
 /// 全屏安全图片浏览器。
-/// 
+///
 /// ## Features
 /// - **Secure Decryption**: 使用 `SecureImage` 在内存中解密展示大图。
 /// - **Gesture Support**: 支持双指缩放 (InteractiveViewer) 和左右滑动切换 (PageView)。
@@ -91,8 +91,9 @@ class _FullImageViewerState extends State<FullImageViewer> {
               maxScale: 4.0,
               child: Center(
                 child: SecureImage(
-                  imagePath: image.filePath, // Use original high-res encrypted file
-                  encryptionKey: image.encryptionKey, 
+                  imagePath:
+                      image.filePath, // Use original high-res encrypted file
+                  encryptionKey: image.encryptionKey,
                   fit: BoxFit.contain,
                 ),
               ),

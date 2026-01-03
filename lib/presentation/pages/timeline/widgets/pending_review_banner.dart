@@ -49,18 +49,12 @@ class PendingReviewBanner extends StatelessWidget {
                     ),
                     const Text(
                       '点击进入校对页，提高数据准确性',
-                      style: TextStyle(
-                        color: AppTheme.textHint,
-                        fontSize: 12,
-                      ),
+                      style: TextStyle(color: AppTheme.textHint, fontSize: 12),
                     ),
                   ],
                 ),
               ),
-              const Icon(
-                Icons.chevron_right,
-                color: AppTheme.primaryTeal,
-              ),
+              const Icon(Icons.chevron_right, color: AppTheme.primaryTeal),
             ],
           ),
         ),

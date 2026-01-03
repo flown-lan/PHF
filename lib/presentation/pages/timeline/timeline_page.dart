@@ -8,7 +8,7 @@
 /// - **Pull to Refresh**: 下拉刷新列表。
 /// - **Navigation**: 点击卡片调整至详情页。
 /// - **Empty State**: 无记录时展示引导提示。
-/// 
+///
 /// ## Repair Logs
 /// - [2025-12-31] 修复：修正 MaterialPageRoute 类型推导警告。
 library;
@@ -26,9 +26,15 @@ import '../review/review_list_page.dart';
 class TimelinePage extends ConsumerWidget {
   const TimelinePage({super.key});
 
-  void _navigateToDetail(BuildContext context, WidgetRef ref, MedicalRecord record) async {
+  void _navigateToDetail(
+    BuildContext context,
+    WidgetRef ref,
+    MedicalRecord record,
+  ) async {
     await Navigator.of(context).push(
-      MaterialPageRoute<void>(builder: (_) => RecordDetailPage(recordId: record.id)),
+      MaterialPageRoute<void>(
+        builder: (_) => RecordDetailPage(recordId: record.id),
+      ),
     );
     // Refresh after return (in case of edits/deletes)
     await ref.read(timelineControllerProvider.notifier).refresh();
@@ -41,29 +47,35 @@ class TimelinePage extends ConsumerWidget {
     return asyncHomeState.when(
       data: (homeState) {
         final records = homeState.records;
-        
+
         if (records.isEmpty && homeState.pendingCount == 0) {
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.inventory_2_outlined, size: 64, color: AppTheme.textHint),
+                const Icon(
+                  Icons.inventory_2_outlined,
+                  size: 64,
+                  color: AppTheme.textHint,
+                ),
                 const SizedBox(height: 16),
                 const Text(
                   '暂无记录，点击右下角 + 号开始录入',
                   style: TextStyle(color: AppTheme.textHint),
                 ),
                 TextButton(
-                  onPressed: () => ref.read(timelineControllerProvider.notifier).refresh(),
+                  onPressed: () =>
+                      ref.read(timelineControllerProvider.notifier).refresh(),
                   child: const Text('刷新'),
-                )
+                ),
               ],
             ),
           );
         }
 
         return RefreshIndicator(
-          onRefresh: () => ref.read(timelineControllerProvider.notifier).refresh(),
+          onRefresh: () =>
+              ref.read(timelineControllerProvider.notifier).refresh(),
           child: CustomScrollView(
             slivers: [
               if (homeState.pendingCount > 0)
@@ -75,7 +87,9 @@ class TimelinePage extends ConsumerWidget {
                       onTap: () {
                         Navigator.push<void>(
                           context,
-                          MaterialPageRoute<void>(builder: (_) => const ReviewListPage()),
+                          MaterialPageRoute<void>(
+                            builder: (_) => const ReviewListPage(),
+                          ),
                         );
                       },
                     ),
@@ -84,22 +98,21 @@ class TimelinePage extends ConsumerWidget {
               SliverPadding(
                 padding: const EdgeInsets.all(16),
                 sliver: SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final record = records[index];
-                      final firstImage = record.images.isNotEmpty ? record.images.first : null;
-                      
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 16.0),
-                        child: EventCard(
-                          record: record,
-                          firstImage: firstImage,
-                          onTap: () => _navigateToDetail(context, ref, record),
-                        ),
-                      );
-                    },
-                    childCount: records.length,
-                  ),
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    final record = records[index];
+                    final firstImage = record.images.isNotEmpty
+                        ? record.images.first
+                        : null;
+
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 16.0),
+                      child: EventCard(
+                        record: record,
+                        firstImage: firstImage,
+                        onTap: () => _navigateToDetail(context, ref, record),
+                      ),
+                    );
+                  }, childCount: records.length),
                 ),
               ),
             ],
@@ -116,9 +129,10 @@ class TimelinePage extends ConsumerWidget {
             Text('加载失败: $err', textAlign: TextAlign.center),
             const SizedBox(height: 16),
             ElevatedButton(
-              onPressed: () => ref.read(timelineControllerProvider.notifier).refresh(),
+              onPressed: () =>
+                  ref.read(timelineControllerProvider.notifier).refresh(),
               child: const Text('重试'),
-            )
+            ),
           ],
         ),
       ),

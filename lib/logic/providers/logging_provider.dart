@@ -5,9 +5,5 @@ part 'logging_provider.g.dart';
 
 @Riverpod(keepAlive: true)
 Talker talker(Ref ref) {
-  return TalkerFlutter.init(
-    settings: TalkerSettings(
-      maxHistoryItems: 1000,
-    ),
-  );
+  return TalkerFlutter.init(settings: TalkerSettings(maxHistoryItems: 1000));
 }

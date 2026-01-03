@@ -44,23 +44,24 @@ abstract class MedicalImage with _$MedicalImage {
     @Default(0) int displayOrder,
     int? width,
     int? height,
-    
+
     // OCR Results
     String? ocrText,
     String? ocrRawJson,
     double? ocrConfidence,
-
     required DateTime createdAt,
     String? hospitalName,
     DateTime? visitDate,
-    
+
     /// 数据库存储的 Tag IDs (JSON List from DB)
     @Default([]) List<String> tagIds,
 
     /// 内存关联字段，不直接参与数据库简单序列化
     @JsonKey(includeFromJson: false, includeToJson: false)
-    @Default([]) List<Tag> tags,
+    @Default([])
+    List<Tag> tags,
   }) = _MedicalImage;
 
-  factory MedicalImage.fromJson(Map<String, dynamic> json) => _$MedicalImageFromJson(json);
+  factory MedicalImage.fromJson(Map<String, dynamic> json) =>
+      _$MedicalImageFromJson(json);
 }

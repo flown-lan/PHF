@@ -34,29 +34,36 @@ class ReviewListPage extends ConsumerWidget {
           return ListView.separated(
             padding: const EdgeInsets.all(16),
             itemCount: records.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 16),
+            separatorBuilder: (_, _) => const SizedBox(height: 16),
             itemBuilder: (context, index) {
               final MedicalRecord record = records[index];
-              final firstImage = record.images.isNotEmpty ? record.images.first : null;
-              
+              final firstImage = record.images.isNotEmpty
+                  ? record.images.first
+                  : null;
+
               return EventCard(
                 record: record,
                 firstImage: firstImage,
                 onTap: () async {
-                   final result = await Navigator.push(
-                     context,
-                     MaterialPageRoute<bool>(builder: (_) => ReviewEditPage(record: record)),
-                   );
-                   if (result == true) {
-                      await ref.read(timelineControllerProvider.notifier).refresh();
-                   }
+                  final result = await Navigator.push(
+                    context,
+                    MaterialPageRoute<bool>(
+                      builder: (_) => ReviewEditPage(record: record),
+                    ),
+                  );
+                  if (result == true) {
+                    await ref
+                        .read(timelineControllerProvider.notifier)
+                        .refresh();
+                  }
                 },
               );
             },
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (Object err, StackTrace stack) => Center(child: Text('Error: $err')),
+        error: (Object err, StackTrace stack) =>
+            Center(child: Text('Error: $err')),
       ),
     );
   }

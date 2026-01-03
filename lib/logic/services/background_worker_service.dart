@@ -45,13 +45,15 @@ void callbackDispatcher() {
     try {
       if (task == _ocrTaskName) {
         talker.info('[BackgroundWorker] Started');
-        
-        final processor = await BackgroundWorkerService()._buildProcessor(talker: talker);
+
+        final processor = await BackgroundWorkerService()._buildProcessor(
+          talker: talker,
+        );
 
         // 2. Process Queue
         int processedCount = 0;
         bool hasMore = true;
-        
+
         while (hasMore && processedCount < 10) {
           hasMore = await processor.processNextItem();
           if (hasMore) processedCount++;
@@ -60,16 +62,16 @@ void callbackDispatcher() {
         talker.info('[BackgroundWorker] Finished. Processed: $processedCount');
       }
       return Future.value(true);
-      
     } catch (err, stack) {
       talker.handle(err, stack, '[BackgroundWorker] Global Error');
-      return Future.value(false); 
+      return Future.value(false);
     }
   });
 }
 
 class BackgroundWorkerService {
-  static final BackgroundWorkerService _instance = BackgroundWorkerService._internal();
+  static final BackgroundWorkerService _instance =
+      BackgroundWorkerService._internal();
   factory BackgroundWorkerService() => _instance;
   BackgroundWorkerService._internal();
 
@@ -83,18 +85,18 @@ class BackgroundWorkerService {
   /// 内部依赖构建逻辑 (Isolate 安全)
   Future<OCRProcessor> _buildProcessor({Talker? talker}) async {
     final pathService = PathProviderService();
-    
+
     talker?.info('[BackgroundWorkerService] Initializing dependencies...');
     // CRITICAL: Ensure path service is initialized
     await pathService.initialize();
     talker?.info('[BackgroundWorkerService] PathProvider initialized.');
-    
+
     final keyManager = MasterKeyManager();
     final dbService = SQLCipherDatabaseService(
-      keyManager: keyManager, 
+      keyManager: keyManager,
       pathService: pathService,
     );
-    
+
     final cryptoService = CryptoService();
     final fileSecurityHelper = FileSecurityHelper(cryptoService: cryptoService);
 
@@ -126,24 +128,26 @@ class BackgroundWorkerService {
 
   /// 初始化 WorkManager
   Future<void> initialize() async {
-    if (defaultTargetPlatform == TargetPlatform.android || defaultTargetPlatform == TargetPlatform.iOS) {
-      await Workmanager().initialize(
-        callbackDispatcher,
-        isInDebugMode: kDebugMode, 
+    if (defaultTargetPlatform == TargetPlatform.android ||
+        defaultTargetPlatform == TargetPlatform.iOS) {
+      await Workmanager().initialize(callbackDispatcher);
+      _talker?.info(
+        '[BackgroundWorkerService] Initialized for ${defaultTargetPlatform.name}',
       );
-      _talker?.info('[BackgroundWorkerService] Initialized for ${defaultTargetPlatform.name}');
     }
   }
 
   /// 启动前台处理循环 (iOS 重点，确保立即执行)
   Future<void> startForegroundProcessing({Talker? talker}) async {
     if (talker != null) _talker = talker;
-    
+
     if (_isProcessing) {
-       _talker?.info('[BackgroundWorkerService] Already processing, skipping...');
-       return;
+      _talker?.info(
+        '[BackgroundWorkerService] Already processing, skipping...',
+      );
+      return;
     }
-    
+
     _isProcessing = true;
     _talker?.info('[BackgroundWorkerService] Starting Foreground OCR Loop');
 
@@ -155,9 +159,15 @@ class BackgroundWorkerService {
       while (await processor.processNextItem()) {
         count++;
       }
-      _talker?.info('[BackgroundWorkerService] Foreground OCR Finished. Total processed: $count');
+      _talker?.info(
+        '[BackgroundWorkerService] Foreground OCR Finished. Total processed: $count',
+      );
     } catch (e, stack) {
-      _talker?.handle(e, stack, '[BackgroundWorkerService] Foreground OCR Error');
+      _talker?.handle(
+        e,
+        stack,
+        '[BackgroundWorkerService] Foreground OCR Error',
+      );
     } finally {
       _isProcessing = false;
     }
@@ -181,9 +191,9 @@ class BackgroundWorkerService {
         _ocrTaskName,
         existingWorkPolicy: ExistingWorkPolicy.append,
         constraints: Constraints(
-            networkType: NetworkType.notRequired,
-            requiresBatteryNotLow: true
-        ), 
+          networkType: NetworkType.notRequired,
+          requiresBatteryNotLow: true,
+        ),
       );
     }
   }

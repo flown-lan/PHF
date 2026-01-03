@@ -53,10 +53,12 @@ abstract class MedicalRecord with _$MedicalRecord {
 
     /// 内存关联字段
     @JsonKey(includeFromJson: false, includeToJson: false)
-    @Default([]) List<MedicalImage> images,
+    @Default([])
+    List<MedicalImage> images,
   }) = _MedicalRecord;
 
-  factory MedicalRecord.fromJson(Map<String, dynamic> json) => _$MedicalRecordFromJson(json);
+  factory MedicalRecord.fromJson(Map<String, dynamic> json) =>
+      _$MedicalRecordFromJson(json);
 }
 
 extension MedicalRecordX on MedicalRecord {

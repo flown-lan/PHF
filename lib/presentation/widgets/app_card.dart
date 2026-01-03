@@ -35,11 +35,10 @@ class AppCard extends StatelessWidget {
       color: backgroundColor ?? AppTheme.bgWhite,
       child: InkWell(
         onTap: onTap,
-        borderRadius: const BorderRadius.all(Radius.circular(AppTheme.radiusCard)),
-        child: Padding(
-          padding: padding,
-          child: child,
+        borderRadius: const BorderRadius.all(
+          Radius.circular(AppTheme.radiusCard),
         ),
+        child: Padding(padding: padding, child: child),
       ),
     );
   }

@@ -41,11 +41,11 @@ class PermissionService {
     }
 
     final status = await permission.request();
-    
+
     if (status.isPermanentlyDenied) {
       return false;
     }
-    
+
     return status.isGranted || status.isLimited;
   }
 

@@ -6,7 +6,7 @@
 /// ## Principles
 /// - **Primary Color**: Teal (#008080)
 /// - **Typography**: Monospace (Inconsolata preference)
-/// - **Shapes**: 
+/// - **Shapes**:
 ///   - Cards: 12px circular radius
 ///   - Buttons/Inputs: 8px circular radius
 ///
@@ -28,7 +28,7 @@ class AppTheme {
   static const Color warningOrange = Color(0xFFFF9900);
   static const Color successGreen = Color(0xFF4CAF50);
   static const Color errorRed = Color(0xFFD32F2F);
-  
+
   static const Color bgWhite = Color(0xFFFFFFFF);
   static const Color bgGrey = Color(0xFFF2F2F7);
   static const Color textBlack = Color(0xFF1C1C1E);
@@ -47,13 +47,13 @@ class AppTheme {
   static const double radiusButton = 8.0;
 
   // --- Typography ---
-  static const String fontPool = 'Inconsolata'; 
+  static const String fontPool = 'Inconsolata';
 
   static const TextStyle monoStyle = TextStyle(
     fontFamily: fontPool,
     fontSize: 14,
     color: textBlack,
-  ); 
+  );
 
   static ThemeData get lightTheme {
     return ThemeData(
@@ -61,7 +61,7 @@ class AppTheme {
       brightness: Brightness.light,
       primaryColor: primaryTeal,
       scaffoldBackgroundColor: bgWhite,
-      
+
       // Color Scheme
       colorScheme: const ColorScheme.light(
         primary: primaryTeal,
@@ -77,10 +77,22 @@ class AppTheme {
       fontFamilyFallback: const ['Courier New', 'Courier', 'monospace'],
       textTheme: const TextTheme(
         // Headers
-        headlineLarge: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: textBlack),
-        headlineMedium: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: textBlack),
-        headlineSmall: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: textBlack),
-        
+        headlineLarge: TextStyle(
+          fontSize: 32,
+          fontWeight: FontWeight.bold,
+          color: textBlack,
+        ),
+        headlineMedium: TextStyle(
+          fontSize: 24,
+          fontWeight: FontWeight.bold,
+          color: textBlack,
+        ),
+        headlineSmall: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+          color: textBlack,
+        ),
+
         // Body
         bodyLarge: TextStyle(fontSize: 16, color: textBlack),
         bodyMedium: TextStyle(fontSize: 14, color: textBlack),
@@ -90,8 +102,8 @@ class AppTheme {
       // Card Theme
       cardTheme: const CardThemeData(
         color: bgWhite,
-        surfaceTintColor: Colors.transparent, 
-        elevation: 0, 
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(radiusCard)),
           side: BorderSide(color: Color(0xFFE5E5EA), width: 1),
@@ -110,7 +122,7 @@ class AppTheme {
           ),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
           textStyle: const TextStyle(
-            fontSize: 16, 
+            fontSize: 16,
             fontWeight: FontWeight.w600,
             fontFamily: fontPool,
           ),
@@ -135,15 +147,15 @@ class AppTheme {
         ),
         contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       ),
-      
+
       // AppBar
       appBarTheme: const AppBarTheme(
         backgroundColor: bgWhite,
         scrolledUnderElevation: 0,
         centerTitle: true,
         titleTextStyle: TextStyle(
-          color: textBlack, 
-          fontSize: 18, 
+          color: textBlack,
+          fontSize: 18,
           fontWeight: FontWeight.bold,
           fontFamily: fontPool,
         ),

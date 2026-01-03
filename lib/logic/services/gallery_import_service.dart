@@ -14,7 +14,8 @@ import 'interfaces/gallery_service.dart';
 class GalleryImportService implements IGalleryService {
   final ImagePicker _picker;
 
-  GalleryImportService({ImagePicker? picker}) : _picker = picker ?? ImagePicker();
+  GalleryImportService({ImagePicker? picker})
+    : _picker = picker ?? ImagePicker();
 
   @override
   Future<List<XFile>> pickImages() async {

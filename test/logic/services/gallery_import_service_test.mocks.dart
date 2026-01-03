@@ -27,13 +27,8 @@ import 'package:mockito/mockito.dart' as _i1;
 
 class _FakeLostDataResponse_0 extends _i1.SmartFake
     implements _i2.LostDataResponse {
-  _FakeLostDataResponse_0(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeLostDataResponse_0(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 /// A class which mocks [ImagePicker].
@@ -50,21 +45,18 @@ class MockImagePicker extends _i1.Mock implements _i3.ImagePicker {
     bool? requestFullMetadata = true,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #pickImage,
-          [],
-          {
-            #source: source,
-            #maxWidth: maxWidth,
-            #maxHeight: maxHeight,
-            #imageQuality: imageQuality,
-            #preferredCameraDevice: preferredCameraDevice,
-            #requestFullMetadata: requestFullMetadata,
-          },
-        ),
-        returnValue: _i4.Future<_i2.XFile?>.value(),
-        returnValueForMissingStub: _i4.Future<_i2.XFile?>.value(),
-      ) as _i4.Future<_i2.XFile?>);
+            Invocation.method(#pickImage, [], {
+              #source: source,
+              #maxWidth: maxWidth,
+              #maxHeight: maxHeight,
+              #imageQuality: imageQuality,
+              #preferredCameraDevice: preferredCameraDevice,
+              #requestFullMetadata: requestFullMetadata,
+            }),
+            returnValue: _i4.Future<_i2.XFile?>.value(),
+            returnValueForMissingStub: _i4.Future<_i2.XFile?>.value(),
+          )
+          as _i4.Future<_i2.XFile?>);
 
   @override
   _i4.Future<List<_i2.XFile>> pickMultiImage({
@@ -75,21 +67,19 @@ class MockImagePicker extends _i1.Mock implements _i3.ImagePicker {
     bool? requestFullMetadata = true,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #pickMultiImage,
-          [],
-          {
-            #maxWidth: maxWidth,
-            #maxHeight: maxHeight,
-            #imageQuality: imageQuality,
-            #limit: limit,
-            #requestFullMetadata: requestFullMetadata,
-          },
-        ),
-        returnValue: _i4.Future<List<_i2.XFile>>.value(<_i2.XFile>[]),
-        returnValueForMissingStub:
-            _i4.Future<List<_i2.XFile>>.value(<_i2.XFile>[]),
-      ) as _i4.Future<List<_i2.XFile>>);
+            Invocation.method(#pickMultiImage, [], {
+              #maxWidth: maxWidth,
+              #maxHeight: maxHeight,
+              #imageQuality: imageQuality,
+              #limit: limit,
+              #requestFullMetadata: requestFullMetadata,
+            }),
+            returnValue: _i4.Future<List<_i2.XFile>>.value(<_i2.XFile>[]),
+            returnValueForMissingStub: _i4.Future<List<_i2.XFile>>.value(
+              <_i2.XFile>[],
+            ),
+          )
+          as _i4.Future<List<_i2.XFile>>);
 
   @override
   _i4.Future<_i2.XFile?> pickMedia({
@@ -99,19 +89,16 @@ class MockImagePicker extends _i1.Mock implements _i3.ImagePicker {
     bool? requestFullMetadata = true,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #pickMedia,
-          [],
-          {
-            #maxWidth: maxWidth,
-            #maxHeight: maxHeight,
-            #imageQuality: imageQuality,
-            #requestFullMetadata: requestFullMetadata,
-          },
-        ),
-        returnValue: _i4.Future<_i2.XFile?>.value(),
-        returnValueForMissingStub: _i4.Future<_i2.XFile?>.value(),
-      ) as _i4.Future<_i2.XFile?>);
+            Invocation.method(#pickMedia, [], {
+              #maxWidth: maxWidth,
+              #maxHeight: maxHeight,
+              #imageQuality: imageQuality,
+              #requestFullMetadata: requestFullMetadata,
+            }),
+            returnValue: _i4.Future<_i2.XFile?>.value(),
+            returnValueForMissingStub: _i4.Future<_i2.XFile?>.value(),
+          )
+          as _i4.Future<_i2.XFile?>);
 
   @override
   _i4.Future<List<_i2.XFile>> pickMultipleMedia({
@@ -122,21 +109,19 @@ class MockImagePicker extends _i1.Mock implements _i3.ImagePicker {
     bool? requestFullMetadata = true,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #pickMultipleMedia,
-          [],
-          {
-            #maxWidth: maxWidth,
-            #maxHeight: maxHeight,
-            #imageQuality: imageQuality,
-            #limit: limit,
-            #requestFullMetadata: requestFullMetadata,
-          },
-        ),
-        returnValue: _i4.Future<List<_i2.XFile>>.value(<_i2.XFile>[]),
-        returnValueForMissingStub:
-            _i4.Future<List<_i2.XFile>>.value(<_i2.XFile>[]),
-      ) as _i4.Future<List<_i2.XFile>>);
+            Invocation.method(#pickMultipleMedia, [], {
+              #maxWidth: maxWidth,
+              #maxHeight: maxHeight,
+              #imageQuality: imageQuality,
+              #limit: limit,
+              #requestFullMetadata: requestFullMetadata,
+            }),
+            returnValue: _i4.Future<List<_i2.XFile>>.value(<_i2.XFile>[]),
+            returnValueForMissingStub: _i4.Future<List<_i2.XFile>>.value(
+              <_i2.XFile>[],
+            ),
+          )
+          as _i4.Future<List<_i2.XFile>>);
 
   @override
   _i4.Future<_i2.XFile?> pickVideo({
@@ -145,18 +130,15 @@ class MockImagePicker extends _i1.Mock implements _i3.ImagePicker {
     Duration? maxDuration,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #pickVideo,
-          [],
-          {
-            #source: source,
-            #preferredCameraDevice: preferredCameraDevice,
-            #maxDuration: maxDuration,
-          },
-        ),
-        returnValue: _i4.Future<_i2.XFile?>.value(),
-        returnValueForMissingStub: _i4.Future<_i2.XFile?>.value(),
-      ) as _i4.Future<_i2.XFile?>);
+            Invocation.method(#pickVideo, [], {
+              #source: source,
+              #preferredCameraDevice: preferredCameraDevice,
+              #maxDuration: maxDuration,
+            }),
+            returnValue: _i4.Future<_i2.XFile?>.value(),
+            returnValueForMissingStub: _i4.Future<_i2.XFile?>.value(),
+          )
+          as _i4.Future<_i2.XFile?>);
 
   @override
   _i4.Future<List<_i2.XFile>> pickMultiVideo({
@@ -164,50 +146,42 @@ class MockImagePicker extends _i1.Mock implements _i3.ImagePicker {
     int? limit,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #pickMultiVideo,
-          [],
-          {
-            #maxDuration: maxDuration,
-            #limit: limit,
-          },
-        ),
-        returnValue: _i4.Future<List<_i2.XFile>>.value(<_i2.XFile>[]),
-        returnValueForMissingStub:
-            _i4.Future<List<_i2.XFile>>.value(<_i2.XFile>[]),
-      ) as _i4.Future<List<_i2.XFile>>);
+            Invocation.method(#pickMultiVideo, [], {
+              #maxDuration: maxDuration,
+              #limit: limit,
+            }),
+            returnValue: _i4.Future<List<_i2.XFile>>.value(<_i2.XFile>[]),
+            returnValueForMissingStub: _i4.Future<List<_i2.XFile>>.value(
+              <_i2.XFile>[],
+            ),
+          )
+          as _i4.Future<List<_i2.XFile>>);
 
   @override
-  _i4.Future<_i2.LostDataResponse> retrieveLostData() => (super.noSuchMethod(
-        Invocation.method(
-          #retrieveLostData,
-          [],
-        ),
-        returnValue:
-            _i4.Future<_i2.LostDataResponse>.value(_FakeLostDataResponse_0(
-          this,
-          Invocation.method(
-            #retrieveLostData,
-            [],
-          ),
-        )),
-        returnValueForMissingStub:
-            _i4.Future<_i2.LostDataResponse>.value(_FakeLostDataResponse_0(
-          this,
-          Invocation.method(
-            #retrieveLostData,
-            [],
-          ),
-        )),
-      ) as _i4.Future<_i2.LostDataResponse>);
+  _i4.Future<_i2.LostDataResponse> retrieveLostData() =>
+      (super.noSuchMethod(
+            Invocation.method(#retrieveLostData, []),
+            returnValue: _i4.Future<_i2.LostDataResponse>.value(
+              _FakeLostDataResponse_0(
+                this,
+                Invocation.method(#retrieveLostData, []),
+              ),
+            ),
+            returnValueForMissingStub: _i4.Future<_i2.LostDataResponse>.value(
+              _FakeLostDataResponse_0(
+                this,
+                Invocation.method(#retrieveLostData, []),
+              ),
+            ),
+          )
+          as _i4.Future<_i2.LostDataResponse>);
 
   @override
-  bool supportsImageSource(_i2.ImageSource? source) => (super.noSuchMethod(
-        Invocation.method(
-          #supportsImageSource,
-          [source],
-        ),
-        returnValue: false,
-        returnValueForMissingStub: false,
-      ) as bool);
+  bool supportsImageSource(_i2.ImageSource? source) =>
+      (super.noSuchMethod(
+            Invocation.method(#supportsImageSource, [source]),
+            returnValue: false,
+            returnValueForMissingStub: false,
+          )
+          as bool);
 }

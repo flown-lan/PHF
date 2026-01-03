@@ -17,6 +17,7 @@ part 'search_result.freezed.dart';
 abstract class SearchResult with _$SearchResult {
   const factory SearchResult({
     required MedicalRecord record,
+
     /// 包含高亮 HTML 标签的摘要
     required String snippet,
   }) = _SearchResult;

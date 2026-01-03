@@ -33,53 +33,43 @@ class MockIRecordRepository extends _i1.Mock implements _i2.IRecordRepository {
   @override
   _i3.Future<List<_i4.MedicalRecord>> getRecordsByPerson(String? personId) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getRecordsByPerson,
-          [personId],
-        ),
-        returnValue:
-            _i3.Future<List<_i4.MedicalRecord>>.value(<_i4.MedicalRecord>[]),
-        returnValueForMissingStub:
-            _i3.Future<List<_i4.MedicalRecord>>.value(<_i4.MedicalRecord>[]),
-      ) as _i3.Future<List<_i4.MedicalRecord>>);
+            Invocation.method(#getRecordsByPerson, [personId]),
+            returnValue: _i3.Future<List<_i4.MedicalRecord>>.value(
+              <_i4.MedicalRecord>[],
+            ),
+            returnValueForMissingStub:
+                _i3.Future<List<_i4.MedicalRecord>>.value(
+                  <_i4.MedicalRecord>[],
+                ),
+          )
+          as _i3.Future<List<_i4.MedicalRecord>>);
 
   @override
   _i3.Future<_i4.MedicalRecord?> getRecordById(String? id) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getRecordById,
-          [id],
-        ),
-        returnValue: _i3.Future<_i4.MedicalRecord?>.value(),
-        returnValueForMissingStub: _i3.Future<_i4.MedicalRecord?>.value(),
-      ) as _i3.Future<_i4.MedicalRecord?>);
+            Invocation.method(#getRecordById, [id]),
+            returnValue: _i3.Future<_i4.MedicalRecord?>.value(),
+            returnValueForMissingStub: _i3.Future<_i4.MedicalRecord?>.value(),
+          )
+          as _i3.Future<_i4.MedicalRecord?>);
 
   @override
-  _i3.Future<void> saveRecord(_i4.MedicalRecord? record) => (super.noSuchMethod(
-        Invocation.method(
-          #saveRecord,
-          [record],
-        ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
-
-  @override
-  _i3.Future<void> updateStatus(
-    String? id,
-    _i4.RecordStatus? status,
-  ) =>
+  _i3.Future<void> saveRecord(_i4.MedicalRecord? record) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #updateStatus,
-          [
-            id,
-            status,
-          ],
-        ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+            Invocation.method(#saveRecord, [record]),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
+
+  @override
+  _i3.Future<void> updateStatus(String? id, _i4.RecordStatus? status) =>
+      (super.noSuchMethod(
+            Invocation.method(#updateStatus, [id, status]),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
 
   @override
   _i3.Future<void> updateRecordMetadata(
@@ -89,28 +79,28 @@ class MockIRecordRepository extends _i1.Mock implements _i2.IRecordRepository {
     String? notes,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #updateRecordMetadata,
-          [id],
-          {
-            #hospitalName: hospitalName,
-            #visitDate: visitDate,
-            #notes: notes,
-          },
-        ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+            Invocation.method(
+              #updateRecordMetadata,
+              [id],
+              {
+                #hospitalName: hospitalName,
+                #visitDate: visitDate,
+                #notes: notes,
+              },
+            ),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
 
   @override
-  _i3.Future<void> hardDeleteRecord(String? id) => (super.noSuchMethod(
-        Invocation.method(
-          #hardDeleteRecord,
-          [id],
-        ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+  _i3.Future<void> hardDeleteRecord(String? id) =>
+      (super.noSuchMethod(
+            Invocation.method(#hardDeleteRecord, [id]),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
 
   @override
   _i3.Future<List<_i4.MedicalRecord>> searchRecords({
@@ -119,53 +109,52 @@ class MockIRecordRepository extends _i1.Mock implements _i2.IRecordRepository {
     List<String>? tags,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #searchRecords,
-          [],
-          {
-            #personId: personId,
-            #query: query,
-            #tags: tags,
-          },
-        ),
-        returnValue:
-            _i3.Future<List<_i4.MedicalRecord>>.value(<_i4.MedicalRecord>[]),
-        returnValueForMissingStub:
-            _i3.Future<List<_i4.MedicalRecord>>.value(<_i4.MedicalRecord>[]),
-      ) as _i3.Future<List<_i4.MedicalRecord>>);
+            Invocation.method(#searchRecords, [], {
+              #personId: personId,
+              #query: query,
+              #tags: tags,
+            }),
+            returnValue: _i3.Future<List<_i4.MedicalRecord>>.value(
+              <_i4.MedicalRecord>[],
+            ),
+            returnValueForMissingStub:
+                _i3.Future<List<_i4.MedicalRecord>>.value(
+                  <_i4.MedicalRecord>[],
+                ),
+          )
+          as _i3.Future<List<_i4.MedicalRecord>>);
 
   @override
-  _i3.Future<void> syncRecordMetadata(String? recordId) => (super.noSuchMethod(
-        Invocation.method(
-          #syncRecordMetadata,
-          [recordId],
-        ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+  _i3.Future<void> syncRecordMetadata(String? recordId) =>
+      (super.noSuchMethod(
+            Invocation.method(#syncRecordMetadata, [recordId]),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
 
   @override
-  _i3.Future<int> getPendingCount(String? personId) => (super.noSuchMethod(
-        Invocation.method(
-          #getPendingCount,
-          [personId],
-        ),
-        returnValue: _i3.Future<int>.value(0),
-        returnValueForMissingStub: _i3.Future<int>.value(0),
-      ) as _i3.Future<int>);
+  _i3.Future<int> getPendingCount(String? personId) =>
+      (super.noSuchMethod(
+            Invocation.method(#getPendingCount, [personId]),
+            returnValue: _i3.Future<int>.value(0),
+            returnValueForMissingStub: _i3.Future<int>.value(0),
+          )
+          as _i3.Future<int>);
 
   @override
   _i3.Future<List<_i4.MedicalRecord>> getReviewRecords(String? personId) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getReviewRecords,
-          [personId],
-        ),
-        returnValue:
-            _i3.Future<List<_i4.MedicalRecord>>.value(<_i4.MedicalRecord>[]),
-        returnValueForMissingStub:
-            _i3.Future<List<_i4.MedicalRecord>>.value(<_i4.MedicalRecord>[]),
-      ) as _i3.Future<List<_i4.MedicalRecord>>);
+            Invocation.method(#getReviewRecords, [personId]),
+            returnValue: _i3.Future<List<_i4.MedicalRecord>>.value(
+              <_i4.MedicalRecord>[],
+            ),
+            returnValueForMissingStub:
+                _i3.Future<List<_i4.MedicalRecord>>.value(
+                  <_i4.MedicalRecord>[],
+                ),
+          )
+          as _i3.Future<List<_i4.MedicalRecord>>);
 }
 
 /// A class which mocks [IImageRepository].
@@ -175,53 +164,42 @@ class MockIImageRepository extends _i1.Mock implements _i5.IImageRepository {
   @override
   _i3.Future<List<_i6.MedicalImage>> getImagesForRecord(String? recordId) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getImagesForRecord,
-          [recordId],
-        ),
-        returnValue:
-            _i3.Future<List<_i6.MedicalImage>>.value(<_i6.MedicalImage>[]),
-        returnValueForMissingStub:
-            _i3.Future<List<_i6.MedicalImage>>.value(<_i6.MedicalImage>[]),
-      ) as _i3.Future<List<_i6.MedicalImage>>);
+            Invocation.method(#getImagesForRecord, [recordId]),
+            returnValue: _i3.Future<List<_i6.MedicalImage>>.value(
+              <_i6.MedicalImage>[],
+            ),
+            returnValueForMissingStub: _i3.Future<List<_i6.MedicalImage>>.value(
+              <_i6.MedicalImage>[],
+            ),
+          )
+          as _i3.Future<List<_i6.MedicalImage>>);
 
   @override
   _i3.Future<void> saveImages(List<_i6.MedicalImage>? images) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #saveImages,
-          [images],
-        ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+            Invocation.method(#saveImages, [images]),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
 
   @override
-  _i3.Future<void> updateImageTags(
-    String? imageId,
-    List<String>? tagIds,
-  ) =>
+  _i3.Future<void> updateImageTags(String? imageId, List<String>? tagIds) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #updateImageTags,
-          [
-            imageId,
-            tagIds,
-          ],
-        ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+            Invocation.method(#updateImageTags, [imageId, tagIds]),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
 
   @override
-  _i3.Future<void> deleteImage(String? id) => (super.noSuchMethod(
-        Invocation.method(
-          #deleteImage,
-          [id],
-        ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+  _i3.Future<void> deleteImage(String? id) =>
+      (super.noSuchMethod(
+            Invocation.method(#deleteImage, [id]),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
 
   @override
   _i3.Future<void> updateImageMetadata(
@@ -230,27 +208,24 @@ class MockIImageRepository extends _i1.Mock implements _i5.IImageRepository {
     DateTime? visitDate,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #updateImageMetadata,
-          [imageId],
-          {
-            #hospitalName: hospitalName,
-            #visitDate: visitDate,
-          },
-        ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+            Invocation.method(
+              #updateImageMetadata,
+              [imageId],
+              {#hospitalName: hospitalName, #visitDate: visitDate},
+            ),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
 
   @override
-  _i3.Future<_i6.MedicalImage?> getImageById(String? id) => (super.noSuchMethod(
-        Invocation.method(
-          #getImageById,
-          [id],
-        ),
-        returnValue: _i3.Future<_i6.MedicalImage?>.value(),
-        returnValueForMissingStub: _i3.Future<_i6.MedicalImage?>.value(),
-      ) as _i3.Future<_i6.MedicalImage?>);
+  _i3.Future<_i6.MedicalImage?> getImageById(String? id) =>
+      (super.noSuchMethod(
+            Invocation.method(#getImageById, [id]),
+            returnValue: _i3.Future<_i6.MedicalImage?>.value(),
+            returnValueForMissingStub: _i3.Future<_i6.MedicalImage?>.value(),
+          )
+          as _i3.Future<_i6.MedicalImage?>);
 
   @override
   _i3.Future<void> updateOCRData(
@@ -260,18 +235,13 @@ class MockIImageRepository extends _i1.Mock implements _i5.IImageRepository {
     double? confidence = 0.0,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #updateOCRData,
-          [
-            imageId,
-            text,
-          ],
-          {
-            #rawJson: rawJson,
-            #confidence: confidence,
-          },
-        ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+            Invocation.method(
+              #updateOCRData,
+              [imageId, text],
+              {#rawJson: rawJson, #confidence: confidence},
+            ),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
 }

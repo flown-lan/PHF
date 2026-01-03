@@ -105,10 +105,11 @@ AppMetaRepository appMetaRepository(Ref ref) {
 SecurityService securityService(Ref ref) {
   final metaRepo = ref.watch(appMetaRepositoryProvider);
   return SecurityService(
-    secureStorage: const FlutterSecureStorage(), 
+    secureStorage: const FlutterSecureStorage(),
     metaRepo: metaRepo,
   );
 }
+
 @Riverpod(keepAlive: true)
 ITagRepository tagRepository(Ref ref) {
   final db = ref.watch(databaseServiceProvider);

@@ -17,15 +17,12 @@ import 'dart:typed_data';
 /// 图像处理服务契约
 abstract class IImageService {
   /// 将原始图片数据转换为标准的 WebP 格式
-  /// 
+  ///
   /// [quality] 默认为 80。
-  Future<Uint8List> compressImage({
-    required Uint8List data,
-    int quality = 80,
-  });
+  Future<Uint8List> compressImage({required Uint8List data, int quality = 80});
 
   /// 生成缩略图数据 (WebP 格式)
-  /// 
+  ///
   /// 宽度限制为 200-300px 范围内以优化 Timeline 加载。
   Future<Uint8List> generateThumbnail({
     required Uint8List data,
@@ -33,7 +30,7 @@ abstract class IImageService {
   });
 
   /// 安全擦除指定路径的文件
-  /// 
+  ///
   /// 在录入流程结束后调用，确保存留的临时明文文件被彻底物理删除。
   Future<void> secureWipe(String filePath);
 
@@ -41,10 +38,7 @@ abstract class IImageService {
   Future<ImageDimensions> getDimensions(Uint8List data);
 
   /// 旋转图像
-  Future<Uint8List> rotateImage({
-    required Uint8List data,
-    required int angle,
-  });
+  Future<Uint8List> rotateImage({required Uint8List data, required int angle});
 
   /// 全量处理：旋转 + 压缩 + 缩略图 (优化内存，仅解码一次)
   Future<ImageProcessingResult> processFull({

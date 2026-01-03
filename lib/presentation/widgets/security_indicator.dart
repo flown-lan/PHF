@@ -15,11 +15,8 @@ import '../theme/app_theme.dart';
 
 class SecurityIndicator extends StatelessWidget {
   final bool isSecure;
-  
-  const SecurityIndicator({
-    super.key, 
-    this.isSecure = true,
-  });
+
+  const SecurityIndicator({super.key, this.isSecure = true});
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +37,9 @@ class SecurityIndicator extends StatelessWidget {
           ),
           const SizedBox(width: 6),
           Text(
-            isSecure ? 'AES-256 Encrypted On-Device' : 'Encryption Not Verified',
+            isSecure
+                ? 'AES-256 Encrypted On-Device'
+                : 'Encryption Not Verified',
             style: const TextStyle(
               fontSize: 10,
               fontWeight: FontWeight.w600,

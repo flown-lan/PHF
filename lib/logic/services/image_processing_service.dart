@@ -18,10 +18,9 @@ import '../utils/secure_wipe_helper.dart';
 import 'interfaces/image_service.dart';
 
 class ImageProcessingService implements IImageService {
-  
   @override
   /// 将原始图片数据转换为 WebP 格式
-  /// 
+  ///
   /// [quality] 控制压缩质量。
   Future<Uint8List> compressImage({
     required Uint8List data,
@@ -35,7 +34,7 @@ class ImageProcessingService implements IImageService {
 
     // 2. Encode to JPEG
     final jpeg = encodeJpg(image, quality: quality);
-    
+
     // 3. Return as Uint8List
     return jpeg;
   }
@@ -75,11 +74,11 @@ class ImageProcessingService implements IImageService {
     }
 
     // 2. Rotate
-    final normalizedAngle = (360 - (angle % 360)) % 360; 
+    final normalizedAngle = (360 - (angle % 360)) % 360;
     final rotatedImage = copyRotate(image, angle: normalizedAngle);
 
     // 3. Encode to JPEG
-    final jpeg = encodeJpg(rotatedImage, quality: 80); 
+    final jpeg = encodeJpg(rotatedImage, quality: 80);
 
     return jpeg;
   }
@@ -128,15 +127,15 @@ class ImageProcessingService implements IImageService {
   Future<ImageDimensions> getDimensions(Uint8List data) async {
     // Use decodeImageInfo for efficiency if available, or lightweight decode
     // 'image' package decodeInfo might be lighter than full decode
-    final info = decodeImage(data); 
-    // Note: 'image' package 4.x has decodeImage which decodes fully. 
+    final info = decodeImage(data);
+    // Note: 'image' package 4.x has decodeImage which decodes fully.
     // Ideally we want metadata only but for Phase 1 robustness we decode.
     // If strict performance optimization is needed later, look for header parsers.
-    
+
     if (info == null) {
-       throw Exception('Failed to decode image info.');
+      throw Exception('Failed to decode image info.');
     }
-    
+
     return ImageDimensions(info.width, info.height);
   }
 }

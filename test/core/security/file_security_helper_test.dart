@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
@@ -43,30 +42,40 @@ void main() {
       await encFile.writeAsBytes(fakeEncrypted);
 
       // Mock Crypto Service
-      when(mockCryptoService.decrypt(
-        encryptedData: anyNamed('encryptedData'),
-        key: anyNamed('key'),
-      )).thenAnswer((_) async => fakeContent);
+      when(
+        mockCryptoService.decrypt(
+          encryptedData: anyNamed('encryptedData'),
+          key: anyNamed('key'),
+        ),
+      ).thenAnswer((_) async => fakeContent);
 
       // Act
-      final result = await helper.decryptDataFromFile(encFile.path, fakeKeyBase64);
+      final result = await helper.decryptDataFromFile(
+        encFile.path,
+        fakeKeyBase64,
+      );
 
       // Assert
       expect(result, fakeContent);
-      verify(mockCryptoService.decrypt(
-        encryptedData: fakeEncrypted, 
-        key: argThat(equals(fakeKeyBytes), named: 'key')
-      )).called(1);
+      verify(
+        mockCryptoService.decrypt(
+          encryptedData: fakeEncrypted,
+          key: argThat(equals(fakeKeyBytes), named: 'key'),
+        ),
+      ).called(1);
     });
 
-    test('decryptDataFromFile should throw FileNotFoundException if file missing', () async {
-      final fakeKeyBase64 = base64Encode(Uint8List(32));
-      final missingPath = '${tempDir.path}/missing.enc';
+    test(
+      'decryptDataFromFile should throw FileNotFoundException if file missing',
+      () async {
+        final fakeKeyBase64 = base64Encode(Uint8List(32));
+        final missingPath = '${tempDir.path}/missing.enc';
 
-      expect(
-        () => helper.decryptDataFromFile(missingPath, fakeKeyBase64),
-        throwsA(isA<FileNotFoundException>()),
-      );
-    });
+        expect(
+          () => helper.decryptDataFromFile(missingPath, fakeKeyBase64),
+          throwsA(isA<FileNotFoundException>()),
+        );
+      },
+    );
   });
 }

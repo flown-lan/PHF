@@ -28,34 +28,19 @@ import 'package:sqflite_sqlcipher/sqflite.dart' as _i4;
 
 class _FakeMasterKeyManager_0 extends _i1.SmartFake
     implements _i2.MasterKeyManager {
-  _FakeMasterKeyManager_0(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeMasterKeyManager_0(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakePathProviderService_1 extends _i1.SmartFake
     implements _i3.PathProviderService {
-  _FakePathProviderService_1(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakePathProviderService_1(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeDatabase_2 extends _i1.SmartFake implements _i4.Database {
-  _FakeDatabase_2(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeDatabase_2(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 /// A class which mocks [SQLCipherDatabaseService].
@@ -64,69 +49,63 @@ class _FakeDatabase_2 extends _i1.SmartFake implements _i4.Database {
 class MockSQLCipherDatabaseService extends _i1.Mock
     implements _i5.SQLCipherDatabaseService {
   @override
-  _i2.MasterKeyManager get keyManager => (super.noSuchMethod(
-        Invocation.getter(#keyManager),
-        returnValue: _FakeMasterKeyManager_0(
-          this,
-          Invocation.getter(#keyManager),
-        ),
-        returnValueForMissingStub: _FakeMasterKeyManager_0(
-          this,
-          Invocation.getter(#keyManager),
-        ),
-      ) as _i2.MasterKeyManager);
-
-  @override
-  _i3.PathProviderService get pathService => (super.noSuchMethod(
-        Invocation.getter(#pathService),
-        returnValue: _FakePathProviderService_1(
-          this,
-          Invocation.getter(#pathService),
-        ),
-        returnValueForMissingStub: _FakePathProviderService_1(
-          this,
-          Invocation.getter(#pathService),
-        ),
-      ) as _i3.PathProviderService);
-
-  @override
-  _i6.Future<_i4.Database> get database => (super.noSuchMethod(
-        Invocation.getter(#database),
-        returnValue: _i6.Future<_i4.Database>.value(_FakeDatabase_2(
-          this,
-          Invocation.getter(#database),
-        )),
-        returnValueForMissingStub:
-            _i6.Future<_i4.Database>.value(_FakeDatabase_2(
-          this,
-          Invocation.getter(#database),
-        )),
-      ) as _i6.Future<_i4.Database>);
-
-  @override
-  _i6.Future<void> close() => (super.noSuchMethod(
-        Invocation.method(
-          #close,
-          [],
-        ),
-        returnValue: _i6.Future<void>.value(),
-        returnValueForMissingStub: _i6.Future<void>.value(),
-      ) as _i6.Future<void>);
-
-  @override
-  _i6.Future<void> onCreate(
-    _i4.Database? db,
-    int? version,
-  ) =>
+  _i2.MasterKeyManager get keyManager =>
       (super.noSuchMethod(
-        Invocation.method(
-          #onCreate,
-          [
-            db,
-            version,
-          ],
-        ),
-        returnValue: _i6.Future<void>.value(),
-        returnValueForMissingStub: _i6.Future<void>.value(),
-      ) as _i6.Future<void>);
+            Invocation.getter(#keyManager),
+            returnValue: _FakeMasterKeyManager_0(
+              this,
+              Invocation.getter(#keyManager),
+            ),
+            returnValueForMissingStub: _FakeMasterKeyManager_0(
+              this,
+              Invocation.getter(#keyManager),
+            ),
+          )
+          as _i2.MasterKeyManager);
+
+  @override
+  _i3.PathProviderService get pathService =>
+      (super.noSuchMethod(
+            Invocation.getter(#pathService),
+            returnValue: _FakePathProviderService_1(
+              this,
+              Invocation.getter(#pathService),
+            ),
+            returnValueForMissingStub: _FakePathProviderService_1(
+              this,
+              Invocation.getter(#pathService),
+            ),
+          )
+          as _i3.PathProviderService);
+
+  @override
+  _i6.Future<_i4.Database> get database =>
+      (super.noSuchMethod(
+            Invocation.getter(#database),
+            returnValue: _i6.Future<_i4.Database>.value(
+              _FakeDatabase_2(this, Invocation.getter(#database)),
+            ),
+            returnValueForMissingStub: _i6.Future<_i4.Database>.value(
+              _FakeDatabase_2(this, Invocation.getter(#database)),
+            ),
+          )
+          as _i6.Future<_i4.Database>);
+
+  @override
+  _i6.Future<void> close() =>
+      (super.noSuchMethod(
+            Invocation.method(#close, []),
+            returnValue: _i6.Future<void>.value(),
+            returnValueForMissingStub: _i6.Future<void>.value(),
+          )
+          as _i6.Future<void>);
+
+  @override
+  _i6.Future<void> onCreate(_i4.Database? db, int? version) =>
+      (super.noSuchMethod(
+            Invocation.method(#onCreate, [db, version]),
+            returnValue: _i6.Future<void>.value(),
+            returnValueForMissingStub: _i6.Future<void>.value(),
+          )
+          as _i6.Future<void>);
 }

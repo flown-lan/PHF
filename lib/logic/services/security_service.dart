@@ -32,9 +32,9 @@ class SecurityService {
     required FlutterSecureStorage secureStorage,
     required AppMetaRepository metaRepo,
     LocalAuthentication? localAuth,
-  })  : _secureStorage = secureStorage,
-        _metaRepo = metaRepo,
-        _localAuth = localAuth ?? LocalAuthentication();
+  }) : _secureStorage = secureStorage,
+       _metaRepo = metaRepo,
+       _localAuth = localAuth ?? LocalAuthentication();
 
   /// 设置新的 PIN 码
   ///

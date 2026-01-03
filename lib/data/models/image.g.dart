@@ -27,7 +27,8 @@ _MedicalImage _$MedicalImageFromJson(Map<String, dynamic> json) =>
       visitDate: json['visitDate'] == null
           ? null
           : DateTime.parse(json['visitDate'] as String),
-      tagIds: (json['tagIds'] as List<dynamic>?)
+      tagIds:
+          (json['tagIds'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
           const [],

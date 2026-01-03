@@ -16,15 +16,15 @@ final class OcrPendingCountProvider
     extends $FunctionalProvider<AsyncValue<int>, int, Stream<int>>
     with $FutureModifier<int>, $StreamProvider<int> {
   OcrPendingCountProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'ocrPendingCountProvider',
-          isAutoDispose: true,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'ocrPendingCountProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$ocrPendingCountHash();
@@ -40,4 +40,4 @@ final class OcrPendingCountProvider
   }
 }
 
-String _$ocrPendingCountHash() => r'6c882e6dca8285e7bf2feaa3e78061fbf040bdea';
+String _$ocrPendingCountHash() => r'e15b6886b8075597f9042d7934687e873d6ce898';

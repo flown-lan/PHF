@@ -40,7 +40,7 @@ class ReviewListController extends _$ReviewListController {
     // Refresh list
     ref.invalidateSelf();
   }
-  
+
   /// 删除记录 (Delete)
   Future<void> deleteRecord(String id) async {
     final repo = ref.read(recordRepositoryProvider);

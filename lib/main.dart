@@ -13,7 +13,7 @@ import 'package:talker_riverpod_logger/talker_riverpod_logger.dart';
 Future<void> main() async {
   // 确保 Flutter 绑定初始化，因为我们需要在 runApp 前或初始化 provider 时进行异步操作
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // 初始化全局 ProviderContainer 并预热异步服务
   final talker = TalkerFlutter.init();
   final container = ProviderContainer(
@@ -70,7 +70,7 @@ class PaperHealthApp extends ConsumerWidget {
 }
 
 /// # AppLoader
-/// 
+///
 /// ## Description
 /// 应用启动加载器。负责检查初始化状态（如：是否已设置应用锁）。
 class AppLoader extends ConsumerWidget {
@@ -101,16 +101,10 @@ class AppLoader extends ConsumerWidget {
         // 如果已设置应用锁且已验证，进入首页
         return const HomePage();
       },
-      loading: () => const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      ),
-      error: (error, stack) => Scaffold(
-        body: Center(
-          child: Text('初始化失败: $error'),
-        ),
-      ),
+      loading: () =>
+          const Scaffold(body: Center(child: CircularProgressIndicator())),
+      error: (error, stack) =>
+          Scaffold(body: Center(child: Text('初始化失败: $error'))),
     );
   }
 }

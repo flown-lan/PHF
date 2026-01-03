@@ -31,15 +31,17 @@ void main() {
       // Arrange
       final dummyKey = Uint8List.fromList(List.filled(32, 1));
       when(mockKeyManager.getMasterKey()).thenAnswer((_) async => dummyKey);
-      when(mockPathService.getDatabasePath(any)).thenReturn('/mock/path/phf_encrypted.db');
+      when(
+        mockPathService.getDatabasePath(any),
+      ).thenReturn('/mock/path/phf_encrypted.db');
 
-      // Note: We cannot easily mock the static/global openDatabase from sqflite 
+      // Note: We cannot easily mock the static/global openDatabase from sqflite
       // without Dependency Injection or FFI in this unit test scope.
       // This test primarily verifies the dependency interaction flow.
-      
+
       // Since calling service.database will trigger openDatabase which fails on standard test environment
       // (MissingPluginException or FFI error), we expect it to fail but check verify calls.
-      
+
       try {
         await service.database;
       } catch (e) {

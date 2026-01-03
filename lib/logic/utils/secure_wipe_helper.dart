@@ -34,19 +34,19 @@ class SecureWipeHelper {
       if (length > 0) {
         final random = Random.secure();
         final raf = await file.open(mode: FileMode.write);
-        
+
         final buffer = Uint8List(_bufferSize);
         int written = 0;
-        
+
         while (written < length) {
           // 每次循环重新填充部分随机数据以增强安全性
           for (var i = 0; i < min(_bufferSize, 1024); i++) {
             buffer[i] = random.nextInt(256);
           }
-          
+
           final remaining = length - written;
           final chunkSize = min(remaining, _bufferSize);
-          
+
           await raf.writeFrom(buffer, 0, chunkSize);
           written += chunkSize;
         }
@@ -74,18 +74,18 @@ class SecureWipeHelper {
       if (length > 0) {
         final random = Random.secure();
         final raf = file.openSync(mode: FileMode.write);
-        
+
         final buffer = Uint8List(_bufferSize);
         int written = 0;
-        
+
         while (written < length) {
           for (var i = 0; i < min(_bufferSize, 1024); i++) {
             buffer[i] = random.nextInt(256);
           }
-          
+
           final remaining = length - written;
           final chunkSize = min(remaining, _bufferSize);
-          
+
           raf.writeFromSync(buffer, 0, chunkSize);
           written += chunkSize;
         }
@@ -97,7 +97,9 @@ class SecureWipeHelper {
       file.deleteSync();
     } catch (e) {
       if (file.existsSync()) {
-        try { file.deleteSync(); } catch (_) {}
+        try {
+          file.deleteSync();
+        } catch (_) {}
       }
     }
   }

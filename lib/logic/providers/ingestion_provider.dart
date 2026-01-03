@@ -5,7 +5,7 @@
 ///
 /// ## Logic
 /// - `pickImages`: 调用 GalleryService 选择图片。
-/// - `submit`: 
+/// - `submit`:
 ///    1. 创建 Record 实体。
 ///    2. 并发处理所有图片 (Compress + Encrypt + Save)。
 ///    3. 保存 Record。
@@ -52,7 +52,7 @@ class IngestionController extends _$IngestionController {
   void updateDate(DateTime date) {
     state = state.copyWith(visitDate: date);
   }
-  
+
   void updateNotes(String notes) {
     state = state.copyWith(notes: notes);
   }
@@ -142,7 +142,10 @@ class IngestionController extends _$IngestionController {
   /// 提交保存
   Future<void> submit() async {
     if (state.rawImages.isEmpty) {
-      state = state.copyWith(status: IngestionStatus.error, errorMessage: "需至少包含一张图片");
+      state = state.copyWith(
+        status: IngestionStatus.error,
+        errorMessage: "需至少包含一张图片",
+      );
       return;
     }
 
@@ -156,62 +159,66 @@ class IngestionController extends _$IngestionController {
       final fileSecurity = ref.read(fileSecurityHelperProvider);
       final imageProcessing = ref.read(imageProcessingServiceProvider);
       final pathService = ref.read(pathProviderServiceProvider);
-      
+
       const currentPersonId = 'def_me'; // Phase 1 Single User
-      
+
       final defaultHospital = state.hospitalName ?? '未命名记录';
       final defaultDate = state.visitDate ?? DateTime.now();
 
       final List<MedicalImage> medicalImages = [];
-      
+
       // Process images concurrently
-      await Future.wait(state.rawImages.asMap().entries.map((entry) async {
-        final index = entry.key;
-        final xFile = entry.value;
-        final rawBytes = await xFile.readAsBytes();
-        
-        // 1. Optimized Image Processing (Single Decode)
-        final result = await imageProcessing.processFull(
-          data: rawBytes,
-          rotationAngle: state.rotations[index],
-          quality: 80,
-        );
+      await Future.wait(
+        state.rawImages.asMap().entries.map((entry) async {
+          final index = entry.key;
+          final xFile = entry.value;
+          final rawBytes = await xFile.readAsBytes();
 
-        // 2. Encrypt & Save Main File (Generate New Key)
-        final fileResult = await fileSecurity.saveEncryptedFile(
-          data: result.mainBytes, 
-          targetDir: pathService.imagesDirPath,
-        );
-        
-        // 3. Encrypt & Save Thumbnail (NEW INDEPENDENT Key - T16.1)
-        final thumbDir = '${pathService.sandboxRoot}/images/thumbnails';
-        final thumbResult = await fileSecurity.saveEncryptedFile(
-          data: result.thumbBytes,
-          targetDir: thumbDir,
-        );
+          // 1. Optimized Image Processing (Single Decode)
+          final result = await imageProcessing.processFull(
+            data: rawBytes,
+            rotationAngle: state.rotations[index],
+            quality: 80,
+          );
 
-        // 4. Create Entity
-        medicalImages.add(MedicalImage(
-          id: const Uuid().v4(),
-          recordId: recordId,
-          encryptionKey: fileResult.base64Key,
-          thumbnailEncryptionKey: thumbResult.base64Key, // Independent key
-          filePath: 'images/${fileResult.relativePath}',
-          thumbnailPath: 'images/thumbnails/${thumbResult.relativePath}',
-          mimeType: 'image/jpeg',
-          fileSize: result.mainBytes.lengthInBytes,
-          displayOrder: index,
-          width: result.width,
-          height: result.height,
-          createdAt: DateTime.now(),
-          hospitalName: defaultHospital,
-          visitDate: defaultDate,
-          tagIds: state.selectedTagIds,
-        ));
+          // 2. Encrypt & Save Main File (Generate New Key)
+          final fileResult = await fileSecurity.saveEncryptedFile(
+            data: result.mainBytes,
+            targetDir: pathService.imagesDirPath,
+          );
 
-        // 5. 关键优化：一旦完成处理并安全存入加密沙盒，立即擦除原始临时文件
-        await SecureWipeHelper.wipe(File(xFile.path)).catchError((_) {});
-      }));
+          // 3. Encrypt & Save Thumbnail (NEW INDEPENDENT Key - T16.1)
+          final thumbDir = '${pathService.sandboxRoot}/images/thumbnails';
+          final thumbResult = await fileSecurity.saveEncryptedFile(
+            data: result.thumbBytes,
+            targetDir: thumbDir,
+          );
+
+          // 4. Create Entity
+          medicalImages.add(
+            MedicalImage(
+              id: const Uuid().v4(),
+              recordId: recordId,
+              encryptionKey: fileResult.base64Key,
+              thumbnailEncryptionKey: thumbResult.base64Key, // Independent key
+              filePath: 'images/${fileResult.relativePath}',
+              thumbnailPath: 'images/thumbnails/${thumbResult.relativePath}',
+              mimeType: 'image/jpeg',
+              fileSize: result.mainBytes.lengthInBytes,
+              displayOrder: index,
+              width: result.width,
+              height: result.height,
+              createdAt: DateTime.now(),
+              hospitalName: defaultHospital,
+              visitDate: defaultDate,
+              tagIds: state.selectedTagIds,
+            ),
+          );
+
+          // 5. 关键优化：一旦完成处理并安全存入加密沙盒，立即擦除原始临时文件
+          await SecureWipeHelper.wipe(File(xFile.path)).catchError((_) {});
+        }),
+      );
 
       // 6. Create Record
       final record = MedicalRecord(
@@ -223,13 +230,13 @@ class IngestionController extends _$IngestionController {
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
         // Phase 2 Change: Default status is processing
-        status: RecordStatus.processing, 
+        status: RecordStatus.processing,
       );
-      
+
       // 7. Transactional Save
       await recordRepo.saveRecord(record);
       await imageRepo.saveImages(medicalImages);
-      
+
       // 8. Sync Aggregated Metadata
       await recordRepo.syncRecordMetadata(recordId);
 
@@ -245,18 +252,20 @@ class IngestionController extends _$IngestionController {
       BackgroundWorkerService().startForegroundProcessing(
         talker: ref.read(talkerProvider),
       );
-      
+
       // 10. Refresh Timeline & Reset State
       ref.invalidate(timelineControllerProvider);
       ref.invalidate(ocrPendingCountProvider); // 强制立即重新开始轮询探测
-      
+
       // 11. Secure Wipe raw images
       await _cleanupFiles(state.rawImages);
-      
+
       state = const IngestionState(status: IngestionStatus.success);
-      
     } catch (e) {
-      state = state.copyWith(status: IngestionStatus.error, errorMessage: e.toString());
+      state = state.copyWith(
+        status: IngestionStatus.error,
+        errorMessage: e.toString(),
+      );
       // Cleanup even on error
       await _cleanupFiles(state.rawImages);
     }

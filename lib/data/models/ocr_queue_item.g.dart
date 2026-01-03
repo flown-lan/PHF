@@ -10,7 +10,8 @@ _OCRQueueItem _$OCRQueueItemFromJson(Map<String, dynamic> json) =>
     _OCRQueueItem(
       id: json['id'] as String,
       imageId: json['imageId'] as String,
-      status: $enumDecodeNullable(_$OCRJobStatusEnumMap, json['status']) ??
+      status:
+          $enumDecodeNullable(_$OCRJobStatusEnumMap, json['status']) ??
           OCRJobStatus.pending,
       retryCount: (json['retryCount'] as num?)?.toInt() ?? 0,
       lastError: json['lastError'] as String?,

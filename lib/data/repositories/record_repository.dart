@@ -26,7 +26,7 @@ class RecordRepository extends BaseRepository implements IRecordRepository {
   @override
   Future<void> saveRecord(MedicalRecord record) async {
     final db = await dbService.database;
-    
+
     // 手动映射字段以匹配数据库 Schema (snake_case)
     final dbMap = <String, dynamic>{
       'id': record.id,
@@ -41,7 +41,7 @@ class RecordRepository extends BaseRepository implements IRecordRepository {
       'status': record.status.name, // 'archived', 'deleted'
       'tags_cache': record.tagsCache,
     };
-    
+
     // images 不存入 records 表
 
     // 执行插入或更新
@@ -124,14 +124,22 @@ class RecordRepository extends BaseRepository implements IRecordRepository {
     final db = await dbService.database;
     await db.update(
       'records',
-      {'status': status.name, 'updated_at_ms': DateTime.now().millisecondsSinceEpoch},
+      {
+        'status': status.name,
+        'updated_at_ms': DateTime.now().millisecondsSinceEpoch,
+      },
       where: 'id = ?',
       whereArgs: [id],
     );
   }
 
   @override
-  Future<void> updateRecordMetadata(String id, {String? hospitalName, DateTime? visitDate, String? notes}) async {
+  Future<void> updateRecordMetadata(
+    String id, {
+    String? hospitalName,
+    DateTime? visitDate,
+    String? notes,
+  }) async {
     final db = await dbService.database;
     final now = DateTime.now().millisecondsSinceEpoch;
     await db.update(
@@ -189,7 +197,8 @@ class RecordRepository extends BaseRepository implements IRecordRepository {
       // JOIN FTS table
       // SELECT r.* FROM records r JOIN ocr_search_index fts ON r.id = fts.record_id WHERE ocr_search_index MATCH ?
       // 注意 FTS MATCH 语法
-      sql = '''
+      sql =
+          '''
         SELECT r.* 
         FROM records r
         JOIN ocr_search_index fts ON r.id = fts.record_id
@@ -198,7 +207,8 @@ class RecordRepository extends BaseRepository implements IRecordRepository {
       ''';
       args.add(query); // Simple match
     } else {
-      sql = 'SELECT r.* FROM records r WHERE $whereClause ORDER BY r.visit_date_ms DESC';
+      sql =
+          'SELECT r.* FROM records r WHERE $whereClause ORDER BY r.visit_date_ms DESC';
     }
 
     final List<Map<String, dynamic>> maps = await db.rawQuery(sql, args);
@@ -208,7 +218,7 @@ class RecordRepository extends BaseRepository implements IRecordRepository {
   @override
   Future<void> syncRecordMetadata(String recordId) async {
     final db = await dbService.database;
-    
+
     // 1. 获取所有属于该 Record 的图片
     final List<Map<String, dynamic>> images = await db.query(
       'images',
@@ -217,7 +227,7 @@ class RecordRepository extends BaseRepository implements IRecordRepository {
       whereArgs: [recordId],
       orderBy: 'page_index ASC',
     );
-    
+
     if (images.isEmpty) return;
 
     int? minDate;
@@ -230,8 +240,10 @@ class RecordRepository extends BaseRepository implements IRecordRepository {
         if (minDate == null || date < minDate) minDate = date;
         if (maxDate == null || date > maxDate) maxDate = date;
       }
-      
-      if (hospitalName == null && img['hospital_name'] != null && (img['hospital_name'] as String).isNotEmpty) {
+
+      if (hospitalName == null &&
+          img['hospital_name'] != null &&
+          (img['hospital_name'] as String).isNotEmpty) {
         hospitalName = img['hospital_name'] as String;
       }
     }
@@ -240,7 +252,9 @@ class RecordRepository extends BaseRepository implements IRecordRepository {
     final Map<String, dynamic> updates = {};
     if (minDate != null) {
       updates['visit_date_ms'] = minDate;
-      updates['visit_date_iso'] = DateTime.fromMillisecondsSinceEpoch(minDate).toIso8601String();
+      updates['visit_date_iso'] = DateTime.fromMillisecondsSinceEpoch(
+        minDate,
+      ).toIso8601String();
     }
     if (maxDate != null) {
       updates['visit_end_date_ms'] = maxDate;
@@ -309,22 +323,27 @@ class RecordRepository extends BaseRepository implements IRecordRepository {
 
   // --- Helpers ---
 
-  MedicalRecord _mapToRecord(Map<String, dynamic> row, List<MedicalImage> images) {
+  MedicalRecord _mapToRecord(
+    Map<String, dynamic> row,
+    List<MedicalImage> images,
+  ) {
     // 还原 DateTime
     final visitDateMs = row['visit_date_ms'] as int?;
     final createdAtMs = row['created_at_ms'] as int;
     final updatedAtMs = row['updated_at_ms'] as int;
 
-    final notedAt = visitDateMs != null 
+    final notedAt = visitDateMs != null
         ? DateTime.fromMillisecondsSinceEpoch(visitDateMs)
-        : DateTime.fromMillisecondsSinceEpoch(createdAtMs); // Fallback to creation date
+        : DateTime.fromMillisecondsSinceEpoch(
+            createdAtMs,
+          ); // Fallback to creation date
 
-    final visitEndDate = row['visit_end_date_ms'] != null 
-        ? DateTime.fromMillisecondsSinceEpoch(row['visit_end_date_ms'] as int) 
+    final visitEndDate = row['visit_end_date_ms'] != null
+        ? DateTime.fromMillisecondsSinceEpoch(row['visit_end_date_ms'] as int)
         : null;
     final createdAt = DateTime.fromMillisecondsSinceEpoch(createdAtMs);
     final updatedAt = DateTime.fromMillisecondsSinceEpoch(updatedAtMs);
-    
+
     // 还原 Status
     final statusStr = row['status'] as String;
     final status = RecordStatus.values.firstWhere(
@@ -346,13 +365,14 @@ class RecordRepository extends BaseRepository implements IRecordRepository {
       images: images,
     );
   }
-  
+
   MedicalImage _mapToImage(Map<String, dynamic> row) {
     return MedicalImage.fromJson({
       'id': row['id'],
       'recordId': row['record_id'],
       'encryptionKey': row['encryption_key'],
-      'thumbnailEncryptionKey': row['thumbnail_encryption_key'] ?? row['encryption_key'],
+      'thumbnailEncryptionKey':
+          row['thumbnail_encryption_key'] ?? row['encryption_key'],
       'filePath': row['file_path'],
       'thumbnailPath': row['thumbnail_path'],
       'mimeType': row['mime_type'],
@@ -364,10 +384,14 @@ class RecordRepository extends BaseRepository implements IRecordRepository {
       'ocrRawJson': row['ocr_raw_json'],
       'ocrConfidence': row['ocr_confidence'],
       'hospitalName': row['hospital_name'],
-      'visitDate': row['visit_date_ms'] != null 
-          ? DateTime.fromMillisecondsSinceEpoch(row['visit_date_ms'] as int).toIso8601String() 
+      'visitDate': row['visit_date_ms'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(
+              row['visit_date_ms'] as int,
+            ).toIso8601String()
           : null,
-      'createdAt': DateTime.fromMillisecondsSinceEpoch(row['created_at_ms'] as int).toIso8601String(),
-    }); 
+      'createdAt': DateTime.fromMillisecondsSinceEpoch(
+        row['created_at_ms'] as int,
+      ).toIso8601String(),
+    });
   }
 }

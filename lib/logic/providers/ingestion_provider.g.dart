@@ -15,15 +15,15 @@ final ingestionControllerProvider = IngestionControllerProvider._();
 final class IngestionControllerProvider
     extends $NotifierProvider<IngestionController, IngestionState> {
   IngestionControllerProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'ingestionControllerProvider',
-          isAutoDispose: true,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'ingestionControllerProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$ingestionControllerHash();
@@ -42,7 +42,7 @@ final class IngestionControllerProvider
 }
 
 String _$ingestionControllerHash() =>
-    r'43fa2f98c11ccd196336c80243a5e5bfffc32846';
+    r'40a4a44451158ae126ca19b297f5a02b24a9a537';
 
 abstract class _$IngestionController extends $Notifier<IngestionState> {
   IngestionState build();
@@ -50,11 +50,14 @@ abstract class _$IngestionController extends $Notifier<IngestionState> {
   @override
   void runBuild() {
     final ref = this.ref as $Ref<IngestionState, IngestionState>;
-    final element = ref.element as $ClassProviderElement<
-        AnyNotifier<IngestionState, IngestionState>,
-        IngestionState,
-        Object?,
-        Object?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<IngestionState, IngestionState>,
+              IngestionState,
+              Object?,
+              Object?
+            >;
     element.handleCreate(ref, build);
   }
 }

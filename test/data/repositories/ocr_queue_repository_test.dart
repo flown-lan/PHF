@@ -23,7 +23,7 @@ void main() {
 
     // Create an in-memory database
     db = await databaseFactory.openDatabase(inMemoryDatabasePath);
-    
+
     // Create Table
     await db.execute('''
       CREATE TABLE ocr_queue (
@@ -51,10 +51,10 @@ void main() {
   group('OCRQueueRepository', () {
     test('enqueue adds item with pending status', () async {
       await queueRepo.enqueue('img_1');
-      
+
       final count = await queueRepo.getPendingCount();
       expect(count, 1);
-      
+
       final item = await queueRepo.dequeue();
       expect(item, isNotNull);
       expect(item!.imageId, 'img_1');
@@ -65,12 +65,14 @@ void main() {
     test('dequeue returns oldest pending item (FIFO)', () async {
       // Insert in order
       await queueRepo.enqueue('img_1');
-      await Future.delayed(const Duration(milliseconds: 10)); // Ensure timestamp diff
+      await Future<void>.delayed(
+        const Duration(milliseconds: 10),
+      ); // Ensure timestamp diff
       await queueRepo.enqueue('img_2');
 
       final first = await queueRepo.dequeue();
       expect(first!.imageId, 'img_1');
-      
+
       // Simulate processing first
       await queueRepo.updateStatus(first.id, OCRJobStatus.completed);
 
@@ -85,39 +87,55 @@ void main() {
 
     test('updateStatus changes status and last_error', () async {
       await queueRepo.enqueue('img_1');
-      var item = await queueRepo.dequeue();
-      
-      await queueRepo.updateStatus(item!.id, OCRJobStatus.failed, error: 'Network Error');
-      
+      final item = await queueRepo.dequeue();
+
+      await queueRepo.updateStatus(
+        item!.id,
+        OCRJobStatus.failed,
+        error: 'Network Error',
+      );
+
       // Verify in DB directly or via logic
       // Since dequeue only returns pending, we can't fetch it via dequeue anymore.
       // We can query DB directly to verify.
-      final result = await db.query('ocr_queue', where: 'id = ?', whereArgs: [item.id]);
+      final result = await db.query(
+        'ocr_queue',
+        where: 'id = ?',
+        whereArgs: [item.id],
+      );
       expect(result.first['status'], OCRJobStatus.failed.name);
       expect(result.first['last_error'], 'Network Error');
     });
 
     test('incrementRetry increases count and updates timestamp', () async {
       await queueRepo.enqueue('img_1');
-      var item = await queueRepo.dequeue();
-      
+      final item = await queueRepo.dequeue();
+
       final before = DateTime.now();
-      await Future.delayed(const Duration(milliseconds: 10));
-      
+      await Future<void>.delayed(const Duration(milliseconds: 10));
+
       await queueRepo.incrementRetry(item!.id);
-      
-      final result = await db.query('ocr_queue', where: 'id = ?', whereArgs: [item.id]);
+
+      final result = await db.query(
+        'ocr_queue',
+        where: 'id = ?',
+        whereArgs: [item.id],
+      );
       expect(result.first['retry_count'], 1);
-      expect((result.first['updated_at_ms'] as int) > before.millisecondsSinceEpoch, isTrue);
+      expect(
+        (result.first['updated_at_ms'] as int) > before.millisecondsSinceEpoch,
+        isTrue,
+      );
     });
 
     test('deleteJob removes item', () async {
       await queueRepo.enqueue('img_1');
-      var item = await queueRepo.dequeue();
-      
+      final item = await queueRepo.dequeue();
+
       await queueRepo.deleteJob(item!.id);
-      
-      final count = await queueRepo.getPendingCount(); // Should be 0 if we deleted it. 
+
+      final count = await queueRepo
+          .getPendingCount(); // Should be 0 if we deleted it.
       // Wait, dequeue doesn't remove it, just reads it.
       // If we delete it, getPendingCount should be 0.
       expect(count, 0);

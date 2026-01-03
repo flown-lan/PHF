@@ -15,15 +15,15 @@ final timelineControllerProvider = TimelineControllerProvider._();
 final class TimelineControllerProvider
     extends $AsyncNotifierProvider<TimelineController, HomeState> {
   TimelineControllerProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'timelineControllerProvider',
-          isAutoDispose: true,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'timelineControllerProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$timelineControllerHash();
@@ -34,7 +34,7 @@ final class TimelineControllerProvider
 }
 
 String _$timelineControllerHash() =>
-    r'988d02cd88a97748394eab446c131d152b0bedf9';
+    r'942d3eec98f6200fb56ec6caafbee9a66643cc7b';
 
 abstract class _$TimelineController extends $AsyncNotifier<HomeState> {
   FutureOr<HomeState> build();
@@ -42,11 +42,14 @@ abstract class _$TimelineController extends $AsyncNotifier<HomeState> {
   @override
   void runBuild() {
     final ref = this.ref as $Ref<AsyncValue<HomeState>, HomeState>;
-    final element = ref.element as $ClassProviderElement<
-        AnyNotifier<AsyncValue<HomeState>, HomeState>,
-        AsyncValue<HomeState>,
-        Object?,
-        Object?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<HomeState>, HomeState>,
+              AsyncValue<HomeState>,
+              Object?,
+              Object?
+            >;
     element.handleCreate(ref, build);
   }
 }

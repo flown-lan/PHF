@@ -20,7 +20,7 @@ void main() {
       expect(json['id'], 'p1');
       expect(json['nickname'], 'Me');
       expect(json['isDefault'], true);
-      
+
       final fromJson = Person.fromJson(json);
       expect(fromJson, person);
     });
@@ -55,7 +55,7 @@ void main() {
 
       expect(image.mimeType, 'image/jpeg'); // Default
       expect(image.displayOrder, 0); // Default
-      
+
       final json = image.toJson();
       expect(json['mimeType'], 'image/jpeg');
       expect(json['fileSize'], 1024);
@@ -75,19 +75,19 @@ void main() {
 
       expect(record.status, RecordStatus.processing); // Default
       expect(record.title, 'Mayo Clinic'); // Getter logic
-      
+
       final json = record.toJson();
       expect(json['personId'], 'p1');
       expect(json['hospitalName'], 'Mayo Clinic');
       expect(json['status'], 'processing');
-      
+
       final fromJson = MedicalRecord.fromJson(json);
       expect(fromJson.title, 'Mayo Clinic');
       expect(fromJson, record);
     });
 
     test('MedicalRecord title fallback', () {
-       final record = MedicalRecord(
+      final record = MedicalRecord(
         id: 'r2',
         personId: 'p1',
         notedAt: DateTime(2023, 1, 1),

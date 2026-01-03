@@ -16,7 +16,7 @@ import 'package:phf/logic/providers/core_providers.dart';
 import 'package:phf/presentation/widgets/event_card.dart';
 
 @GenerateNiceMocks([
-  MockSpec<FileSecurityHelper>(), 
+  MockSpec<FileSecurityHelper>(),
   MockSpec<PathProviderService>(),
   MockSpec<ITagRepository>(),
 ])
@@ -26,7 +26,7 @@ void main() {
   late MockFileSecurityHelper mockFileSecurityHelper;
   late MockPathProviderService mockPathProviderService;
   late MockITagRepository mockTagRepository;
-  
+
   Widget createSubject(MedicalRecord record, {MedicalImage? image}) {
     return ProviderScope(
       overrides: [
@@ -49,20 +49,84 @@ void main() {
       mockTagRepository = MockITagRepository();
 
       final fakePng = Uint8List.fromList([
-        0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, 0x00, 0x00, 0x00, 0x0D, 
-        0x49, 0x48, 0x44, 0x52, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 
-        0x08, 0x06, 0x00, 0x00, 0x00, 0x1F, 0x15, 0xC4, 0x89, 0x00, 0x00, 0x00, 
-        0x0A, 0x49, 0x44, 0x41, 0x54, 0x78, 0x9C, 0x63, 0x00, 0x01, 0x00, 0x00, 
-        0x05, 0x00, 0x01, 0x0D, 0x0A, 0x2D, 0xB4, 0x00, 0x00, 0x00, 0x00, 0x49, 
-        0x45, 0x4E, 0x44, 0xAE, 0x42, 0x60, 0x82
+        0x89,
+        0x50,
+        0x4E,
+        0x47,
+        0x0D,
+        0x0A,
+        0x1A,
+        0x0A,
+        0x00,
+        0x00,
+        0x00,
+        0x0D,
+        0x49,
+        0x48,
+        0x44,
+        0x52,
+        0x00,
+        0x00,
+        0x00,
+        0x01,
+        0x00,
+        0x00,
+        0x00,
+        0x01,
+        0x08,
+        0x06,
+        0x00,
+        0x00,
+        0x00,
+        0x1F,
+        0x15,
+        0xC4,
+        0x89,
+        0x00,
+        0x00,
+        0x00,
+        0x0A,
+        0x49,
+        0x44,
+        0x41,
+        0x54,
+        0x78,
+        0x9C,
+        0x63,
+        0x00,
+        0x01,
+        0x00,
+        0x00,
+        0x05,
+        0x00,
+        0x01,
+        0x0D,
+        0x0A,
+        0x2D,
+        0xB4,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0x49,
+        0x45,
+        0x4E,
+        0x44,
+        0xAE,
+        0x42,
+        0x60,
+        0x82,
       ]);
 
       when(mockPathProviderService.sandboxRoot).thenReturn('/mock/sandbox');
-      when(mockFileSecurityHelper.decryptDataFromFile(any, any))
-          .thenAnswer((_) async => fakePng);
+      when(
+        mockFileSecurityHelper.decryptDataFromFile(any, any),
+      ).thenAnswer((_) async => fakePng);
     });
 
-    testWidgets('displays first image tag name instead of notes', (widgetTester) async {
+    testWidgets('displays first image tag name instead of notes', (
+      widgetTester,
+    ) async {
       // Setup Data
       const tagId = 'tag_1';
       const tagName = 'Important Checkup';
@@ -93,7 +157,14 @@ void main() {
       );
       final recordWithImage = record.copyWith(images: [image]);
 
-      final tags = [Tag(id: tagId, name: tagName, color: '#FFFFFF', createdAt: DateTime.now())];
+      final tags = [
+        Tag(
+          id: tagId,
+          name: tagName,
+          color: '#FFFFFF',
+          createdAt: DateTime.now(),
+        ),
+      ];
 
       // Setup Mocks
       when(mockTagRepository.getAllTags()).thenAnswer((_) async => tags);
@@ -107,7 +178,9 @@ void main() {
       expect(find.text(noteText), findsNothing);
     });
 
-    testWidgets('fallbacks to notes if image has no tags', (widgetTester) async {
+    testWidgets('fallbacks to notes if image has no tags', (
+      widgetTester,
+    ) async {
       const noteText = 'This is a note';
 
       final record = MedicalRecord(
@@ -132,10 +205,15 @@ void main() {
         tagIds: [], // Empty tags
       );
 
-      await widgetTester.pumpWidget(createSubject(record.copyWith(images: [image])));
+      await widgetTester.pumpWidget(
+        createSubject(record.copyWith(images: [image])),
+      );
       await widgetTester.pumpAndSettle();
 
-      expect(find.text(noteText), findsNothing); // Notes no longer shown in EventCard
+      expect(
+        find.text(noteText),
+        findsNothing,
+      ); // Notes no longer shown in EventCard
     });
   });
 }

@@ -20,6 +20,7 @@ void main() {
   setUp(() async {
     PathProviderPlatform.instance = FakePathProviderPlatform();
     service = PathProviderService();
+    service.reset();
   });
 
   group('PathProviderService', () {
@@ -36,7 +37,7 @@ void main() {
 
     test('clearTemp removes files in temp directory', () async {
       await service.initialize();
-      
+
       final tempFile = File('${service.tempDirPath}/test.txt');
       await tempFile.writeAsString('hello');
       expect(tempFile.existsSync(), isTrue);

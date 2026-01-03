@@ -11,7 +11,6 @@ library;
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
@@ -25,11 +24,17 @@ class AndroidOCRService implements IOCRService {
   static const MethodChannel _channel = MethodChannel('com.example.phf/ocr');
 
   @override
-  Future<OCRResult> recognizeText(Uint8List imageBytes, {String? mimeType}) async {
+  Future<OCRResult> recognizeText(
+    Uint8List imageBytes, {
+    String? mimeType,
+  }) async {
     File? tempFile;
     try {
-      log('Starting Native Android OCR for image size: ${imageBytes.length} bytes', name: 'AndroidOCRService');
-      
+      log(
+        'Starting Native Android OCR for image size: ${imageBytes.length} bytes',
+        name: 'AndroidOCRService',
+      );
+
       // 1. Create secure temp file
       final tempDir = await getTemporaryDirectory();
       final uuid = const Uuid().v4();
@@ -45,10 +50,15 @@ class AndroidOCRService implements IOCRService {
       // 3. Parse Result
       final dynamic decoded = jsonDecode(jsonResult);
       final Map<String, dynamic> resultMap = decoded as Map<String, dynamic>;
-      
+
       return OCRResult.fromJson(resultMap);
     } catch (e, stack) {
-      log('Android OCR Failed: $e', name: 'AndroidOCRService', error: e, stackTrace: stack);
+      log(
+        'Android OCR Failed: $e',
+        name: 'AndroidOCRService',
+        error: e,
+        stackTrace: stack,
+      );
       throw Exception('Android OCR Logic Error: $e');
     } finally {
       // 4. Secure Wipe (Crucial)

@@ -41,8 +41,8 @@ void main() {
 
       expect(result, isEmpty);
     });
-    
-    // Note: pickMultiImage returns unmodifiable list usually, 
+
+    // Note: pickMultiImage returns unmodifiable list usually,
     // but here we just check our returned list.
   });
 }

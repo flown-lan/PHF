@@ -55,9 +55,7 @@ class MainFab extends StatelessWidget {
         elevation: 6,
         highlightElevation: 2,
         // 符合 Premium 感，使用稍大的圆角
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       );
     }
 
@@ -68,9 +66,7 @@ class MainFab extends StatelessWidget {
       tooltip: tooltip,
       elevation: 6,
       highlightElevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Icon(icon, size: 28),
     );
   }

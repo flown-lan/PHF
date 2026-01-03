@@ -11,17 +11,18 @@ Future<bool> hasLock(Ref ref) async {
 }
 
 @Riverpod(keepAlive: true)
-class AuthStateController extends _$AuthStateController with WidgetsBindingObserver {
+class AuthStateController extends _$AuthStateController
+    with WidgetsBindingObserver {
   @override
   bool build() {
     // 注册生命周期观察者
     WidgetsBinding.instance.addObserver(this);
-    
+
     // 监听销毁，移除观察者
     ref.onDispose(() {
       WidgetsBinding.instance.removeObserver(this);
     });
-    
+
     // 初始状态：如果应用设置了锁，冷启动应该处于锁定状态
     return true; // 默认启动时锁定 (AppLoader 会检查是否需要显示 LockScreen)
   }
