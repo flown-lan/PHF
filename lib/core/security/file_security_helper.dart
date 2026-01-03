@@ -35,7 +35,7 @@ class FileSecurityHelper {
   ///
   /// [sourceFile]: 原始输入文件/临时文件。
   /// [targetDir]: 加密后的文件存放目录（绝对路径）。
-  /// 
+  ///
   /// Returns: 用于存储到 DB 的相对路径和 Base64 Key。
   Future<EncryptedFileResult> encryptMedia(
     File sourceFile, {
@@ -48,7 +48,7 @@ class FileSecurityHelper {
     // 2. Determine Output Path
     final fileName = '${_uuid.v4()}.enc';
     final destPath = '$targetDir/$fileName';
-    
+
     // Ensure parent directory exists
     final dir = Directory(targetDir);
     if (!await dir.exists()) {
@@ -62,7 +62,7 @@ class FileSecurityHelper {
       key: keyBytes,
     );
 
-    // 4. Return Result (path is relative filename for now, logic layer handles full path usually, 
+    // 4. Return Result (path is relative filename for now, logic layer handles full path usually,
     // but here we return relative filename to be flexible)
     // 根据 Spec 的习惯，这里返回文件名，Data 层再拼接入库
     return EncryptedFileResult(
@@ -95,10 +95,10 @@ class FileSecurityHelper {
 
     // 3. Encrypt Data directly to File
     final encryptedPacket = await _cryptoService.encrypt(
-      data: data, 
+      data: data,
       key: keyBytes,
     );
-    
+
     final file = File(destPath);
     await file.writeAsBytes(encryptedPacket);
 
@@ -144,12 +144,12 @@ class FileSecurityHelper {
     if (!await file.exists()) {
       throw FileNotFoundException(path);
     }
-    
+
     final encryptedData = await file.readAsBytes();
     final keyBytes = base64Decode(base64Key);
 
     return _cryptoService.decrypt(
-      encryptedData: encryptedData, 
+      encryptedData: encryptedData,
       key: keyBytes,
     );
   }

@@ -7,7 +7,7 @@
 /// ## Implementation Details
 /// - **Date Extraction**: 匹配 YYYY-MM-DD, YYYY/MM/DD, YYYY年MM月DD日 等格式。
 /// - **Hospital Extraction**: 查找包含“医院”、“中心”、“卫生站”等关键词的行，并进行清洗。
-/// - **Confidence Scoring**: 
+/// - **Confidence Scoring**:
 ///   - 初始分 = OCR 平均置信度。
 ///   - 惩罚项：未提取到有效日期 (-0.3)，未提取到有效医院 (-0.1)。
 ///
@@ -115,17 +115,19 @@ class SmartExtractor {
 
   static String? _extractHospital(String text) {
     final lines = text.split('\n');
-    
+
     // 策略：寻找包含关键词的最早的行
     for (var line in lines) {
       final trimmedLine = line.trim();
       if (trimmedLine.length < 4 || trimmedLine.length > 50) continue;
 
       // 检查是否包含医院关键词
-      final hasHospitalKw = _hospitalKeywords.any((kw) => trimmedLine.contains(kw));
+      final hasHospitalKw =
+          _hospitalKeywords.any((kw) => trimmedLine.contains(kw));
       if (hasHospitalKw) {
         // 排除掉不相关的行（如“科室：内科一病房”）
-        final shouldExclude = _excludeKeywords.any((kw) => trimmedLine.contains(kw));
+        final shouldExclude =
+            _excludeKeywords.any((kw) => trimmedLine.contains(kw));
         if (!shouldExclude) {
           // 清洗：去除行首尾可能的非文字干扰
           return _sanitizeHospitalName(trimmedLine);

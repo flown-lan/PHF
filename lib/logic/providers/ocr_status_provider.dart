@@ -21,7 +21,7 @@ part 'ocr_status_provider.g.dart';
 Stream<int> ocrPendingCount(Ref ref) async* {
   final repo = ref.watch(ocrQueueRepositoryProvider);
   final talker = ref.watch(talkerProvider);
-  
+
   // 保持订阅状态
   // ignore: unused_local_variable
   final keepAlive = ref.keepAlive();
@@ -31,7 +31,7 @@ Stream<int> ocrPendingCount(Ref ref) async* {
   while (true) {
     try {
       final count = await repo.getPendingCount();
-      
+
       // 只有当数字变化时才 yield，减少 UI 无谓重绘
       if (count != lastCount) {
         talker.debug('[OCRStatusProvider] Count changed: $lastCount -> $count');

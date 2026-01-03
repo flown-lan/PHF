@@ -24,7 +24,7 @@
 /// - `ocr_queue`: OCR 任务队列
 ///
 /// ## Fix Record
-/// - **2025-12-31**: 
+/// - **2025-12-31**:
 ///   1. 补全 `_onUpgrade` 中 v6 版本对 `images` 表的字段扩展 (`ocr_text` 等)。
 ///   2. 重构构造函数支持注入 `DatabaseFactory`，以便进行 FFI 单元测试。
 library;
@@ -59,7 +59,7 @@ class SQLCipherDatabaseService {
   Future<Database> get database async {
     final db = _database;
     if (db != null) return db;
-    
+
     // 如果已经在初始化中，等待同一个 Future
     if (_initFuture != null) return _initFuture!;
 
@@ -113,7 +113,7 @@ class SQLCipherDatabaseService {
   Future<void> _onConfigure(Database db) async {
     // 启用外键约束
     await db.execute('PRAGMA foreign_keys = ON');
-    
+
     // 开启 WAL 模式 (重要：解决跨 Isolate 读写同步延迟)
     // 注意：某些 Android 版本要求使用 rawQuery 执行会有返回值的 PRAGMA
     await db.rawQuery('PRAGMA journal_mode = WAL');
@@ -121,8 +121,8 @@ class SQLCipherDatabaseService {
 
     // 显式设置安全参数 (SQLCipher 4 Defaults but made explicit for future-proofing)
     // 4096 bytes page size aligns with most filesystems
-    await db.execute('PRAGMA cipher_page_size = 4096'); 
-    
+    await db.execute('PRAGMA cipher_page_size = 4096');
+
     // 256,000 PBKDF2 iterations for key derivation
     await db.execute('PRAGMA kdf_iter = 256000');
   }
@@ -248,11 +248,14 @@ class SQLCipherDatabaseService {
         content
       )
     ''');
-    
+
     // 索引优化 (根据查询频率)
-    batch.execute('CREATE INDEX idx_records_visit_date ON records(visit_date_ms)');
-    batch.execute('CREATE INDEX idx_records_person_status ON records(person_id, status)');
-    batch.execute('CREATE INDEX idx_images_record_order ON images(record_id, page_index)');
+    batch.execute(
+        'CREATE INDEX idx_records_visit_date ON records(visit_date_ms)');
+    batch.execute(
+        'CREATE INDEX idx_records_person_status ON records(person_id, status)');
+    batch.execute(
+        'CREATE INDEX idx_images_record_order ON images(record_id, page_index)');
     batch.execute('CREATE INDEX idx_ocr_queue_status ON ocr_queue(status)');
 
     // 10. 执行种子数据填充
@@ -266,7 +269,7 @@ class SQLCipherDatabaseService {
 
     if (oldVersion < 2) {
       // Upgrade to v2: Add Tags Schema
-      
+
       // 1. Add 'tags_cache' to records table
       try {
         await db.execute('ALTER TABLE records ADD COLUMN tags_cache TEXT');
@@ -302,29 +305,34 @@ class SQLCipherDatabaseService {
       // 5. Seed System Tags
       final now = DateTime.now().millisecondsSinceEpoch;
       final tags = [
-        {'id': 'sys_tag_1', 'name': '检验', 'color': '#009688', 'order_index': 1}, 
-        {'id': 'sys_tag_2', 'name': '检查', 'color': '#26A69A', 'order_index': 2}, 
-        {'id': 'sys_tag_3', 'name': '病历', 'color': '#00796B', 'order_index': 3}, 
-        {'id': 'sys_tag_4', 'name': '处方', 'color': '#4DB6AC', 'order_index': 4}, 
+        {'id': 'sys_tag_1', 'name': '检验', 'color': '#009688', 'order_index': 1},
+        {'id': 'sys_tag_2', 'name': '检查', 'color': '#26A69A', 'order_index': 2},
+        {'id': 'sys_tag_3', 'name': '病历', 'color': '#00796B', 'order_index': 3},
+        {'id': 'sys_tag_4', 'name': '处方', 'color': '#4DB6AC', 'order_index': 4},
       ];
 
       for (var tag in tags) {
-        batch.insert('tags', {
-          'id': tag['id'],
-          'name': tag['name'],
-          'color': tag['color'],
-          'order_index': tag['order_index'],
-          'is_custom': 0,
-          'created_at_ms': now,
-        }, conflictAlgorithm: ConflictAlgorithm.ignore);
+        batch.insert(
+            'tags',
+            {
+              'id': tag['id'],
+              'name': tag['name'],
+              'color': tag['color'],
+              'order_index': tag['order_index'],
+              'is_custom': 0,
+              'created_at_ms': now,
+            },
+            conflictAlgorithm: ConflictAlgorithm.ignore);
       }
     }
-    
+
     if (oldVersion < 3) {
       // Upgrade to v3: Add thumbnail_encryption_key to images
       try {
-        await db.execute('ALTER TABLE images ADD COLUMN thumbnail_encryption_key TEXT');
-        await db.execute('UPDATE images SET thumbnail_encryption_key = encryption_key WHERE thumbnail_encryption_key IS NULL');
+        await db.execute(
+            'ALTER TABLE images ADD COLUMN thumbnail_encryption_key TEXT');
+        await db.execute(
+            'UPDATE images SET thumbnail_encryption_key = encryption_key WHERE thumbnail_encryption_key IS NULL');
       } catch (_) {}
     }
 
@@ -333,7 +341,7 @@ class SQLCipherDatabaseService {
       try {
         await db.execute('ALTER TABLE images ADD COLUMN hospital_name TEXT');
         await db.execute('ALTER TABLE images ADD COLUMN visit_date_ms INTEGER');
-        
+
         await db.execute('''
           UPDATE images 
           SET hospital_name = (SELECT hospital_name FROM records WHERE records.id = images.record_id),
@@ -346,14 +354,16 @@ class SQLCipherDatabaseService {
     if (oldVersion < 5) {
       // Upgrade to v5: Add visit_end_date_ms to records
       try {
-        await db.execute('ALTER TABLE records ADD COLUMN visit_end_date_ms INTEGER');
-        await db.execute('UPDATE records SET visit_end_date_ms = visit_date_ms WHERE visit_end_date_ms IS NULL');
+        await db.execute(
+            'ALTER TABLE records ADD COLUMN visit_end_date_ms INTEGER');
+        await db.execute(
+            'UPDATE records SET visit_end_date_ms = visit_date_ms WHERE visit_end_date_ms IS NULL');
       } catch (_) {}
     }
 
     if (oldVersion < 6) {
       // Upgrade to v6: Phase 2.1 Schema (OCR & Queue)
-      
+
       // 1. Add OCR columns to images table
       try {
         await db.execute('ALTER TABLE images ADD COLUMN ocr_text TEXT');
@@ -385,9 +395,10 @@ class SQLCipherDatabaseService {
       ''');
 
       // 4. Index for queue
-      batch.execute('CREATE INDEX IF NOT EXISTS idx_ocr_queue_status ON ocr_queue(status)');
+      batch.execute(
+          'CREATE INDEX IF NOT EXISTS idx_ocr_queue_status ON ocr_queue(status)');
     }
-    
+
     await batch.commit();
   }
 }

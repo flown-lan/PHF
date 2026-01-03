@@ -36,7 +36,7 @@ class EventCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final dateStr = _formatDateRange(record.notedAt, record.visitEndDate);
     final allTagsAsync = ref.watch(allTagsProvider);
-    
+
     return AppCard(
       onTap: onTap,
       padding: EdgeInsets.zero, // Custom layout inside
@@ -50,7 +50,8 @@ class EventCard extends ConsumerWidget {
               children: [
                 // Date Badge
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
                     color: AppTheme.bgGray,
                     borderRadius: BorderRadius.circular(4),
@@ -101,7 +102,8 @@ class EventCard extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               alignment: Alignment.center,
-              child: const Icon(Icons.medical_services_outlined, color: AppTheme.textHint, size: 48),
+              child: const Icon(Icons.medical_services_outlined,
+                  color: AppTheme.textHint, size: 48),
             ),
 
           // 3. Footer (Count info only)
@@ -112,10 +114,11 @@ class EventCard extends ConsumerWidget {
                 const Spacer(),
                 // Display count of images
                 if (record.images.length > 6)
-                   Text(
-                     '共 ${record.images.length} 张图片 >',
-                     style: const TextStyle(fontSize: 12, color: AppTheme.textHint),
-                   ),
+                  Text(
+                    '共 ${record.images.length} 张图片 >',
+                    style:
+                        const TextStyle(fontSize: 12, color: AppTheme.textHint),
+                  ),
               ],
             ),
           ),
@@ -132,7 +135,9 @@ class EventCard extends ConsumerWidget {
     return LayoutBuilder(builder: (context, constraints) {
       const double spacing = 4.0;
       const int crossAxisCount = 3;
-      final double itemSize = (constraints.maxWidth - (crossAxisCount - 1) * spacing) / crossAxisCount;
+      final double itemSize =
+          (constraints.maxWidth - (crossAxisCount - 1) * spacing) /
+              crossAxisCount;
 
       return Wrap(
         spacing: spacing,
@@ -140,11 +145,13 @@ class EventCard extends ConsumerWidget {
         children: List.generate(displayImages.length, (index) {
           final img = displayImages[index];
           final isLast = index == 5 && images.length > 6;
-          
+
           // Get first tag name
           String? firstTagName;
           if (img.tagIds.isNotEmpty) {
-            final firstTag = allTags.firstWhere((t) => t.id == img.tagIds.first, orElse: () => Tag(id: '', name: '', createdAt: DateTime(0), color: ''));
+            final firstTag = allTags.firstWhere((t) => t.id == img.tagIds.first,
+                orElse: () =>
+                    Tag(id: '', name: '', createdAt: DateTime(0), color: ''));
             if (firstTag.name.isNotEmpty) {
               firstTagName = firstTag.name;
             }
@@ -168,14 +175,18 @@ class EventCard extends ConsumerWidget {
                   left: 4,
                   bottom: 4,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
                     decoration: BoxDecoration(
                       color: Colors.black.withOpacity(0.6),
                       borderRadius: BorderRadius.circular(2),
                     ),
                     child: Text(
                       firstTagName,
-                      style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
@@ -190,7 +201,10 @@ class EventCard extends ConsumerWidget {
                   child: const Center(
                     child: Text(
                       '...',
-                      style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
@@ -233,14 +247,14 @@ class EventCard extends ConsumerWidget {
   String _formatDateRange(DateTime start, DateTime? end) {
     final fmtFull = DateFormat('yyyy.MM.dd');
     final fmtDay = DateFormat('MM.dd');
-    
+
     if (end == null || _isSameDay(start, end)) {
       return fmtFull.format(start);
     } else {
       if (start.year == end.year) {
-         return '${fmtFull.format(start)} - ${fmtDay.format(end)}';
+        return '${fmtFull.format(start)} - ${fmtDay.format(end)}';
       } else {
-         return '${fmtFull.format(start)} - ${fmtFull.format(end)}';
+        return '${fmtFull.format(start)} - ${fmtFull.format(end)}';
       }
     }
   }

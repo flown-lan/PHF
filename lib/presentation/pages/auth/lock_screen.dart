@@ -5,7 +5,7 @@ import '../../theme/app_theme.dart';
 import '../../widgets/pin_keyboard.dart';
 
 /// # LockScreen
-/// 
+///
 /// ## Description
 /// 应用锁界面。在冷启动或从后台恢复时显示，要求用户进行身份验证。
 class LockScreen extends ConsumerStatefulWidget {
@@ -34,7 +34,8 @@ class _LockScreenState extends ConsumerState<LockScreen> {
     final securityService = ref.read(securityServiceProvider);
     final isEnabled = await securityService.isBiometricsEnabled();
     if (isEnabled) {
-      final success = await securityService.enableBiometrics(); // Reuse existing method or create authenticateBiometrics
+      final success = await securityService
+          .enableBiometrics(); // Reuse existing method or create authenticateBiometrics
       if (success) {
         widget.onAuthenticated();
       }
@@ -63,7 +64,7 @@ class _LockScreenState extends ConsumerState<LockScreen> {
     setState(() => _isProcessing = true);
     final securityService = ref.read(securityServiceProvider);
     final isValid = await securityService.validatePin(_pin);
-    
+
     if (isValid) {
       widget.onAuthenticated();
     } else {

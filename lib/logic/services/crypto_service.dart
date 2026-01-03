@@ -23,7 +23,7 @@ import 'interfaces/crypto_service.dart';
 class CryptoService implements ICryptoService {
   // Use AesGcm with 256-bit keys and 128-bit (16 bytes) tags.
   final AesGcm _algorithm = AesGcm.with256bits(nonceLength: 12);
-  
+
   // Chunk size for file streaming (e.g., 2MB plaintext per chunk)
   static const int _chunkSize = 2 * 1024 * 1024;
 
@@ -41,7 +41,7 @@ class CryptoService implements ICryptoService {
     Uint8List? associatedData,
   }) async {
     final secretKey = SecretKey(key);
-    
+
     // Encrypt
     final secretBox = await _algorithm.encrypt(
       data,
@@ -80,7 +80,8 @@ class CryptoService implements ICryptoService {
       return Uint8List.fromList(plaintext);
     } catch (e) {
       if (e is SecretBoxAuthenticationError) {
-        throw SecurityException('Decryption failed: Authentication tag mismatch.');
+        throw SecurityException(
+            'Decryption failed: Authentication tag mismatch.');
       }
       throw SecurityException('Decryption error: $e');
     }
@@ -100,44 +101,43 @@ class CryptoService implements ICryptoService {
     if (await outputFile.exists()) {
       await SecureWipeHelper.wipe(outputFile);
     }
-    
+
     final outputSink = outputFile.openWrite();
     final inputAccess = await inputFile.open();
     final fileLen = await inputFile.length();
-    
+
     int offset = 0;
     try {
       while (offset < fileLen) {
         // Read chunk
-        final chunkLen = (offset + _chunkSize > fileLen) 
-            ? fileLen - offset 
-            : _chunkSize;
-            
+        final chunkLen =
+            (offset + _chunkSize > fileLen) ? fileLen - offset : _chunkSize;
+
         final buffer = Uint8List(chunkLen);
         await _readExact(inputAccess, buffer);
-        
+
         // Encrypt chunk
         final secretBox = await _algorithm.encrypt(
           buffer,
           secretKey: secretKey,
         );
-        
+
         // Serialize: [Len 4B][Nonce 12B][Cipher][Tag 16B]
         final concatenated = secretBox.concatenation();
         final packetLen = concatenated.length;
-        
+
         // Write Length Header (4 bytes Big Endian)
         final header = ByteData(4);
         header.setUint32(0, packetLen, Endian.big);
         outputSink.add(header.buffer.asUint8List());
-        
+
         // Write Payload
         outputSink.add(concatenated);
-        
+
         offset += chunkLen;
       }
     } catch (e) {
-       throw SecurityException('File encryption failed: $e');
+      throw SecurityException('File encryption failed: $e');
     } finally {
       await inputAccess.close();
       await outputSink.close();
@@ -161,43 +161,45 @@ class CryptoService implements ICryptoService {
     final outputSink = outputFile.openWrite();
     final inputAccess = await inputFile.open();
     final fileLen = await inputFile.length();
-    
+
     int offset = 0;
-    
+
     try {
       while (offset < fileLen) {
         // 1. Read Packet Length (4 bytes)
         if (offset + 4 > fileLen) {
-           throw SecurityException('Corrupted file: Incomplete header at end of file.');
+          throw SecurityException(
+              'Corrupted file: Incomplete header at end of file.');
         }
-        
+
         final headerBytes = Uint8List(4);
         await _readExact(inputAccess, headerBytes);
         offset += 4;
-        
-        final packetLen = ByteData.sublistView(headerBytes).getUint32(0, Endian.big);
-        
+
+        final packetLen =
+            ByteData.sublistView(headerBytes).getUint32(0, Endian.big);
+
         // 2. Read Packet (Nonce + Cipher + Tag)
         if (offset + packetLen > fileLen) {
-           throw SecurityException('Corrupted file: Incomplete packet.');
+          throw SecurityException('Corrupted file: Incomplete packet.');
         }
-        
+
         final packetBytes = Uint8List(packetLen);
         await _readExact(inputAccess, packetBytes);
         offset += packetLen;
-        
+
         // 3. Decrypt
         final secretBox = SecretBox.fromConcatenation(
           packetBytes,
           nonceLength: 12,
           macLength: 16,
         );
-        
+
         final plaintext = await _algorithm.decrypt(
           secretBox,
           secretKey: secretKey,
         );
-        
+
         outputSink.add(plaintext);
       }
     } catch (e) {
@@ -217,7 +219,7 @@ class CryptoService implements ICryptoService {
     while (offset < buffer.length) {
       // readInto reads *up to* remaining bytes
       final readCount = await file.readInto(buffer, offset, buffer.length);
-     if (readCount == 0) {
+      if (readCount == 0) {
         throw SecurityException('Unexpected end of file.');
       }
       offset += readCount;

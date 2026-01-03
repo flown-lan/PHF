@@ -36,7 +36,7 @@ void main() {
 
     test('clearTemp removes files in temp directory', () async {
       await service.initialize();
-      
+
       final tempFile = File('${service.tempDirPath}/test.txt');
       await tempFile.writeAsString('hello');
       expect(tempFile.existsSync(), isTrue);

@@ -24,7 +24,7 @@ void main() {
       // 32 bytes of 0x01
       final existingKey = Uint8List.fromList(List.filled(32, 1));
       final base64Key = base64Encode(existingKey);
-      
+
       when(mockStorage.read(key: 'phf_master_key_v1'))
           .thenAnswer((_) async => base64Key);
 
@@ -34,7 +34,8 @@ void main() {
       // Assert
       expect(result, existingKey);
       verify(mockStorage.read(key: 'phf_master_key_v1')).called(1);
-      verifyNever(mockStorage.write(key: anyNamed('key'), value: anyNamed('value')));
+      verifyNever(
+          mockStorage.write(key: anyNamed('key'), value: anyNamed('value')));
     });
 
     test('getMasterKey generates new key if missing', () async {
@@ -48,14 +49,12 @@ void main() {
       // Assert
       expect(result.length, 32);
       verify(mockStorage.read(key: 'phf_master_key_v1')).called(1);
-      
+
       // Capture the write
       final verification = verify(mockStorage.write(
-        key: 'phf_master_key_v1', 
-        value: captureAnyNamed('value')
-      ));
+          key: 'phf_master_key_v1', value: captureAnyNamed('value')));
       verification.called(1);
-      
+
       // Verify stored value matches returned value
       final storedBase64 = verification.captured.single as String;
       expect(base64Decode(storedBase64), result);
@@ -65,7 +64,7 @@ void main() {
       // Arrange: 16 bytes of 0x02
       final existingSalt = Uint8List.fromList(List.filled(16, 2));
       final base64Salt = base64Encode(existingSalt);
-      
+
       when(mockStorage.read(key: 'phf_user_salt_v1'))
           .thenAnswer((_) async => base64Salt);
 
@@ -86,11 +85,10 @@ void main() {
 
       // Assert
       expect(result.length, 16);
-      
+
       verify(mockStorage.write(
-        key: 'phf_user_salt_v1', 
-        value: anyNamed('value')
-      )).called(1);
+              key: 'phf_user_salt_v1', value: anyNamed('value')))
+          .called(1);
     });
 
     test('wipeAll deletes both keys', () async {

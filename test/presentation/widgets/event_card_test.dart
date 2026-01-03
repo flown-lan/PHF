@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
@@ -21,7 +20,7 @@ import 'package:phf/data/repositories/interfaces/tag_repository.dart';
 import 'event_card_test.mocks.dart';
 
 @GenerateNiceMocks([
-  MockSpec<FileSecurityHelper>(), 
+  MockSpec<FileSecurityHelper>(),
   MockSpec<PathProviderService>(),
   MockSpec<ITagRepository>(),
 ])
@@ -29,7 +28,7 @@ void main() {
   late MockFileSecurityHelper mockFileSecurityHelper;
   late MockPathProviderService mockPathProviderService;
   late MockITagRepository mockTagRepository;
-  
+
   Widget createSubject(MedicalRecord record, {MedicalImage? image}) {
     return ProviderScope(
       overrides: [
@@ -56,17 +55,18 @@ void main() {
     });
 
     void setupMocks() {
-        when(mockPathProviderService.sandboxRoot).thenReturn('/mock/sandbox');
-        when(mockPathProviderService.getSecureFile(any)).thenAnswer((realInvocation) {
-          final path = realInvocation.positionalArguments[0] as String;
-          return Future.value(File('/mock/sandbox/$path'));
-        });
-        when(mockTagRepository.getAllTags()).thenAnswer((_) async => []);
+      when(mockPathProviderService.sandboxRoot).thenReturn('/mock/sandbox');
+      when(mockPathProviderService.getSecureFile(any))
+          .thenAnswer((realInvocation) {
+        final path = realInvocation.positionalArguments[0] as String;
+        return Future.value(File('/mock/sandbox/$path'));
+      });
+      when(mockTagRepository.getAllTags()).thenAnswer((_) async => []);
     }
 
     testWidgets('displays hospital name and date', (widgetTester) async {
       setupMocks();
-      
+
       final record = MedicalRecord(
         id: 'r1',
         personId: 'p1',
@@ -110,11 +110,11 @@ void main() {
       // Mock decryption
       final fakePng = Uint8List.fromList([
         // Minimal 1x1 Transparent PNG
-        0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, 0x00, 0x00, 0x00, 0x0D, 
-        0x49, 0x48, 0x44, 0x52, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 
-        0x08, 0x06, 0x00, 0x00, 0x00, 0x1F, 0x15, 0xC4, 0x89, 0x00, 0x00, 0x00, 
-        0x0A, 0x49, 0x44, 0x41, 0x54, 0x78, 0x9C, 0x63, 0x00, 0x01, 0x00, 0x00, 
-        0x05, 0x00, 0x01, 0x0D, 0x0A, 0x2D, 0xB4, 0x00, 0x00, 0x00, 0x00, 0x49, 
+        0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, 0x00, 0x00, 0x00, 0x0D,
+        0x49, 0x48, 0x44, 0x52, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01,
+        0x08, 0x06, 0x00, 0x00, 0x00, 0x1F, 0x15, 0xC4, 0x89, 0x00, 0x00, 0x00,
+        0x0A, 0x49, 0x44, 0x41, 0x54, 0x78, 0x9C, 0x63, 0x00, 0x01, 0x00, 0x00,
+        0x05, 0x00, 0x01, 0x0D, 0x0A, 0x2D, 0xB4, 0x00, 0x00, 0x00, 0x00, 0x49,
         0x45, 0x4E, 0x44, 0xAE, 0x42, 0x60, 0x82
       ]);
 
@@ -122,7 +122,7 @@ void main() {
           .thenAnswer((_) async => fakePng);
 
       await widgetTester.pumpWidget(createSubject(recordWithImage));
-      
+
       // Initial State (Placeholder)
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
 
@@ -132,11 +132,12 @@ void main() {
     });
 
     testWidgets('displays tags if present on images', (widgetTester) async {
-       setupMocks();
-       final tag = Tag(id: 't1', name: 'Tag A', createdAt: DateTime.now(), color: '#008080');
-       when(mockTagRepository.getAllTags()).thenAnswer((_) async => [tag]);
+      setupMocks();
+      final tag = Tag(
+          id: 't1', name: 'Tag A', createdAt: DateTime.now(), color: '#008080');
+      when(mockTagRepository.getAllTags()).thenAnswer((_) async => [tag]);
 
-       final image = MedicalImage(
+      final image = MedicalImage(
         id: 'i1',
         recordId: 'r1',
         encryptionKey: 'base64Key',

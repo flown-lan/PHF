@@ -21,7 +21,7 @@ class SearchController extends _$SearchController {
     state = await AsyncValue.guard(() async {
       final repo = ref.read(searchRepositoryProvider);
       // TODO: Get real user ID
-      const userId = 'def_me'; 
+      const userId = 'def_me';
       return repo.search(query, userId);
     });
   }

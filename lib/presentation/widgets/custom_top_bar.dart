@@ -35,11 +35,12 @@ class CustomTopBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       title: Text(title),
-      leading: showBack 
-          ? (leading ?? IconButton(
-              icon: const Icon(Icons.arrow_back_ios_new, size: 20),
-              onPressed: () => Navigator.of(context).maybePop(),
-            ))
+      leading: showBack
+          ? (leading ??
+              IconButton(
+                icon: const Icon(Icons.arrow_back_ios_new, size: 20),
+                onPressed: () => Navigator.of(context).maybePop(),
+              ))
           : null,
       actions: [
         if (actions != null) ...actions!,

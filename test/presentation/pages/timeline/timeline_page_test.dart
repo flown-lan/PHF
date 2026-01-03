@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -51,10 +50,8 @@ void main() {
 
     when(mockRecordRepo.getRecordsByPerson(any))
         .thenAnswer((_) async => [record]);
-    when(mockRecordRepo.getPendingCount(any))
-        .thenAnswer((_) async => 0);
-    when(mockImageRepo.getImagesForRecord(any))
-        .thenAnswer((_) async => []);
+    when(mockRecordRepo.getPendingCount(any)).thenAnswer((_) async => 0);
+    when(mockImageRepo.getImagesForRecord(any)).thenAnswer((_) async => []);
 
     await tester.pumpWidget(createSubject());
     await tester.pumpAndSettle(); // Wait for FutureBuilder
@@ -64,10 +61,8 @@ void main() {
   });
 
   testWidgets('Timeline displays empty state when no records', (tester) async {
-    when(mockRecordRepo.getRecordsByPerson(any))
-        .thenAnswer((_) async => []);
-    when(mockRecordRepo.getPendingCount(any))
-        .thenAnswer((_) async => 0);
+    when(mockRecordRepo.getRecordsByPerson(any)).thenAnswer((_) async => []);
+    when(mockRecordRepo.getPendingCount(any)).thenAnswer((_) async => 0);
 
     await tester.pumpWidget(createSubject());
     await tester.pumpAndSettle();
@@ -75,11 +70,10 @@ void main() {
     expect(find.textContaining('暂无记录'), findsOneWidget);
   });
 
-  testWidgets('Timeline displays pending banner when pendingCount > 0', (tester) async {
-    when(mockRecordRepo.getRecordsByPerson(any))
-        .thenAnswer((_) async => []);
-    when(mockRecordRepo.getPendingCount(any))
-        .thenAnswer((_) async => 5);
+  testWidgets('Timeline displays pending banner when pendingCount > 0',
+      (tester) async {
+    when(mockRecordRepo.getRecordsByPerson(any)).thenAnswer((_) async => []);
+    when(mockRecordRepo.getPendingCount(any)).thenAnswer((_) async => 5);
 
     await tester.pumpWidget(createSubject());
     await tester.pumpAndSettle();

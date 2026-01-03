@@ -39,25 +39,25 @@ class DatabaseSeeder {
         'name': '检验',
         'color': '#009688', // Teal 500
         'order_index': 1
-      }, 
+      },
       {
         'id': 'sys_tag_2',
         'name': '检查',
         'color': '#26A69A', // Teal 400
         'order_index': 2
-      }, 
+      },
       {
         'id': 'sys_tag_3',
         'name': '病历',
         'color': '#00796B', // Teal 700
         'order_index': 3
-      }, 
+      },
       {
         'id': 'sys_tag_4',
         'name': '处方',
         'color': '#4DB6AC', // Teal 300
         'order_index': 4
-      }, 
+      },
     ];
 
     for (var tag in tags) {

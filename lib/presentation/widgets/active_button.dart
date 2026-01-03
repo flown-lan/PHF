@@ -40,7 +40,7 @@ class ActiveButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bgColor = isDestructive ? AppTheme.errorRed : AppTheme.primaryTeal;
-    
+
     return SizedBox(
       height: 48, // Improved touch target
       child: ElevatedButton(

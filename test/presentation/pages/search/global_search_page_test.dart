@@ -35,16 +35,21 @@ void main() {
   testWidgets('GlobalSearchPage triggers search on input', (tester) async {
     // Arrange
     final record = MedicalRecord(
-      id: 'r1', personId: 'p1', hospitalName: 'Result Hospital',
-      notedAt: DateTime.now(), createdAt: DateTime.now(), updatedAt: DateTime.now(),
+      id: 'r1',
+      personId: 'p1',
+      hospitalName: 'Result Hospital',
+      notedAt: DateTime.now(),
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
     );
-    final result = SearchResult(record: record, snippet: 'Found <b>Hospital</b>');
-    
+    final result =
+        SearchResult(record: record, snippet: 'Found <b>Hospital</b>');
+
     when(mockSearchRepo.search(any, any)).thenAnswer((_) async => [result]);
 
     // Act
     await tester.pumpWidget(createSubject());
-    
+
     // Find text field
     final textField = find.byType(TextField);
     expect(textField, findsOneWidget);

@@ -14,14 +14,13 @@ class IngestionPage extends ConsumerStatefulWidget {
 }
 
 class _IngestionPageState extends ConsumerState<IngestionPage> {
-  
   @override
   void initState() {
     super.initState();
     // Auto-trigger picker if empty
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (ref.read(ingestionControllerProvider).rawImages.isEmpty) {
-         _showPickerMenu();
+        _showPickerMenu();
       }
     });
   }
@@ -60,11 +59,11 @@ class _IngestionPageState extends ConsumerState<IngestionPage> {
     final state = ref.watch(ingestionControllerProvider);
     final notifier = ref.read(ingestionControllerProvider.notifier);
 
-    ref.listen(ingestionControllerProvider.select((s) => s.status), (previous, next) {
+    ref.listen(ingestionControllerProvider.select((s) => s.status),
+        (previous, next) {
       if (next == IngestionStatus.success) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('已进入后台 OCR 处理队列...'))
-        );
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('已进入后台 OCR 处理队列...')));
         Navigator.of(context).pop();
       } else if (next == IngestionStatus.error) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -88,32 +87,34 @@ class _IngestionPageState extends ConsumerState<IngestionPage> {
           const SizedBox(width: 8),
         ],
       ),
-      body: state.rawImages.isEmpty 
-        ? _buildEmpty(context) 
-        : _buildGrid(context, state, notifier),
-      bottomNavigationBar: state.rawImages.isEmpty ? null : SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text(
-                '元数据将在保存后由背景 OCR 自动识别',
-                style: TextStyle(fontSize: 12, color: AppTheme.textHint),
-              ),
-              const SizedBox(height: 12),
-              SizedBox(
-                width: double.infinity,
-                child: ActiveButton(
-                  text: '开始处理并归档',
-                  onPressed: () => notifier.submit(),
-                  isLoading: state.status == IngestionStatus.processing,
+      body: state.rawImages.isEmpty
+          ? _buildEmpty(context)
+          : _buildGrid(context, state, notifier),
+      bottomNavigationBar: state.rawImages.isEmpty
+          ? null
+          : SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      '元数据将在保存后由背景 OCR 自动识别',
+                      style: TextStyle(fontSize: 12, color: AppTheme.textHint),
+                    ),
+                    const SizedBox(height: 12),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ActiveButton(
+                        text: '开始处理并归档',
+                        onPressed: () => notifier.submit(),
+                        isLoading: state.status == IngestionStatus.processing,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 
@@ -135,7 +136,8 @@ class _IngestionPageState extends ConsumerState<IngestionPage> {
     );
   }
 
-  Widget _buildGrid(BuildContext context, IngestionState state, IngestionController notifier) {
+  Widget _buildGrid(BuildContext context, IngestionState state,
+      IngestionController notifier) {
     return GridView.builder(
       padding: const EdgeInsets.all(16),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -151,7 +153,8 @@ class _IngestionPageState extends ConsumerState<IngestionPage> {
 
         return Card(
           clipBehavior: Clip.antiAlias,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           child: Stack(
             children: [
               Positioned.fill(
@@ -175,12 +178,14 @@ class _IngestionPageState extends ConsumerState<IngestionPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       IconButton(
-                        icon: const Icon(Icons.rotate_right, size: 18, color: Colors.white),
+                        icon: const Icon(Icons.rotate_right,
+                            size: 18, color: Colors.white),
                         onPressed: () => notifier.rotateImage(index),
                         padding: EdgeInsets.zero,
                       ),
                       IconButton(
-                        icon: const Icon(Icons.delete_outline, size: 18, color: Colors.white),
+                        icon: const Icon(Icons.delete_outline,
+                            size: 18, color: Colors.white),
                         onPressed: () => notifier.removeImage(index),
                         padding: EdgeInsets.zero,
                       ),
@@ -193,14 +198,18 @@ class _IngestionPageState extends ConsumerState<IngestionPage> {
                 top: 8,
                 left: 8,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
                     color: Colors.black54,
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
                     '${index + 1}',
-                    style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold),
                   ),
                 ),
               ),

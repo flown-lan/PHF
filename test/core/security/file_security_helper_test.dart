@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
@@ -49,17 +48,20 @@ void main() {
       )).thenAnswer((_) async => fakeContent);
 
       // Act
-      final result = await helper.decryptDataFromFile(encFile.path, fakeKeyBase64);
+      final result =
+          await helper.decryptDataFromFile(encFile.path, fakeKeyBase64);
 
       // Assert
       expect(result, fakeContent);
       verify(mockCryptoService.decrypt(
-        encryptedData: fakeEncrypted, 
-        key: argThat(equals(fakeKeyBytes), named: 'key')
-      )).called(1);
+              encryptedData: fakeEncrypted,
+              key: argThat(equals(fakeKeyBytes), named: 'key')))
+          .called(1);
     });
 
-    test('decryptDataFromFile should throw FileNotFoundException if file missing', () async {
+    test(
+        'decryptDataFromFile should throw FileNotFoundException if file missing',
+        () async {
       final fakeKeyBase64 = base64Encode(Uint8List(32));
       final missingPath = '${tempDir.path}/missing.enc';
 

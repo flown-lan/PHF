@@ -21,10 +21,10 @@ abstract class ICryptoService {
   Uint8List generateRandomKey();
 
   /// 使用提供的密钥加密数据
-  /// 
+  ///
   /// [key] 必须为 32 字节。
   /// [associatedData] (AAD) 用于防止密文被篡改。
-  /// 
+  ///
   /// 返回加密后的数据包（IV + Ciphertext + Tag）。
   Future<Uint8List> encrypt({
     required Uint8List data,
@@ -33,10 +33,10 @@ abstract class ICryptoService {
   });
 
   /// 使用提供的密钥解密数据包
-  /// 
+  ///
   /// [encryptedData] 必须包含 IV 和 Auth Tag。
   /// [key] 必须为 32 字节。
-  /// 
+  ///
   /// 如果校验失败（摘要不匹配），应抛出 `SecurityException`。
   Future<Uint8List> decrypt({
     required Uint8List encryptedData,
@@ -45,9 +45,9 @@ abstract class ICryptoService {
   });
 
   /// [Streaming] 对物理文件执行流式加密
-  /// 
+  ///
   /// 符合 `Constitution#I. Privacy`：避免大文件加载导致 OOM。
-  /// 
+  ///
   /// [sourcePath]: 原始明文文件路径。
   /// [destPath]: 加密后结果存储路径。
   /// [key]: 32 字节密钥。
@@ -58,7 +58,7 @@ abstract class ICryptoService {
   });
 
   /// [Streaming] 对物理文件执行流式解密
-  /// 
+  ///
   /// [sourcePath]: 加密后的密文文件路径（含 IV 头部）。
   /// [destPath]: 解密后明文临时存储路径（处理完需立即 Wipe）。
   Future<void> decryptFile({

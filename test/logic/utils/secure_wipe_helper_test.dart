@@ -9,7 +9,8 @@ void main() {
 
     setUp(() async {
       final tempDir = Directory.systemTemp;
-      testFile = File('${tempDir.path}/wipe_test_${DateTime.now().millisecondsSinceEpoch}.bin');
+      testFile = File(
+          '${tempDir.path}/wipe_test_${DateTime.now().millisecondsSinceEpoch}.bin');
     });
 
     tearDown(() async {
@@ -34,7 +35,7 @@ void main() {
         largeData[i] = 0xAA; // Fill with non-random constant
       }
       await testFile.writeAsBytes(largeData);
-      
+
       final originalLength = await testFile.length();
       expect(originalLength, 128 * 1024);
 

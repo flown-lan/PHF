@@ -30,10 +30,12 @@ class IOSOCRService implements IOCRService {
   static const MethodChannel _channel = MethodChannel('com.example.phf/ocr');
 
   @override
-  Future<OCRResult> recognizeText(Uint8List imageBytes, {String? mimeType}) async {
+  Future<OCRResult> recognizeText(Uint8List imageBytes,
+      {String? mimeType}) async {
     File? tempFile;
     try {
-      log('Starting iOS OCR for image size: ${imageBytes.length} bytes', name: 'IOSOCRService');
+      log('Starting iOS OCR for image size: ${imageBytes.length} bytes',
+          name: 'IOSOCRService');
 
       // 1. Create secure temp file
       final tempDir = await getTemporaryDirectory();
@@ -50,19 +52,22 @@ class IOSOCRService implements IOCRService {
       // 3. Parse Result
       final dynamic decoded = jsonDecode(jsonResult);
       final Map<String, dynamic> resultMap = decoded as Map<String, dynamic>;
-      
+
       final ocrResult = OCRResult.fromJson(resultMap);
-      log('iOS OCR completed. Found ${ocrResult.blocks.length} blocks.', name: 'IOSOCRService');
-      
+      log('iOS OCR completed. Found ${ocrResult.blocks.length} blocks.',
+          name: 'IOSOCRService');
+
       return ocrResult;
     } catch (e, stack) {
-      log('iOS OCR Failed: $e', name: 'IOSOCRService', error: e, stackTrace: stack);
+      log('iOS OCR Failed: $e',
+          name: 'IOSOCRService', error: e, stackTrace: stack);
       throw Exception('iOS OCR Logic Error: $e');
     } finally {
       // 4. Secure Wipe (Crucial)
       if (tempFile != null) {
         await SecureWipeHelper.wipe(tempFile);
-        log('Secure wipe of temp iOS OCR file completed.', name: 'IOSOCRService');
+        log('Secure wipe of temp iOS OCR file completed.',
+            name: 'IOSOCRService');
       }
     }
   }

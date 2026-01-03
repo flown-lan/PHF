@@ -32,7 +32,8 @@ class SecureImage extends ConsumerStatefulWidget {
   final double? height;
   final BoxFit? fit;
   final BorderRadius? borderRadius;
-  final Widget Function(BuildContext context, ImageProvider imageProvider)? builder;
+  final Widget Function(BuildContext context, ImageProvider imageProvider)?
+      builder;
 
   const SecureImage({
     super.key,
@@ -61,7 +62,7 @@ class _SecureImageState extends ConsumerState<SecureImage> {
   @override
   void didUpdateWidget(covariant SecureImage oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.imagePath != widget.imagePath || 
+    if (oldWidget.imagePath != widget.imagePath ||
         oldWidget.encryptionKey != widget.encryptionKey) {
       _load();
     }
@@ -70,13 +71,14 @@ class _SecureImageState extends ConsumerState<SecureImage> {
   void _load() {
     final helper = ref.read(fileSecurityHelperProvider);
     final pathService = ref.read(pathProviderServiceProvider);
-    
+
     // Resolve absolute path from relative sandbox path
     final fullPath = widget.imagePath.startsWith('/')
         ? widget.imagePath
         : '${pathService.sandboxRoot}/${widget.imagePath}';
 
-    _decryptionFuture = helper.decryptDataFromFile(fullPath, widget.encryptionKey);
+    _decryptionFuture =
+        helper.decryptDataFromFile(fullPath, widget.encryptionKey);
   }
 
   @override
@@ -91,11 +93,11 @@ class _SecureImageState extends ConsumerState<SecureImage> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return _buildPlaceholder(context);
           } else if (snapshot.hasError) {
-             debugPrint('SecureImage error: ${snapshot.error}');
-             return _buildError(context);
+            debugPrint('SecureImage error: ${snapshot.error}');
+            return _buildError(context);
           } else if (snapshot.hasData) {
             final imageProvider = MemoryImage(snapshot.data!);
-            
+
             if (widget.builder != null) {
               return widget.builder!(context, imageProvider);
             }
@@ -121,10 +123,10 @@ class _SecureImageState extends ConsumerState<SecureImage> {
       color: AppTheme.bgGray,
       child: const Center(
         child: SizedBox(
-          width: 20, 
-          height: 20, 
-          child: CircularProgressIndicator(strokeWidth: 2, color: AppTheme.primary)
-        ),
+            width: 20,
+            height: 20,
+            child: CircularProgressIndicator(
+                strokeWidth: 2, color: AppTheme.primary)),
       ),
     );
   }
@@ -135,7 +137,8 @@ class _SecureImageState extends ConsumerState<SecureImage> {
       height: widget.height,
       color: AppTheme.bgGray,
       child: const Center(
-        child: Icon(Icons.broken_image_rounded, color: AppTheme.textHint, size: 24),
+        child: Icon(Icons.broken_image_rounded,
+            color: AppTheme.textHint, size: 24),
       ),
     );
   }

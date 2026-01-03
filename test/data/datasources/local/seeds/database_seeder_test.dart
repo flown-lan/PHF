@@ -20,14 +20,14 @@ void main() {
       DatabaseSeeder.run(mockBatch);
 
       // Assert
-      
+
       // 1. Verify Person Insertion
       verify(mockBatch.insert(
         'persons',
         argThat(predicate((Map<String, Object?> map) {
           return map['id'] == 'def_me' &&
-                 map['nickname'] == '本人' &&
-                 map['is_default'] == 1;
+              map['nickname'] == '本人' &&
+              map['is_default'] == 1;
         })),
       )).called(1);
 

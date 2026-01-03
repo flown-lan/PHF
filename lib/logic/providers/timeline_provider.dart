@@ -35,7 +35,8 @@ class TimelineController extends _$TimelineController {
         final prevCount = previous?.value ?? -1;
 
         if (nextCount != prevCount) {
-          talker.info('[TimelineController] OCR Status update: $prevCount -> $nextCount. Triggering refresh.');
+          talker.info(
+              '[TimelineController] OCR Status update: $prevCount -> $nextCount. Triggering refresh.');
           refresh();
         }
       }
@@ -49,7 +50,7 @@ class TimelineController extends _$TimelineController {
     final repo = ref.read(recordRepositoryProvider);
     final imageRepo = ref.read(imageRepositoryProvider);
     // TODO: Phase 2 Get Person ID from User Session
-    const currentPersonId = 'def_me'; 
+    const currentPersonId = 'def_me';
     final records = await repo.getRecordsByPerson(currentPersonId);
     final pendingCount = await repo.getPendingCount(currentPersonId);
 
@@ -59,7 +60,7 @@ class TimelineController extends _$TimelineController {
       final images = await imageRepo.getImagesForRecord(rec.id);
       enriched.add(rec.copyWith(images: images));
     }
-    
+
     return HomeState(
       records: enriched,
       pendingCount: pendingCount,
@@ -79,7 +80,7 @@ class TimelineController extends _$TimelineController {
       final repo = ref.read(recordRepositoryProvider);
       final imageRepo = ref.read(imageRepositoryProvider);
       const currentPersonId = 'def_me';
-      
+
       final records = await repo.searchRecords(
         personId: currentPersonId,
         query: query,
@@ -92,7 +93,7 @@ class TimelineController extends _$TimelineController {
         final images = await imageRepo.getImagesForRecord(rec.id);
         enriched.add(rec.copyWith(images: images));
       }
-      
+
       return HomeState(
         records: enriched,
         pendingCount: pendingCount,

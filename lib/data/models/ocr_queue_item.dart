@@ -46,5 +46,6 @@ abstract class OCRQueueItem with _$OCRQueueItem {
     required DateTime updatedAt,
   }) = _OCRQueueItem;
 
-  factory OCRQueueItem.fromJson(Map<String, dynamic> json) => _$OCRQueueItemFromJson(json);
+  factory OCRQueueItem.fromJson(Map<String, dynamic> json) =>
+      _$OCRQueueItemFromJson(json);
 }

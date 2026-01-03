@@ -69,26 +69,39 @@ void main() {
 
     test('Full success flow (High Confidence)', () async {
       final item = OCRQueueItem(
-          id: '1', imageId: 'img1', status: OCRJobStatus.pending, 
-          createdAt: DateTime.now(), updatedAt: DateTime.now());
+          id: '1',
+          imageId: 'img1',
+          status: OCRJobStatus.pending,
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now());
       final image = MedicalImage(
-        id: 'img1', recordId: 'rec1', filePath: '/path', encryptionKey: 'key', 
-        thumbnailEncryptionKey: 'key_thumb', thumbnailPath: '/path_thumb', mimeType: 'image/jpeg',
-        createdAt: DateTime.now()
-      );
+          id: 'img1',
+          recordId: 'rec1',
+          filePath: '/path',
+          encryptionKey: 'key',
+          thumbnailEncryptionKey: 'key_thumb',
+          thumbnailPath: '/path_thumb',
+          mimeType: 'image/jpeg',
+          createdAt: DateTime.now());
       final record = MedicalRecord(
-        id: 'rec1', personId: 'p1', notedAt: DateTime.now(), 
-        createdAt: DateTime.now(), updatedAt: DateTime.now(),
-        status: RecordStatus.processing
-      );
+          id: 'rec1',
+          personId: 'p1',
+          notedAt: DateTime.now(),
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+          status: RecordStatus.processing);
       final decryptedBytes = Uint8List(10);
-      const ocrResult = OCRResult(text: '2023-10-10\nHospital A', confidence: 0.95);
+      const ocrResult =
+          OCRResult(text: '2023-10-10\nHospital A', confidence: 0.95);
 
       when(mockQueueRepo.dequeue()).thenAnswer((_) async => item);
       when(mockImageRepo.getImageById('img1')).thenAnswer((_) async => image);
-      when(mockSecurityHelper.decryptDataFromFile(any, any)).thenAnswer((_) async => decryptedBytes);
-      when(mockOcrService.recognizeText(any, mimeType: anyNamed('mimeType'))).thenAnswer((_) async => ocrResult);
-      when(mockRecordRepo.getRecordById('rec1')).thenAnswer((_) async => record);
+      when(mockSecurityHelper.decryptDataFromFile(any, any))
+          .thenAnswer((_) async => decryptedBytes);
+      when(mockOcrService.recognizeText(any, mimeType: anyNamed('mimeType')))
+          .thenAnswer((_) async => ocrResult);
+      when(mockRecordRepo.getRecordById('rec1'))
+          .thenAnswer((_) async => record);
       when(mockSearchRepo.syncRecordIndex(any)).thenAnswer((_) async {});
 
       final result = await processor.processNextItem();
@@ -97,14 +110,22 @@ void main() {
 
       // Verify Flow
       verify(mockSecurityHelper.decryptDataFromFile('/path', 'key')).called(1);
-      verify(mockOcrService.recognizeText(decryptedBytes, mimeType: 'image/jpeg')).called(1);
-      
+      verify(mockOcrService.recognizeText(decryptedBytes,
+              mimeType: 'image/jpeg'))
+          .called(1);
+
       // Verify Update Image
-      verify(mockImageRepo.updateOCRData('img1', any, rawJson: anyNamed('rawJson'), confidence: anyNamed('confidence'))).called(1);
-      verify(mockImageRepo.updateImageMetadata('img1', hospitalName: anyNamed('hospitalName'), visitDate: anyNamed('visitDate'))).called(1);
+      verify(mockImageRepo.updateOCRData('img1', any,
+              rawJson: anyNamed('rawJson'), confidence: anyNamed('confidence')))
+          .called(1);
+      verify(mockImageRepo.updateImageMetadata('img1',
+              hospitalName: anyNamed('hospitalName'),
+              visitDate: anyNamed('visitDate')))
+          .called(1);
 
       // Verify Record Status (High Confidence -> Archived)
-      verify(mockRecordRepo.updateStatus('rec1', RecordStatus.archived)).called(1);
+      verify(mockRecordRepo.updateStatus('rec1', RecordStatus.archived))
+          .called(1);
 
       // Verify Search Index
       verify(mockSearchRepo.syncRecordIndex('rec1')).called(1);
@@ -115,45 +136,63 @@ void main() {
 
     test('Low confidence flow (Processing -> Review)', () async {
       final item = OCRQueueItem(
-          id: '1', imageId: 'img1', status: OCRJobStatus.pending, 
-          createdAt: DateTime.now(), updatedAt: DateTime.now());
+          id: '1',
+          imageId: 'img1',
+          status: OCRJobStatus.pending,
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now());
       final image = MedicalImage(
-          id: 'img1', recordId: 'rec1', filePath: '/path', encryptionKey: 'key',
-          thumbnailEncryptionKey: 'key_thumb', thumbnailPath: '/path_thumb', mimeType: 'image/jpeg',
-          createdAt: DateTime.now()
-      );
+          id: 'img1',
+          recordId: 'rec1',
+          filePath: '/path',
+          encryptionKey: 'key',
+          thumbnailEncryptionKey: 'key_thumb',
+          thumbnailPath: '/path_thumb',
+          mimeType: 'image/jpeg',
+          createdAt: DateTime.now());
       final record = MedicalRecord(
-          id: 'rec1', personId: 'p1', notedAt: DateTime.now(),
-          createdAt: DateTime.now(), updatedAt: DateTime.now(),
-          status: RecordStatus.processing
-      );
+          id: 'rec1',
+          personId: 'p1',
+          notedAt: DateTime.now(),
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+          status: RecordStatus.processing);
       const ocrResult = OCRResult(text: 'No Clear Data', confidence: 0.5);
 
       when(mockQueueRepo.dequeue()).thenAnswer((_) async => item);
       when(mockImageRepo.getImageById('img1')).thenAnswer((_) async => image);
-      when(mockSecurityHelper.decryptDataFromFile(any, any)).thenAnswer((_) async => Uint8List(0));
-      when(mockOcrService.recognizeText(any, mimeType: anyNamed('mimeType'))).thenAnswer((_) async => ocrResult);
-      when(mockRecordRepo.getRecordById('rec1')).thenAnswer((_) async => record);
+      when(mockSecurityHelper.decryptDataFromFile(any, any))
+          .thenAnswer((_) async => Uint8List(0));
+      when(mockOcrService.recognizeText(any, mimeType: anyNamed('mimeType')))
+          .thenAnswer((_) async => ocrResult);
+      when(mockRecordRepo.getRecordById('rec1'))
+          .thenAnswer((_) async => record);
       when(mockSearchRepo.syncRecordIndex(any)).thenAnswer((_) async {});
 
       await processor.processNextItem();
 
       // Verify Record Status (Low Confidence -> Review)
-      verify(mockRecordRepo.updateStatus('rec1', RecordStatus.review)).called(1);
+      verify(mockRecordRepo.updateStatus('rec1', RecordStatus.review))
+          .called(1);
     });
 
     test('Failure handling', () async {
       final item = OCRQueueItem(
-          id: '1', imageId: 'img1', status: OCRJobStatus.pending, 
-          createdAt: DateTime.now(), updatedAt: DateTime.now());
-      
+          id: '1',
+          imageId: 'img1',
+          status: OCRJobStatus.pending,
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now());
+
       when(mockQueueRepo.dequeue()).thenAnswer((_) async => item);
       when(mockImageRepo.getImageById('img1')).thenThrow(Exception('DB Error'));
 
       final result = await processor.processNextItem();
 
       expect(result, isFalse);
-      verify(mockQueueRepo.updateStatus('1', OCRJobStatus.failed, error: anyNamed('error'))).called(1);
+      verify(mockQueueRepo.updateStatus('1', OCRJobStatus.failed,
+              error: anyNamed('error')))
+          .called(1);
     });
   });
 }

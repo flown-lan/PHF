@@ -56,7 +56,8 @@ class _GlobalSearchPageState extends ConsumerState<GlobalSearchPage> {
           style: const TextStyle(fontSize: 18),
           onChanged: _onSearchChanged,
           textInputAction: TextInputAction.search,
-          onSubmitted: (val) => ref.read(searchControllerProvider.notifier).search(val),
+          onSubmitted: (val) =>
+              ref.read(searchControllerProvider.notifier).search(val),
         ),
         backgroundColor: AppTheme.bgWhite,
         iconTheme: const IconThemeData(color: AppTheme.textPrimary),
@@ -77,7 +78,9 @@ class _GlobalSearchPageState extends ConsumerState<GlobalSearchPage> {
             return _buildEmptyState();
           }
           if (results.isEmpty) {
-            return const Center(child: Text('输入关键词开始搜索', style: TextStyle(color: AppTheme.textHint)));
+            return const Center(
+                child: Text('输入关键词开始搜索',
+                    style: TextStyle(color: AppTheme.textHint)));
           }
           return ListView.separated(
             padding: const EdgeInsets.all(16),
@@ -124,7 +127,8 @@ class _SearchResultCard extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute<void>(builder: (_) => RecordDetailPage(recordId: result.record.id)),
+          MaterialPageRoute<void>(
+              builder: (_) => RecordDetailPage(recordId: result.record.id)),
         );
       },
       child: Container(
@@ -148,18 +152,21 @@ class _SearchResultCard extends StatelessWidget {
               padding: const EdgeInsets.all(12),
               child: Row(
                 children: [
-                  const Icon(Icons.local_hospital, size: 16, color: AppTheme.primaryTeal),
+                  const Icon(Icons.local_hospital,
+                      size: 16, color: AppTheme.primaryTeal),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       result.record.hospitalName ?? '未填写',
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 14),
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   Text(
                     DateFormat('yyyy-MM-dd').format(result.record.notedAt),
-                    style: AppTheme.monoStyle.copyWith(fontSize: 12, color: AppTheme.textHint),
+                    style: AppTheme.monoStyle
+                        .copyWith(fontSize: 12, color: AppTheme.textHint),
                   ),
                 ],
               ),
@@ -172,7 +179,8 @@ class _SearchResultCard extends StatelessWidget {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Icon(Icons.text_snippet_outlined, size: 16, color: AppTheme.textHint),
+                    const Icon(Icons.text_snippet_outlined,
+                        size: 16, color: AppTheme.textHint),
                     const SizedBox(width: 8),
                     Expanded(
                       child: RichText(
@@ -194,14 +202,14 @@ class _SearchResultCard extends StatelessWidget {
     // Simple regex parser.
     final List<TextSpan> spans = [];
     final RegExp exp = RegExp(r'(.*?)<b>(.*?)</b>');
-    
+
     // This simple loop might miss trailing text or complex nesting (FTS5 doesn't nest).
     // Better strategy: split by <b> then </b>.
     // Or use splitMapJoin logic manually.
-    
+
     // Let's iterate using split.
     // "prefix <b>match</b> suffix <b>match2</b> tail"
-    
+
     int lastIndex = 0;
     // Find all matches
     for (final match in exp.allMatches(snippet)) {
@@ -216,15 +224,15 @@ class _SearchResultCard extends StatelessWidget {
       spans.add(TextSpan(
         text: match.group(2), // The content inside <b>...</b>
         style: const TextStyle(
-          color: AppTheme.primaryTeal, 
-          fontWeight: FontWeight.bold, 
+          color: AppTheme.primaryTeal,
+          fontWeight: FontWeight.bold,
           backgroundColor: Color(0xFFE0F2F1), // Light teal bg
           fontSize: 13,
         ),
       ));
       lastIndex = match.end;
     }
-    
+
     // Add remaining text
     if (lastIndex < snippet.length) {
       spans.add(TextSpan(

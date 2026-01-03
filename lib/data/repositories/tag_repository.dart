@@ -19,7 +19,7 @@ class TagRepository implements ITagRepository {
       'tags',
       orderBy: 'order_index ASC',
     );
-    
+
     return maps.map((row) => _mapToTag(row)).toList();
   }
 
@@ -36,7 +36,8 @@ class TagRepository implements ITagRepository {
       // 注意：Model 中字段名为 isSystem，DB 为 is_custom (逻辑反向或命名对齐需求)
       // 种子数据中 is_custom=0 表示系统标签，这里我们根据实际语义对齐
       isSystem: (row['is_custom'] as int? ?? 0) == 0,
-      createdAt: DateTime.fromMillisecondsSinceEpoch(row['created_at_ms'] as int),
+      createdAt:
+          DateTime.fromMillisecondsSinceEpoch(row['created_at_ms'] as int),
     );
   }
 }

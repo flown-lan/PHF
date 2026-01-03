@@ -28,7 +28,8 @@ void main() {
       expect(tapped, isTrue);
     });
 
-    testWidgets('shows loading indicator and ignores tap when loading', (tester) async {
+    testWidgets('shows loading indicator and ignores tap when loading',
+        (tester) async {
       bool tapped = false;
       await tester.pumpWidget(createTestWidget(
         ActiveButton(
@@ -39,8 +40,9 @@ void main() {
       ));
 
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
-      expect(find.text('Loading'), findsNothing); // Text is replaced by spinner in current impl
-      
+      expect(find.text('Loading'),
+          findsNothing); // Text is replaced by spinner in current impl
+
       await tester.tap(find.byType(ActiveButton));
       expect(tapped, isFalse);
     });

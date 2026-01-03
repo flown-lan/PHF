@@ -28,7 +28,8 @@ abstract class OCRBlock with _$OCRBlock {
     required double height,
   }) = _OCRBlock;
 
-  factory OCRBlock.fromJson(Map<String, dynamic> json) => _$OCRBlockFromJson(json);
+  factory OCRBlock.fromJson(Map<String, dynamic> json) =>
+      _$OCRBlockFromJson(json);
 }
 
 @freezed
@@ -40,5 +41,6 @@ abstract class OCRResult with _$OCRResult {
     @Default(0.0) double confidence,
   }) = _OCRResult;
 
-  factory OCRResult.fromJson(Map<String, dynamic> json) => _$OCRResultFromJson(json);
+  factory OCRResult.fromJson(Map<String, dynamic> json) =>
+      _$OCRResultFromJson(json);
 }

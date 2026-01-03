@@ -114,7 +114,7 @@ void main() {
       // Fill some recognizable data
       plaintext[0] = 0xAA;
       plaintext[size - 1] = 0xBB;
-      
+
       await sourceFile.writeAsBytes(plaintext);
 
       await service.encryptFile(
@@ -123,7 +123,7 @@ void main() {
         key: key,
       );
 
-      // Verify file size: 
+      // Verify file size:
       // Chunk 1 (2MB): 4 + 12 + 2MB + 16
       // Chunk 2 (1MB): 4 + 12 + 1MB + 16
       // Total Overhead: (4+12+16)*2 = 64 bytes.

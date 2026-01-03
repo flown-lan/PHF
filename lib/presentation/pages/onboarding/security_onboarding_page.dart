@@ -28,7 +28,8 @@ class SecurityOnboardingPage extends ConsumerStatefulWidget {
       _SecurityOnboardingPageState();
 }
 
-class _SecurityOnboardingPageState extends ConsumerState<SecurityOnboardingPage> {
+class _SecurityOnboardingPageState
+    extends ConsumerState<SecurityOnboardingPage> {
   // Logic State
   String _pin = '';
   String _confirmedPin = '';
@@ -168,15 +169,13 @@ class _SecurityOnboardingPageState extends ConsumerState<SecurityOnboardingPage>
             ),
             const SizedBox(height: 12),
             Text(
-              _isConfirming
-                  ? '请再次输入以确认'
-                  : '为了保护您的隐私，请设置 6 位数字密码',
+              _isConfirming ? '请再次输入以确认' : '为了保护您的隐私，请设置 6 位数字密码',
               style: const TextStyle(
                 fontSize: 14,
                 color: AppTheme.textSecondary,
               ),
             ),
-            
+
             const SizedBox(height: 48),
 
             // PIN Dots

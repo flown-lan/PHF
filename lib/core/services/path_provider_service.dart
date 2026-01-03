@@ -31,7 +31,7 @@ class PathProviderService {
   bool _isInitialized = false;
 
   /// 初始化目录结构
-  /// 
+  ///
   /// 建议在应用启动时 (main.dart) 调用。
   Future<void> initialize() async {
     if (_isInitialized) return;
@@ -81,7 +81,7 @@ class PathProviderService {
   }
 
   /// 清理临时目录
-  /// 
+  ///
   /// 遍历 temp 目录并物理删除所有文件，符合安全清理策略。
   Future<void> clearTemp() async {
     _checkInitialized();

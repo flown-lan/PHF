@@ -17,7 +17,7 @@ import '../../../data/models/image.dart';
 /// 医疗图像仓储契约
 abstract class IImageRepository {
   /// 获取属于特定记录的所有图片元数据
-  /// 
+  ///
   /// 结果应按 `displayOrder` 正序排列。
   Future<List<MedicalImage>> getImagesForRecord(String recordId);
 
@@ -25,7 +25,7 @@ abstract class IImageRepository {
   Future<void> saveImages(List<MedicalImage> images);
 
   /// 给特定图片更新标签关联
-  /// 
+  ///
   /// 实现类需负责在 `image_tags` 表中执行增删，并可选地触发 Record 表的 `tags_cache` 更新。
   Future<void> updateImageTags(String imageId, List<String> tagIds);
 
@@ -33,11 +33,13 @@ abstract class IImageRepository {
   Future<void> deleteImage(String id);
 
   /// 更新单张图片的元数据 (医院、日期)
-  Future<void> updateImageMetadata(String imageId, {String? hospitalName, DateTime? visitDate});
+  Future<void> updateImageMetadata(String imageId,
+      {String? hospitalName, DateTime? visitDate});
 
   /// 获取单张图片元数据
   Future<MedicalImage?> getImageById(String id);
 
   /// 更新图片 OCR 识别结果
-  Future<void> updateOCRData(String imageId, String text, {String? rawJson, double confidence = 0.0});
+  Future<void> updateOCRData(String imageId, String text,
+      {String? rawJson, double confidence = 0.0});
 }
