@@ -109,7 +109,8 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
     final currentImage = _images[_currentIndex];
 
     // Check if anything actually changed
-    final bool hospitalChanged = _hospitalController.text !=
+    final bool hospitalChanged =
+        _hospitalController.text !=
         (currentImage.hospitalName ?? _record?.hospitalName ?? '');
     final bool dateChanged =
         _visitDate != (currentImage.visitDate ?? _record?.notedAt);
@@ -148,13 +149,15 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
       await ref.read(timelineControllerProvider.notifier).refresh();
 
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text('保存成功')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('保存成功')));
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('保存失败: $e')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('保存失败: $e')));
       }
     }
   }
@@ -170,12 +173,14 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
         content: const Text('确定要删除当前这张图片吗？此操作不可撤销。'),
         actions: [
           TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: const Text('取消')),
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('取消'),
+          ),
           TextButton(
-              onPressed: () => Navigator.pop(context, true),
-              style: TextButton.styleFrom(foregroundColor: AppTheme.errorRed),
-              child: const Text('删除')),
+            onPressed: () => Navigator.pop(context, true),
+            style: TextButton.styleFrom(foregroundColor: AppTheme.errorRed),
+            child: const Text('删除'),
+          ),
         ],
       ),
     );
@@ -202,8 +207,9 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('删除失败: $e')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('删除失败: $e')));
       }
     }
   }
@@ -230,8 +236,9 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
 
       // We don't wait for completion here, but we should inform the user
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text('已重新加入识别队列，请稍候...')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('已重新加入识别队列，请稍候...')));
       }
 
       // Wait a bit and reload to see if it finished (simple UX)
@@ -239,8 +246,9 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
       await _loadData();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('重新识别失败: $e')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('重新识别失败: $e')));
       }
       setState(() => _isLoading = false);
     }
@@ -284,8 +292,10 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
           if (_isEditing)
             TextButton(
               onPressed: _saveChanges,
-              child: const Text('保存',
-                  style: TextStyle(fontWeight: FontWeight.bold)),
+              child: const Text(
+                '保存',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
             ),
           IconButton(
             icon: const Icon(Icons.description_outlined),
@@ -345,11 +355,15 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
                             color: Colors.black.withValues(alpha: 0.6),
                             shape: BoxShape.circle,
                             border: Border.all(
-                                color: Colors.white.withValues(alpha: 0.3)),
+                              color: Colors.white.withValues(alpha: 0.3),
+                            ),
                           ),
                           child: IconButton(
-                            icon: const Icon(Icons.chevron_left,
-                                color: Colors.white, size: 28),
+                            icon: const Icon(
+                              Icons.chevron_left,
+                              color: Colors.white,
+                              size: 28,
+                            ),
                             onPressed: () {
                               _pageController.previousPage(
                                 duration: const Duration(milliseconds: 300),
@@ -370,11 +384,15 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
                             color: Colors.black.withValues(alpha: 0.6),
                             shape: BoxShape.circle,
                             border: Border.all(
-                                color: Colors.white.withValues(alpha: 0.3)),
+                              color: Colors.white.withValues(alpha: 0.3),
+                            ),
                           ),
                           child: IconButton(
-                            icon: const Icon(Icons.chevron_right,
-                                color: Colors.white, size: 28),
+                            icon: const Icon(
+                              Icons.chevron_right,
+                              color: Colors.white,
+                              size: 28,
+                            ),
                             onPressed: () {
                               _pageController.nextPage(
                                 duration: const Duration(milliseconds: 300),
@@ -393,14 +411,19 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
                   child: Center(
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 4),
+                        horizontal: 12,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
-                          color: Colors.black54,
-                          borderRadius: BorderRadius.circular(16)),
+                        color: Colors.black54,
+                        borderRadius: BorderRadius.circular(16),
+                      ),
                       child: Text(
                         '${_currentIndex + 1} / ${_images.length}',
-                        style:
-                            const TextStyle(color: Colors.white, fontSize: 12),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                        ),
                       ),
                     ),
                   ),
@@ -416,8 +439,9 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
             flex: 6,
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(20),
-              child:
-                  _isEditing ? _buildEditView() : _buildInfoView(currentImage),
+              child: _isEditing
+                  ? _buildEditView()
+                  : _buildInfoView(currentImage),
             ),
           ),
         ],
@@ -428,33 +452,45 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
   Widget _buildInfoView(MedicalImage img) {
     final hospital = img.hospitalName ?? _record?.hospitalName ?? '未填写';
     final date = img.visitDate ?? _record?.notedAt;
-    final dateStr =
-        date != null ? DateFormat('yyyy-MM-dd').format(date) : '未知日期';
+    final dateStr = date != null
+        ? DateFormat('yyyy-MM-dd').format(date)
+        : '未知日期';
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('医院',
-            style: TextStyle(fontSize: 12, color: AppTheme.textHint)),
-        Text(hospital,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        const Text(
+          '医院',
+          style: TextStyle(fontSize: 12, color: AppTheme.textHint),
+        ),
+        Text(
+          hospital,
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
         const SizedBox(height: 16),
-        const Text('就诊日期',
-            style: TextStyle(fontSize: 12, color: AppTheme.textHint)),
+        const Text(
+          '就诊日期',
+          style: TextStyle(fontSize: 12, color: AppTheme.textHint),
+        ),
         Text(dateStr, style: AppTheme.monoStyle.copyWith(fontSize: 16)),
         const SizedBox(height: 24),
-        const Text('标签',
-            style: TextStyle(fontSize: 12, color: AppTheme.textHint)),
+        const Text(
+          '标签',
+          style: TextStyle(fontSize: 12, color: AppTheme.textHint),
+        ),
         const SizedBox(height: 8),
         if (img.tagIds.isEmpty)
-          const Text('无标签',
-              style: TextStyle(color: AppTheme.textHint, fontSize: 14))
+          const Text(
+            '无标签',
+            style: TextStyle(color: AppTheme.textHint, fontSize: 14),
+          )
         else
           Wrap(
             spacing: 8,
             runSpacing: 8,
-            children:
-                img.tagIds.map((tid) => _TagNameChip(tagId: tid)).toList(),
+            children: img.tagIds
+                .map((tid) => _TagNameChip(tagId: tid))
+                .toList(),
           ),
         const SizedBox(height: 40),
         const Divider(),
@@ -552,12 +588,14 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('OCR 识别结果',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  const Text(
+                    'OCR 识别结果',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
                   IconButton(
-                      onPressed: () => Navigator.pop(context),
-                      icon: const Icon(Icons.close)),
+                    onPressed: () => Navigator.pop(context),
+                    icon: const Icon(Icons.close),
+                  ),
                 ],
               ),
               const Divider(),
@@ -566,8 +604,10 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
                   controller: scrollController,
                   child: SelectableText(
                     displayText,
-                    style:
-                        AppTheme.monoStyle.copyWith(fontSize: 16, height: 1.5),
+                    style: AppTheme.monoStyle.copyWith(
+                      fontSize: 16,
+                      height: 1.5,
+                    ),
                   ),
                 ),
               ),
@@ -607,9 +647,11 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
         ListTile(
           contentPadding: EdgeInsets.zero,
           title: const Text('就诊日期'),
-          subtitle: Text(_visitDate != null
-              ? DateFormat('yyyy-MM-dd').format(_visitDate!)
-              : '选择日期'),
+          subtitle: Text(
+            _visitDate != null
+                ? DateFormat('yyyy-MM-dd').format(_visitDate!)
+                : '选择日期',
+          ),
           trailing: const Icon(Icons.calendar_today),
           onTap: () async {
             final picked = await showDatePicker(
@@ -635,8 +677,9 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
             }
             final oldIds = _images[_currentIndex].tagIds;
             setState(() {
-              _images[_currentIndex] =
-                  _images[_currentIndex].copyWith(tagIds: currentIds);
+              _images[_currentIndex] = _images[_currentIndex].copyWith(
+                tagIds: currentIds,
+              );
             });
             try {
               await ref
@@ -646,12 +689,14 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
               await ref.read(timelineControllerProvider.notifier).refresh();
             } catch (e) {
               setState(() {
-                _images[_currentIndex] =
-                    _images[_currentIndex].copyWith(tagIds: oldIds);
+                _images[_currentIndex] = _images[_currentIndex].copyWith(
+                  tagIds: oldIds,
+                );
               });
               if (mounted) {
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(SnackBar(content: Text('更新标签失败: $e')));
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text('更新标签失败: $e')));
               }
             }
           },
@@ -663,8 +708,9 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
             currentIds.insert(newIdx, item);
 
             setState(() {
-              _images[_currentIndex] =
-                  _images[_currentIndex].copyWith(tagIds: currentIds);
+              _images[_currentIndex] = _images[_currentIndex].copyWith(
+                tagIds: currentIds,
+              );
             });
             try {
               await ref
@@ -674,12 +720,14 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
               await ref.read(timelineControllerProvider.notifier).refresh();
             } catch (e) {
               setState(() {
-                _images[_currentIndex] =
-                    _images[_currentIndex].copyWith(tagIds: originalIds);
+                _images[_currentIndex] = _images[_currentIndex].copyWith(
+                  tagIds: originalIds,
+                );
               });
               if (mounted) {
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(SnackBar(content: Text('重排标签失败: $e')));
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text('重排标签失败: $e')));
               }
             }
           },
@@ -694,8 +742,10 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
                 _updateControllersForIndex(_currentIndex);
               });
             },
-            child:
-                const Text('取消编辑', style: TextStyle(color: AppTheme.textGrey)),
+            child: const Text(
+              '取消编辑',
+              style: TextStyle(color: AppTheme.textGrey),
+            ),
           ),
         ),
         const SizedBox(height: 24),
@@ -713,22 +763,28 @@ class _TagNameChip extends ConsumerWidget {
     final allTagsAsync = ref.watch(allTagsProvider);
     return allTagsAsync.when(
       data: (allTags) {
-        final tag = allTags.firstWhere((t) => t.id == tagId,
-            orElse: () =>
-                Tag(id: '', name: '?', createdAt: DateTime(0), color: ''));
+        final tag = allTags.firstWhere(
+          (t) => t.id == tagId,
+          orElse: () =>
+              Tag(id: '', name: '?', createdAt: DateTime(0), color: ''),
+        );
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
           decoration: BoxDecoration(
             color: AppTheme.primaryTeal.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(12),
-            border:
-                Border.all(color: AppTheme.primaryTeal.withValues(alpha: 0.2)),
+            border: Border.all(
+              color: AppTheme.primaryTeal.withValues(alpha: 0.2),
+            ),
           ),
-          child: Text(tag.name,
-              style: const TextStyle(
-                  fontSize: 12,
-                  color: AppTheme.primaryTeal,
-                  fontWeight: FontWeight.bold)),
+          child: Text(
+            tag.name,
+            style: const TextStyle(
+              fontSize: 12,
+              color: AppTheme.primaryTeal,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         );
       },
       loading: () => const SizedBox(),

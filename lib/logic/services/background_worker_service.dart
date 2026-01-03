@@ -46,8 +46,9 @@ void callbackDispatcher() {
       if (task == _ocrTaskName) {
         talker.info('[BackgroundWorker] Started');
 
-        final processor =
-            await BackgroundWorkerService()._buildProcessor(talker: talker);
+        final processor = await BackgroundWorkerService()._buildProcessor(
+          talker: talker,
+        );
 
         // 2. Process Queue
         int processedCount = 0;
@@ -129,11 +130,10 @@ class BackgroundWorkerService {
   Future<void> initialize() async {
     if (defaultTargetPlatform == TargetPlatform.android ||
         defaultTargetPlatform == TargetPlatform.iOS) {
-      await Workmanager().initialize(
-        callbackDispatcher,
-      );
+      await Workmanager().initialize(callbackDispatcher);
       _talker?.info(
-          '[BackgroundWorkerService] Initialized for ${defaultTargetPlatform.name}');
+        '[BackgroundWorkerService] Initialized for ${defaultTargetPlatform.name}',
+      );
     }
   }
 
@@ -142,8 +142,9 @@ class BackgroundWorkerService {
     if (talker != null) _talker = talker;
 
     if (_isProcessing) {
-      _talker
-          ?.info('[BackgroundWorkerService] Already processing, skipping...');
+      _talker?.info(
+        '[BackgroundWorkerService] Already processing, skipping...',
+      );
       return;
     }
 
@@ -159,10 +160,14 @@ class BackgroundWorkerService {
         count++;
       }
       _talker?.info(
-          '[BackgroundWorkerService] Foreground OCR Finished. Total processed: $count');
+        '[BackgroundWorkerService] Foreground OCR Finished. Total processed: $count',
+      );
     } catch (e, stack) {
       _talker?.handle(
-          e, stack, '[BackgroundWorkerService] Foreground OCR Error');
+        e,
+        stack,
+        '[BackgroundWorkerService] Foreground OCR Error',
+      );
     } finally {
       _isProcessing = false;
     }
@@ -186,7 +191,9 @@ class BackgroundWorkerService {
         _ocrTaskName,
         existingWorkPolicy: ExistingWorkPolicy.append,
         constraints: Constraints(
-            networkType: NetworkType.notRequired, requiresBatteryNotLow: true),
+          networkType: NetworkType.notRequired,
+          requiresBatteryNotLow: true,
+        ),
       );
     }
   }

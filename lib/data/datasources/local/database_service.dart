@@ -251,11 +251,14 @@ class SQLCipherDatabaseService {
 
     // 索引优化 (根据查询频率)
     batch.execute(
-        'CREATE INDEX idx_records_visit_date ON records(visit_date_ms)');
+      'CREATE INDEX idx_records_visit_date ON records(visit_date_ms)',
+    );
     batch.execute(
-        'CREATE INDEX idx_records_person_status ON records(person_id, status)');
+      'CREATE INDEX idx_records_person_status ON records(person_id, status)',
+    );
     batch.execute(
-        'CREATE INDEX idx_images_record_order ON images(record_id, page_index)');
+      'CREATE INDEX idx_images_record_order ON images(record_id, page_index)',
+    );
     batch.execute('CREATE INDEX idx_ocr_queue_status ON ocr_queue(status)');
 
     // 10. 执行种子数据填充
@@ -312,17 +315,14 @@ class SQLCipherDatabaseService {
       ];
 
       for (var tag in tags) {
-        batch.insert(
-            'tags',
-            {
-              'id': tag['id'],
-              'name': tag['name'],
-              'color': tag['color'],
-              'order_index': tag['order_index'],
-              'is_custom': 0,
-              'created_at_ms': now,
-            },
-            conflictAlgorithm: ConflictAlgorithm.ignore);
+        batch.insert('tags', {
+          'id': tag['id'],
+          'name': tag['name'],
+          'color': tag['color'],
+          'order_index': tag['order_index'],
+          'is_custom': 0,
+          'created_at_ms': now,
+        }, conflictAlgorithm: ConflictAlgorithm.ignore);
       }
     }
 
@@ -330,9 +330,11 @@ class SQLCipherDatabaseService {
       // Upgrade to v3: Add thumbnail_encryption_key to images
       try {
         await db.execute(
-            'ALTER TABLE images ADD COLUMN thumbnail_encryption_key TEXT');
+          'ALTER TABLE images ADD COLUMN thumbnail_encryption_key TEXT',
+        );
         await db.execute(
-            'UPDATE images SET thumbnail_encryption_key = encryption_key WHERE thumbnail_encryption_key IS NULL');
+          'UPDATE images SET thumbnail_encryption_key = encryption_key WHERE thumbnail_encryption_key IS NULL',
+        );
       } catch (_) {}
     }
 
@@ -355,9 +357,11 @@ class SQLCipherDatabaseService {
       // Upgrade to v5: Add visit_end_date_ms to records
       try {
         await db.execute(
-            'ALTER TABLE records ADD COLUMN visit_end_date_ms INTEGER');
+          'ALTER TABLE records ADD COLUMN visit_end_date_ms INTEGER',
+        );
         await db.execute(
-            'UPDATE records SET visit_end_date_ms = visit_date_ms WHERE visit_end_date_ms IS NULL');
+          'UPDATE records SET visit_end_date_ms = visit_date_ms WHERE visit_end_date_ms IS NULL',
+        );
       } catch (_) {}
     }
 
@@ -396,7 +400,8 @@ class SQLCipherDatabaseService {
 
       // 4. Index for queue
       batch.execute(
-          'CREATE INDEX IF NOT EXISTS idx_ocr_queue_status ON ocr_queue(status)');
+        'CREATE INDEX IF NOT EXISTS idx_ocr_queue_status ON ocr_queue(status)',
+      );
     }
 
     await batch.commit();

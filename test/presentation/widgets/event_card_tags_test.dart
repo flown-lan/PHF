@@ -115,16 +115,18 @@ void main() {
         0xAE,
         0x42,
         0x60,
-        0x82
+        0x82,
       ]);
 
       when(mockPathProviderService.sandboxRoot).thenReturn('/mock/sandbox');
-      when(mockFileSecurityHelper.decryptDataFromFile(any, any))
-          .thenAnswer((_) async => fakePng);
+      when(
+        mockFileSecurityHelper.decryptDataFromFile(any, any),
+      ).thenAnswer((_) async => fakePng);
     });
 
-    testWidgets('displays first image tag name instead of notes',
-        (widgetTester) async {
+    testWidgets('displays first image tag name instead of notes', (
+      widgetTester,
+    ) async {
       // Setup Data
       const tagId = 'tag_1';
       const tagName = 'Important Checkup';
@@ -157,10 +159,11 @@ void main() {
 
       final tags = [
         Tag(
-            id: tagId,
-            name: tagName,
-            color: '#FFFFFF',
-            createdAt: DateTime.now())
+          id: tagId,
+          name: tagName,
+          color: '#FFFFFF',
+          createdAt: DateTime.now(),
+        ),
       ];
 
       // Setup Mocks
@@ -175,8 +178,9 @@ void main() {
       expect(find.text(noteText), findsNothing);
     });
 
-    testWidgets('fallbacks to notes if image has no tags',
-        (widgetTester) async {
+    testWidgets('fallbacks to notes if image has no tags', (
+      widgetTester,
+    ) async {
       const noteText = 'This is a note';
 
       final record = MedicalRecord(
@@ -201,12 +205,15 @@ void main() {
         tagIds: [], // Empty tags
       );
 
-      await widgetTester
-          .pumpWidget(createSubject(record.copyWith(images: [image])));
+      await widgetTester.pumpWidget(
+        createSubject(record.copyWith(images: [image])),
+      );
       await widgetTester.pumpAndSettle();
 
-      expect(find.text(noteText),
-          findsNothing); // Notes no longer shown in EventCard
+      expect(
+        find.text(noteText),
+        findsNothing,
+      ); // Notes no longer shown in EventCard
     });
   });
 }

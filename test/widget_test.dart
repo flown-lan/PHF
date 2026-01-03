@@ -4,8 +4,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:phf/presentation/theme/app_theme.dart';
 
 void main() {
-  testWidgets('App launches and displays PHF text',
-      (WidgetTester tester) async {
+  testWidgets('App launches and displays PHF text', (
+    WidgetTester tester,
+  ) async {
     // Build our app and trigger a frame.
     await tester.pumpWidget(
       ProviderScope(

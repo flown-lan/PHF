@@ -122,12 +122,14 @@ class SmartExtractor {
       if (trimmedLine.length < 4 || trimmedLine.length > 50) continue;
 
       // 检查是否包含医院关键词
-      final hasHospitalKw =
-          _hospitalKeywords.any((kw) => trimmedLine.contains(kw));
+      final hasHospitalKw = _hospitalKeywords.any(
+        (kw) => trimmedLine.contains(kw),
+      );
       if (hasHospitalKw) {
         // 排除掉不相关的行（如“科室：内科一病房”）
-        final shouldExclude =
-            _excludeKeywords.any((kw) => trimmedLine.contains(kw));
+        final shouldExclude = _excludeKeywords.any(
+          (kw) => trimmedLine.contains(kw),
+        );
         if (!shouldExclude) {
           // 清洗：去除行首尾可能的非文字干扰
           return _sanitizeHospitalName(trimmedLine);

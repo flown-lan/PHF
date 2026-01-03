@@ -49,8 +49,10 @@ class EventCard extends ConsumerWidget {
               children: [
                 // Date Badge
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 2,
+                  ),
                   decoration: BoxDecoration(
                     color: AppTheme.bgGray,
                     borderRadius: BorderRadius.circular(4),
@@ -101,8 +103,11 @@ class EventCard extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               alignment: Alignment.center,
-              child: const Icon(Icons.medical_services_outlined,
-                  color: AppTheme.textHint, size: 48),
+              child: const Icon(
+                Icons.medical_services_outlined,
+                color: AppTheme.textHint,
+                size: 48,
+              ),
             ),
 
           // 3. Footer (Count info only)
@@ -115,8 +120,10 @@ class EventCard extends ConsumerWidget {
                 if (record.images.length > 6)
                   Text(
                     '共 ${record.images.length} 张图片 >',
-                    style:
-                        const TextStyle(fontSize: 12, color: AppTheme.textHint),
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: AppTheme.textHint,
+                    ),
                   ),
               ],
             ),
@@ -131,87 +138,95 @@ class EventCard extends ConsumerWidget {
     final int displayCount = images.length > 6 ? 6 : images.length;
     final List<MedicalImage> displayImages = images.take(displayCount).toList();
 
-    return LayoutBuilder(builder: (context, constraints) {
-      const double spacing = 4.0;
-      const int crossAxisCount = 3;
-      final double itemSize =
-          (constraints.maxWidth - (crossAxisCount - 1) * spacing) /
-              crossAxisCount;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        const double spacing = 4.0;
+        const int crossAxisCount = 3;
+        final double itemSize =
+            (constraints.maxWidth - (crossAxisCount - 1) * spacing) /
+            crossAxisCount;
 
-      return Wrap(
-        spacing: spacing,
-        runSpacing: spacing,
-        children: List.generate(displayImages.length, (index) {
-          final img = displayImages[index];
-          final isLast = index == 5 && images.length > 6;
+        return Wrap(
+          spacing: spacing,
+          runSpacing: spacing,
+          children: List.generate(displayImages.length, (index) {
+            final img = displayImages[index];
+            final isLast = index == 5 && images.length > 6;
 
-          // Get first tag name
-          String? firstTagName;
-          if (img.tagIds.isNotEmpty) {
-            final firstTag = allTags.firstWhere((t) => t.id == img.tagIds.first,
+            // Get first tag name
+            String? firstTagName;
+            if (img.tagIds.isNotEmpty) {
+              final firstTag = allTags.firstWhere(
+                (t) => t.id == img.tagIds.first,
                 orElse: () =>
-                    Tag(id: '', name: '', createdAt: DateTime(0), color: ''));
-            if (firstTag.name.isNotEmpty) {
-              firstTagName = firstTag.name;
+                    Tag(id: '', name: '', createdAt: DateTime(0), color: ''),
+              );
+              if (firstTag.name.isNotEmpty) {
+                firstTagName = firstTag.name;
+              }
             }
-          }
 
-          return Stack(
-            children: [
-              SizedBox(
-                width: itemSize,
-                height: itemSize,
-                child: SecureImage(
-                  imagePath: img.thumbnailPath,
-                  encryptionKey: img.thumbnailEncryptionKey,
-                  borderRadius: BorderRadius.circular(4),
-                  fit: BoxFit.cover,
-                ),
-              ),
-              // Tag Overlay
-              if (firstTagName != null)
-                Positioned(
-                  left: 4,
-                  bottom: 4,
-                  child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withValues(alpha: 0.6),
-                      borderRadius: BorderRadius.circular(2),
-                    ),
-                    child: Text(
-                      firstTagName,
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-              if (isLast)
-                Container(
+            return Stack(
+              children: [
+                SizedBox(
                   width: itemSize,
                   height: itemSize,
-                  decoration: BoxDecoration(
-                    color: Colors.black.withValues(alpha: 0.4),
+                  child: SecureImage(
+                    imagePath: img.thumbnailPath,
+                    encryptionKey: img.thumbnailEncryptionKey,
                     borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: const Center(
-                    child: Text(
-                      '...',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold),
-                    ),
+                    fit: BoxFit.cover,
                   ),
                 ),
-            ],
-          );
-        }),
-      );
-    });
+                // Tag Overlay
+                if (firstTagName != null)
+                  Positioned(
+                    left: 4,
+                    bottom: 4,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 4,
+                        vertical: 1,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withValues(alpha: 0.6),
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                      child: Text(
+                        firstTagName,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                if (isLast)
+                  Container(
+                    width: itemSize,
+                    height: itemSize,
+                    decoration: BoxDecoration(
+                      color: Colors.black.withValues(alpha: 0.4),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: const Center(
+                      child: Text(
+                        '...',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            );
+          }),
+        );
+      },
+    );
   }
 
   String _formatDateRange(DateTime start, DateTime? end) {

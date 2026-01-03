@@ -22,21 +22,22 @@ void main() {
       // Assert
 
       // 1. Verify Person Insertion
-      verify(mockBatch.insert(
-        'persons',
-        argThat(predicate((Map<String, Object?> map) {
-          return map['id'] == 'def_me' &&
-              map['nickname'] == '本人' &&
-              map['is_default'] == 1;
-        })),
-      )).called(1);
+      verify(
+        mockBatch.insert(
+          'persons',
+          argThat(
+            predicate((Map<String, Object?> map) {
+              return map['id'] == 'def_me' &&
+                  map['nickname'] == '本人' &&
+                  map['is_default'] == 1;
+            }),
+          ),
+        ),
+      ).called(1);
 
       // 2. Verify Tags Insertion
       // We verify that 'tags' table was targeted 4 times
-      verify(mockBatch.insert(
-        'tags',
-        any,
-      )).called(4);
+      verify(mockBatch.insert('tags', any)).called(4);
     });
   });
 }

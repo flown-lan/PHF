@@ -101,16 +101,10 @@ class AppLoader extends ConsumerWidget {
         // 如果已设置应用锁且已验证，进入首页
         return const HomePage();
       },
-      loading: () => const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      ),
-      error: (error, stack) => Scaffold(
-        body: Center(
-          child: Text('初始化失败: $error'),
-        ),
-      ),
+      loading: () =>
+          const Scaffold(body: Center(child: CircularProgressIndicator())),
+      error: (error, stack) =>
+          Scaffold(body: Center(child: Text('初始化失败: $error'))),
     );
   }
 }

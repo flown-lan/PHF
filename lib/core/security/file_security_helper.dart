@@ -25,11 +25,9 @@ class FileSecurityHelper {
   final ICryptoService _cryptoService;
   final Uuid _uuid;
 
-  FileSecurityHelper({
-    required ICryptoService cryptoService,
-    Uuid? uuid,
-  })  : _cryptoService = cryptoService,
-        _uuid = uuid ?? const Uuid();
+  FileSecurityHelper({required ICryptoService cryptoService, Uuid? uuid})
+    : _cryptoService = cryptoService,
+      _uuid = uuid ?? const Uuid();
 
   /// 加密媒体文件
   ///
@@ -65,10 +63,7 @@ class FileSecurityHelper {
     // 4. Return Result (path is relative filename for now, logic layer handles full path usually,
     // but here we return relative filename to be flexible)
     // 根据 Spec 的习惯，这里返回文件名，Data 层再拼接入库
-    return EncryptedFileResult(
-      relativePath: fileName,
-      base64Key: base64Key,
-    );
+    return EncryptedFileResult(relativePath: fileName, base64Key: base64Key);
   }
 
   /// 直接加密内存数据到文件
@@ -102,10 +97,7 @@ class FileSecurityHelper {
     final file = File(destPath);
     await file.writeAsBytes(encryptedPacket);
 
-    return EncryptedFileResult(
-      relativePath: fileName,
-      base64Key: base64Key,
-    );
+    return EncryptedFileResult(relativePath: fileName, base64Key: base64Key);
   }
 
   /// 解密文件到临时目录
@@ -148,10 +140,7 @@ class FileSecurityHelper {
     final encryptedData = await file.readAsBytes();
     final keyBytes = base64Decode(base64Key);
 
-    return _cryptoService.decrypt(
-      encryptedData: encryptedData,
-      key: keyBytes,
-    );
+    return _cryptoService.decrypt(encryptedData: encryptedData, key: keyBytes);
   }
 }
 

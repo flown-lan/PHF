@@ -37,8 +37,9 @@ class ReviewListPage extends ConsumerWidget {
             separatorBuilder: (_, __) => const SizedBox(height: 16),
             itemBuilder: (context, index) {
               final MedicalRecord record = records[index];
-              final firstImage =
-                  record.images.isNotEmpty ? record.images.first : null;
+              final firstImage = record.images.isNotEmpty
+                  ? record.images.first
+                  : null;
 
               return EventCard(
                 record: record,
@@ -47,7 +48,8 @@ class ReviewListPage extends ConsumerWidget {
                   final result = await Navigator.push(
                     context,
                     MaterialPageRoute<bool>(
-                        builder: (_) => ReviewEditPage(record: record)),
+                      builder: (_) => ReviewEditPage(record: record),
+                    ),
                   );
                   if (result == true) {
                     await ref

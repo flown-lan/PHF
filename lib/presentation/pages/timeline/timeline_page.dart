@@ -27,10 +27,14 @@ class TimelinePage extends ConsumerWidget {
   const TimelinePage({super.key});
 
   void _navigateToDetail(
-      BuildContext context, WidgetRef ref, MedicalRecord record) async {
+    BuildContext context,
+    WidgetRef ref,
+    MedicalRecord record,
+  ) async {
     await Navigator.of(context).push(
       MaterialPageRoute<void>(
-          builder: (_) => RecordDetailPage(recordId: record.id)),
+        builder: (_) => RecordDetailPage(recordId: record.id),
+      ),
     );
     // Refresh after return (in case of edits/deletes)
     await ref.read(timelineControllerProvider.notifier).refresh();
@@ -49,8 +53,11 @@ class TimelinePage extends ConsumerWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.inventory_2_outlined,
-                    size: 64, color: AppTheme.textHint),
+                const Icon(
+                  Icons.inventory_2_outlined,
+                  size: 64,
+                  color: AppTheme.textHint,
+                ),
                 const SizedBox(height: 16),
                 const Text(
                   '暂无记录，点击右下角 + 号开始录入',
@@ -60,7 +67,7 @@ class TimelinePage extends ConsumerWidget {
                   onPressed: () =>
                       ref.read(timelineControllerProvider.notifier).refresh(),
                   child: const Text('刷新'),
-                )
+                ),
               ],
             ),
           );
@@ -81,7 +88,8 @@ class TimelinePage extends ConsumerWidget {
                         Navigator.push<void>(
                           context,
                           MaterialPageRoute<void>(
-                              builder: (_) => const ReviewListPage()),
+                            builder: (_) => const ReviewListPage(),
+                          ),
                         );
                       },
                     ),
@@ -90,23 +98,21 @@ class TimelinePage extends ConsumerWidget {
               SliverPadding(
                 padding: const EdgeInsets.all(16),
                 sliver: SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final record = records[index];
-                      final firstImage =
-                          record.images.isNotEmpty ? record.images.first : null;
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    final record = records[index];
+                    final firstImage = record.images.isNotEmpty
+                        ? record.images.first
+                        : null;
 
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 16.0),
-                        child: EventCard(
-                          record: record,
-                          firstImage: firstImage,
-                          onTap: () => _navigateToDetail(context, ref, record),
-                        ),
-                      );
-                    },
-                    childCount: records.length,
-                  ),
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 16.0),
+                      child: EventCard(
+                        record: record,
+                        firstImage: firstImage,
+                        onTap: () => _navigateToDetail(context, ref, record),
+                      ),
+                    );
+                  }, childCount: records.length),
                 ),
               ),
             ],
@@ -126,7 +132,7 @@ class TimelinePage extends ConsumerWidget {
               onPressed: () =>
                   ref.read(timelineControllerProvider.notifier).refresh(),
               child: const Text('重试'),
-            )
+            ),
           ],
         ),
       ),

@@ -60,14 +60,14 @@ class OCRProcessor {
     required FileSecurityHelper securityHelper,
     required PathProviderService pathService,
     Talker? talker,
-  })  : _queueRepository = queueRepository,
-        _imageRepository = imageRepository,
-        _recordRepository = recordRepository,
-        _searchRepository = searchRepository,
-        _ocrService = ocrService,
-        _securityHelper = securityHelper,
-        _pathService = pathService,
-        _talker = talker;
+  }) : _queueRepository = queueRepository,
+       _imageRepository = imageRepository,
+       _recordRepository = recordRepository,
+       _searchRepository = searchRepository,
+       _ocrService = ocrService,
+       _securityHelper = securityHelper,
+       _pathService = pathService,
+       _talker = talker;
 
   /// 处理队列中的下一个任务
   /// 返回 true 表示处理了一个任务，false 表示队列为空或处理失败
@@ -102,8 +102,10 @@ class OCRProcessor {
       );
 
       // 3. 执行 OCR 识别
-      final ocrResult = await _ocrService.recognizeText(decryptedBytes,
-          mimeType: image.mimeType);
+      final ocrResult = await _ocrService.recognizeText(
+        decryptedBytes,
+        mimeType: image.mimeType,
+      );
 
       // 立即释放原始解密数据
       decryptedBytes = null;
@@ -113,12 +115,14 @@ class OCRProcessor {
       if (fullText.isEmpty && ocrResult.blocks.isNotEmpty) {
         fullText = ocrResult.blocks.map((b) => b.text).join('\n').trim();
         _talker?.warning(
-            '[OCRProcessor] OCR text was empty but blocks exist. Joined blocks.');
+          '[OCRProcessor] OCR text was empty but blocks exist. Joined blocks.',
+        );
       }
 
       if (fullText.isEmpty) {
         _talker?.warning(
-            '[OCRProcessor] OCR result for Image ${image.id} is completely empty.');
+          '[OCRProcessor] OCR result for Image ${image.id} is completely empty.',
+        );
       }
 
       // 4. 智能提取 (FR-203)
@@ -131,16 +135,21 @@ class OCRProcessor {
 
       // 5. 持久化数据
       // 5.1 更新 Image OCR 数据
-      await _imageRepository.updateOCRData(image.id, fullText,
-          rawJson: jsonEncode(ocrResult.toJson()),
-          confidence: extracted.confidenceScore);
+      await _imageRepository.updateOCRData(
+        image.id,
+        fullText,
+        rawJson: jsonEncode(ocrResult.toJson()),
+        confidence: extracted.confidenceScore,
+      );
 
       // 5.2 更新 Image 业务元数据 (如果有新发现)
       // 仅当提取到有效值且当前 Image 对应字段为空时，或者我们选择覆盖？
       if (extracted.visitDate != null || extracted.hospitalName != null) {
-        await _imageRepository.updateImageMetadata(image.id,
-            hospitalName: extracted.hospitalName,
-            visitDate: extracted.visitDate);
+        await _imageRepository.updateImageMetadata(
+          image.id,
+          hospitalName: extracted.hospitalName,
+          visitDate: extracted.visitDate,
+        );
       }
 
       // 5.3 更新 Record 状态与合并元数据
@@ -188,8 +197,12 @@ class OCRProcessor {
     } catch (e, stack) {
       _talker?.handle(e, stack, '[OCRProcessor] Processing Failed: ${item.id}');
       if (_talker == null) {
-        log('Processing Failed: ${item.id}. Error: $e',
-            name: 'OCRProcessor', error: e, stackTrace: stack);
+        log(
+          'Processing Failed: ${item.id}. Error: $e',
+          name: 'OCRProcessor',
+          error: e,
+          stackTrace: stack,
+        );
       }
       decryptedBytes = null; // Ensure clear on error
 

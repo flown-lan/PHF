@@ -33,7 +33,7 @@ class SecureImage extends ConsumerStatefulWidget {
   final BoxFit? fit;
   final BorderRadius? borderRadius;
   final Widget Function(BuildContext context, ImageProvider imageProvider)?
-      builder;
+  builder;
 
   const SecureImage({
     super.key,
@@ -77,8 +77,10 @@ class _SecureImageState extends ConsumerState<SecureImage> {
         ? widget.imagePath
         : '${pathService.sandboxRoot}/${widget.imagePath}';
 
-    _decryptionFuture =
-        helper.decryptDataFromFile(fullPath, widget.encryptionKey);
+    _decryptionFuture = helper.decryptDataFromFile(
+      fullPath,
+      widget.encryptionKey,
+    );
   }
 
   @override
@@ -123,10 +125,13 @@ class _SecureImageState extends ConsumerState<SecureImage> {
       color: AppTheme.bgGray,
       child: const Center(
         child: SizedBox(
-            width: 20,
-            height: 20,
-            child: CircularProgressIndicator(
-                strokeWidth: 2, color: AppTheme.primary)),
+          width: 20,
+          height: 20,
+          child: CircularProgressIndicator(
+            strokeWidth: 2,
+            color: AppTheme.primary,
+          ),
+        ),
       ),
     );
   }
@@ -137,8 +142,11 @@ class _SecureImageState extends ConsumerState<SecureImage> {
       height: widget.height,
       color: AppTheme.bgGray,
       child: const Center(
-        child: Icon(Icons.broken_image_rounded,
-            color: AppTheme.textHint, size: 24),
+        child: Icon(
+          Icons.broken_image_rounded,
+          color: AppTheme.textHint,
+          size: 24,
+        ),
       ),
     );
   }

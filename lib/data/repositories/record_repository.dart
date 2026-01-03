@@ -126,7 +126,7 @@ class RecordRepository extends BaseRepository implements IRecordRepository {
       'records',
       {
         'status': status.name,
-        'updated_at_ms': DateTime.now().millisecondsSinceEpoch
+        'updated_at_ms': DateTime.now().millisecondsSinceEpoch,
       },
       where: 'id = ?',
       whereArgs: [id],
@@ -134,8 +134,12 @@ class RecordRepository extends BaseRepository implements IRecordRepository {
   }
 
   @override
-  Future<void> updateRecordMetadata(String id,
-      {String? hospitalName, DateTime? visitDate, String? notes}) async {
+  Future<void> updateRecordMetadata(
+    String id, {
+    String? hospitalName,
+    DateTime? visitDate,
+    String? notes,
+  }) async {
     final db = await dbService.database;
     final now = DateTime.now().millisecondsSinceEpoch;
     await db.update(
@@ -193,7 +197,8 @@ class RecordRepository extends BaseRepository implements IRecordRepository {
       // JOIN FTS table
       // SELECT r.* FROM records r JOIN ocr_search_index fts ON r.id = fts.record_id WHERE ocr_search_index MATCH ?
       // 注意 FTS MATCH 语法
-      sql = '''
+      sql =
+          '''
         SELECT r.* 
         FROM records r
         JOIN ocr_search_index fts ON r.id = fts.record_id
@@ -247,8 +252,9 @@ class RecordRepository extends BaseRepository implements IRecordRepository {
     final Map<String, dynamic> updates = {};
     if (minDate != null) {
       updates['visit_date_ms'] = minDate;
-      updates['visit_date_iso'] =
-          DateTime.fromMillisecondsSinceEpoch(minDate).toIso8601String();
+      updates['visit_date_iso'] = DateTime.fromMillisecondsSinceEpoch(
+        minDate,
+      ).toIso8601String();
     }
     if (maxDate != null) {
       updates['visit_end_date_ms'] = maxDate;
@@ -318,7 +324,9 @@ class RecordRepository extends BaseRepository implements IRecordRepository {
   // --- Helpers ---
 
   MedicalRecord _mapToRecord(
-      Map<String, dynamic> row, List<MedicalImage> images) {
+    Map<String, dynamic> row,
+    List<MedicalImage> images,
+  ) {
     // 还原 DateTime
     final visitDateMs = row['visit_date_ms'] as int?;
     final createdAtMs = row['created_at_ms'] as int;
@@ -327,7 +335,8 @@ class RecordRepository extends BaseRepository implements IRecordRepository {
     final notedAt = visitDateMs != null
         ? DateTime.fromMillisecondsSinceEpoch(visitDateMs)
         : DateTime.fromMillisecondsSinceEpoch(
-            createdAtMs); // Fallback to creation date
+            createdAtMs,
+          ); // Fallback to creation date
 
     final visitEndDate = row['visit_end_date_ms'] != null
         ? DateTime.fromMillisecondsSinceEpoch(row['visit_end_date_ms'] as int)
@@ -376,12 +385,13 @@ class RecordRepository extends BaseRepository implements IRecordRepository {
       'ocrConfidence': row['ocr_confidence'],
       'hospitalName': row['hospital_name'],
       'visitDate': row['visit_date_ms'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(row['visit_date_ms'] as int)
-              .toIso8601String()
+          ? DateTime.fromMillisecondsSinceEpoch(
+              row['visit_date_ms'] as int,
+            ).toIso8601String()
           : null,
-      'createdAt':
-          DateTime.fromMillisecondsSinceEpoch(row['created_at_ms'] as int)
-              .toIso8601String(),
+      'createdAt': DateTime.fromMillisecondsSinceEpoch(
+        row['created_at_ms'] as int,
+      ).toIso8601String(),
     });
   }
 }

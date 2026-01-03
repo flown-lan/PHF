@@ -23,8 +23,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class MasterKeyManager {
   static const _keyParams = AndroidOptions();
-  static const _iosParams =
-      IOSOptions(accessibility: KeychainAccessibility.first_unlock);
+  static const _iosParams = IOSOptions(
+    accessibility: KeychainAccessibility.first_unlock,
+  );
 
   // Storage Keys
   static const String _kMasterKey = 'phf_master_key_v1';
@@ -33,11 +34,12 @@ class MasterKeyManager {
   final FlutterSecureStorage _storage;
 
   MasterKeyManager({FlutterSecureStorage? storage})
-      : _storage = storage ??
-            const FlutterSecureStorage(
-              aOptions: _keyParams,
-              iOptions: _iosParams,
-            );
+    : _storage =
+          storage ??
+          const FlutterSecureStorage(
+            aOptions: _keyParams,
+            iOptions: _iosParams,
+          );
 
   /// 获取 Master Key (32 bytes)
   ///

@@ -78,11 +78,20 @@ class AppTheme {
       textTheme: const TextTheme(
         // Headers
         headlineLarge: TextStyle(
-            fontSize: 32, fontWeight: FontWeight.bold, color: textBlack),
+          fontSize: 32,
+          fontWeight: FontWeight.bold,
+          color: textBlack,
+        ),
         headlineMedium: TextStyle(
-            fontSize: 24, fontWeight: FontWeight.bold, color: textBlack),
+          fontSize: 24,
+          fontWeight: FontWeight.bold,
+          color: textBlack,
+        ),
         headlineSmall: TextStyle(
-            fontSize: 20, fontWeight: FontWeight.w600, color: textBlack),
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+          color: textBlack,
+        ),
 
         // Body
         bodyLarge: TextStyle(fontSize: 16, color: textBlack),

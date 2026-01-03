@@ -36,7 +36,8 @@ class TimelineController extends _$TimelineController {
 
         if (nextCount != prevCount) {
           talker.info(
-              '[TimelineController] OCR Status update: $prevCount -> $nextCount. Triggering refresh.');
+            '[TimelineController] OCR Status update: $prevCount -> $nextCount. Triggering refresh.',
+          );
           refresh();
         }
       }
@@ -61,10 +62,7 @@ class TimelineController extends _$TimelineController {
       enriched.add(rec.copyWith(images: images));
     }
 
-    return HomeState(
-      records: enriched,
-      pendingCount: pendingCount,
-    );
+    return HomeState(records: enriched, pendingCount: pendingCount);
   }
 
   /// 刷新列表
@@ -94,10 +92,7 @@ class TimelineController extends _$TimelineController {
         enriched.add(rec.copyWith(images: images));
       }
 
-      return HomeState(
-        records: enriched,
-        pendingCount: pendingCount,
-      );
+      return HomeState(records: enriched, pendingCount: pendingCount);
     });
   }
 

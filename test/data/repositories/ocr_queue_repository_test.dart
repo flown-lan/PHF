@@ -66,7 +66,8 @@ void main() {
       // Insert in order
       await queueRepo.enqueue('img_1');
       await Future<void>.delayed(
-          const Duration(milliseconds: 10)); // Ensure timestamp diff
+        const Duration(milliseconds: 10),
+      ); // Ensure timestamp diff
       await queueRepo.enqueue('img_2');
 
       final first = await queueRepo.dequeue();
@@ -88,14 +89,20 @@ void main() {
       await queueRepo.enqueue('img_1');
       final item = await queueRepo.dequeue();
 
-      await queueRepo.updateStatus(item!.id, OCRJobStatus.failed,
-          error: 'Network Error');
+      await queueRepo.updateStatus(
+        item!.id,
+        OCRJobStatus.failed,
+        error: 'Network Error',
+      );
 
       // Verify in DB directly or via logic
       // Since dequeue only returns pending, we can't fetch it via dequeue anymore.
       // We can query DB directly to verify.
-      final result =
-          await db.query('ocr_queue', where: 'id = ?', whereArgs: [item.id]);
+      final result = await db.query(
+        'ocr_queue',
+        where: 'id = ?',
+        whereArgs: [item.id],
+      );
       expect(result.first['status'], OCRJobStatus.failed.name);
       expect(result.first['last_error'], 'Network Error');
     });
@@ -109,13 +116,16 @@ void main() {
 
       await queueRepo.incrementRetry(item!.id);
 
-      final result =
-          await db.query('ocr_queue', where: 'id = ?', whereArgs: [item.id]);
+      final result = await db.query(
+        'ocr_queue',
+        where: 'id = ?',
+        whereArgs: [item.id],
+      );
       expect(result.first['retry_count'], 1);
       expect(
-          (result.first['updated_at_ms'] as int) >
-              before.millisecondsSinceEpoch,
-          isTrue);
+        (result.first['updated_at_ms'] as int) > before.millisecondsSinceEpoch,
+        isTrue,
+      );
     });
 
     test('deleteJob removes item', () async {
@@ -124,8 +134,8 @@ void main() {
 
       await queueRepo.deleteJob(item!.id);
 
-      final count =
-          await queueRepo.getPendingCount(); // Should be 0 if we deleted it.
+      final count = await queueRepo
+          .getPendingCount(); // Should be 0 if we deleted it.
       // Wait, dequeue doesn't remove it, just reads it.
       // If we delete it, getPendingCount should be 0.
       expect(count, 0);

@@ -36,10 +36,9 @@ void main() {
 
       await service.setPin(pin);
 
-      verify(mockStorage.write(
-        key: 'user_pin_hash',
-        value: anyNamed('value'),
-      )).called(1);
+      verify(
+        mockStorage.write(key: 'user_pin_hash', value: anyNamed('value')),
+      ).called(1);
 
       verify(mockMetaRepo.setHasLock(true)).called(1);
     });
@@ -61,25 +60,28 @@ void main() {
     });
 
     test('validatePin returns false for incorrect pin', () async {
-      when(mockStorage.read(key: 'user_pin_hash')).thenAnswer(
-        (_) async => 'stored_hash',
-      );
+      when(
+        mockStorage.read(key: 'user_pin_hash'),
+      ).thenAnswer((_) async => 'stored_hash');
 
       final result = await service.validatePin('000000');
       expect(result, isFalse);
     });
 
     test('enableBiometrics writes to storage on success', () async {
-      when(mockLocalAuth.authenticate(
-        localizedReason: anyNamed('localizedReason'),
-        biometricOnly: anyNamed('biometricOnly'),
-      )).thenAnswer((_) async => true);
+      when(
+        mockLocalAuth.authenticate(
+          localizedReason: anyNamed('localizedReason'),
+          biometricOnly: anyNamed('biometricOnly'),
+        ),
+      ).thenAnswer((_) async => true);
 
       final result = await service.enableBiometrics();
 
       expect(result, isTrue);
-      verify(mockStorage.write(key: 'biometrics_enabled', value: 'true'))
-          .called(1);
+      verify(
+        mockStorage.write(key: 'biometrics_enabled', value: 'true'),
+      ).called(1);
     });
   });
 }

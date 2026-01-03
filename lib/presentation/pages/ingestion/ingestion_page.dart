@@ -59,16 +59,19 @@ class _IngestionPageState extends ConsumerState<IngestionPage> {
     final state = ref.watch(ingestionControllerProvider);
     final notifier = ref.read(ingestionControllerProvider.notifier);
 
-    ref.listen(ingestionControllerProvider.select((s) => s.status),
-        (previous, next) {
+    ref.listen(ingestionControllerProvider.select((s) => s.status), (
+      previous,
+      next,
+    ) {
       if (next == IngestionStatus.success) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text('已进入后台 OCR 处理队列...')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('已进入后台 OCR 处理队列...')));
         Navigator.of(context).pop();
       } else if (next == IngestionStatus.error) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('保存受阻: ${state.errorMessage}')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('保存受阻: ${state.errorMessage}')));
       }
     });
 
@@ -127,17 +130,17 @@ class _IngestionPageState extends ConsumerState<IngestionPage> {
           const SizedBox(height: 16),
           const Text('请添加病历照片', style: TextStyle(color: AppTheme.textHint)),
           const SizedBox(height: 24),
-          ElevatedButton(
-            onPressed: _showPickerMenu,
-            child: const Text('立即添加'),
-          ),
+          ElevatedButton(onPressed: _showPickerMenu, child: const Text('立即添加')),
         ],
       ),
     );
   }
 
-  Widget _buildGrid(BuildContext context, IngestionState state,
-      IngestionController notifier) {
+  Widget _buildGrid(
+    BuildContext context,
+    IngestionState state,
+    IngestionController notifier,
+  ) {
     return GridView.builder(
       padding: const EdgeInsets.all(16),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -153,17 +156,15 @@ class _IngestionPageState extends ConsumerState<IngestionPage> {
 
         return Card(
           clipBehavior: Clip.antiAlias,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
           child: Stack(
             children: [
               Positioned.fill(
                 child: RotatedBox(
                   quarterTurns: rotation ~/ 90,
-                  child: Image.file(
-                    File(image.path),
-                    fit: BoxFit.cover,
-                  ),
+                  child: Image.file(File(image.path), fit: BoxFit.cover),
                 ),
               ),
               // Toolbar
@@ -178,14 +179,20 @@ class _IngestionPageState extends ConsumerState<IngestionPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       IconButton(
-                        icon: const Icon(Icons.rotate_right,
-                            size: 18, color: Colors.white),
+                        icon: const Icon(
+                          Icons.rotate_right,
+                          size: 18,
+                          color: Colors.white,
+                        ),
                         onPressed: () => notifier.rotateImage(index),
                         padding: EdgeInsets.zero,
                       ),
                       IconButton(
-                        icon: const Icon(Icons.delete_outline,
-                            size: 18, color: Colors.white),
+                        icon: const Icon(
+                          Icons.delete_outline,
+                          size: 18,
+                          color: Colors.white,
+                        ),
                         onPressed: () => notifier.removeImage(index),
                         padding: EdgeInsets.zero,
                       ),
@@ -198,8 +205,10 @@ class _IngestionPageState extends ConsumerState<IngestionPage> {
                 top: 8,
                 left: 8,
                 child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 2,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.black54,
                     borderRadius: BorderRadius.circular(4),
@@ -207,9 +216,10 @@ class _IngestionPageState extends ConsumerState<IngestionPage> {
                   child: Text(
                     '${index + 1}',
                     style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold),
+                      color: Colors.white,
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),

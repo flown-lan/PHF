@@ -81,7 +81,8 @@ class CryptoService implements ICryptoService {
     } catch (e) {
       if (e is SecretBoxAuthenticationError) {
         throw SecurityException(
-            'Decryption failed: Authentication tag mismatch.');
+          'Decryption failed: Authentication tag mismatch.',
+        );
       }
       throw SecurityException('Decryption error: $e');
     }
@@ -110,8 +111,9 @@ class CryptoService implements ICryptoService {
     try {
       while (offset < fileLen) {
         // Read chunk
-        final chunkLen =
-            (offset + _chunkSize > fileLen) ? fileLen - offset : _chunkSize;
+        final chunkLen = (offset + _chunkSize > fileLen)
+            ? fileLen - offset
+            : _chunkSize;
 
         final buffer = Uint8List(chunkLen);
         await _readExact(inputAccess, buffer);
@@ -169,15 +171,17 @@ class CryptoService implements ICryptoService {
         // 1. Read Packet Length (4 bytes)
         if (offset + 4 > fileLen) {
           throw SecurityException(
-              'Corrupted file: Incomplete header at end of file.');
+            'Corrupted file: Incomplete header at end of file.',
+          );
         }
 
         final headerBytes = Uint8List(4);
         await _readExact(inputAccess, headerBytes);
         offset += 4;
 
-        final packetLen =
-            ByteData.sublistView(headerBytes).getUint32(0, Endian.big);
+        final packetLen = ByteData.sublistView(
+          headerBytes,
+        ).getUint32(0, Endian.big);
 
         // 2. Read Packet (Nonce + Cipher + Tag)
         if (offset + packetLen > fileLen) {

@@ -3,13 +3,7 @@ import 'package:image_picker/image_picker.dart';
 
 part 'ingestion_state.freezed.dart';
 
-enum IngestionStatus {
-  idle,
-  processing,
-  saving,
-  success,
-  error,
-}
+enum IngestionStatus { idle, processing, saving, success, error }
 
 @freezed
 abstract class IngestionState with _$IngestionState {

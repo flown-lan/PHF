@@ -47,8 +47,10 @@ class TagSelector extends ConsumerWidget {
       ),
       error: (err, stack) => Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Text('加载标签失败: $err',
-            style: const TextStyle(color: AppTheme.errorRed, fontSize: 12)),
+        child: Text(
+          '加载标签失败: $err',
+          style: const TextStyle(color: AppTheme.errorRed, fontSize: 12),
+        ),
       ),
     );
   }
@@ -58,11 +60,14 @@ class TagSelector extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // 1. All Tags Library (The Selection Area)
-        const Text('全量标签 (点击切换选中)',
-            style: TextStyle(
-                fontSize: 12,
-                color: AppTheme.textHint,
-                fontWeight: FontWeight.bold)),
+        const Text(
+          '全量标签 (点击切换选中)',
+          style: TextStyle(
+            fontSize: 12,
+            color: AppTheme.textHint,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         const SizedBox(height: 12),
         Wrap(
           spacing: 8,
@@ -102,15 +107,22 @@ class TagSelector extends ConsumerWidget {
             children: [
               const Icon(Icons.swap_vert, size: 16, color: AppTheme.textHint),
               const SizedBox(width: 4),
-              const Text('拖拽排序 (决定展示优先级)',
-                  style: TextStyle(
-                      fontSize: 12,
-                      color: AppTheme.textHint,
-                      fontWeight: FontWeight.bold)),
+              const Text(
+                '拖拽排序 (决定展示优先级)',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: AppTheme.textHint,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               const Spacer(),
-              Text('${selectedTagIds.length} 个已选',
-                  style: const TextStyle(
-                      fontSize: 11, color: AppTheme.primaryTeal)),
+              Text(
+                '${selectedTagIds.length} 个已选',
+                style: const TextStyle(
+                  fontSize: 11,
+                  color: AppTheme.primaryTeal,
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 12),
@@ -154,9 +166,10 @@ class TagSelector extends ConsumerWidget {
   }
 
   Widget _buildReorderItem(List<Tag> allTags, String id, int index) {
-    final tag = allTags.firstWhere((t) => t.id == id,
-        orElse: () =>
-            Tag(id: id, name: '?', createdAt: DateTime(0), color: ''));
+    final tag = allTags.firstWhere(
+      (t) => t.id == id,
+      orElse: () => Tag(id: id, name: '?', createdAt: DateTime(0), color: ''),
+    );
     return Container(
       key: ValueKey('reorder_$id'),
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
@@ -179,16 +192,22 @@ class TagSelector extends ConsumerWidget {
             child: Text(
               '${index + 1}',
               style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 10,
-                  fontWeight: FontWeight.bold),
+                color: Colors.white,
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ),
-        title: Text(tag.name,
-            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
-        trailing:
-            const Icon(Icons.drag_handle, color: AppTheme.textHint, size: 20),
+        title: Text(
+          tag.name,
+          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+        ),
+        trailing: const Icon(
+          Icons.drag_handle,
+          color: AppTheme.textHint,
+          size: 20,
+        ),
       ),
     );
   }

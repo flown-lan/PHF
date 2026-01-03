@@ -21,8 +21,10 @@ import 'package:sqflite_sqlcipher/sqflite.dart';
 // Mock Services
 class MockPathProviderService extends Mock implements PathProviderService {
   @override
-  String getDatabasePath(String fileName) => p.join(Directory.systemTemp.path,
-      'test_tags_${DateTime.now().millisecondsSinceEpoch}.db');
+  String getDatabasePath(String fileName) => p.join(
+    Directory.systemTemp.path,
+    'test_tags_${DateTime.now().millisecondsSinceEpoch}.db',
+  );
   @override
   String get sandboxRoot => '/tmp';
 }
@@ -49,12 +51,15 @@ class TestDatabaseService extends SQLCipherDatabaseService {
     final path = pathService.getDatabasePath('test.db');
 
     // Use factory directly
-    final db = await databaseFactoryFfi.openDatabase(path,
-        options: OpenDatabaseOptions(
-            version: 1,
-            onCreate: (db, version) async {
-              await onCreate(db, version);
-            }));
+    final db = await databaseFactoryFfi.openDatabase(
+      path,
+      options: OpenDatabaseOptions(
+        version: 1,
+        onCreate: (db, version) async {
+          await onCreate(db, version);
+        },
+      ),
+    );
     _cachedDb = db;
     return _cachedDb!;
   }
@@ -85,8 +90,11 @@ void main() {
     final db = await dbService.database;
 
     // 1. Create a Person
-    await db.insert(
-        'persons', {'id': 'p1', 'nickname': 'Test', 'created_at_ms': 0});
+    await db.insert('persons', {
+      'id': 'p1',
+      'nickname': 'Test',
+      'created_at_ms': 0,
+    });
 
     // 2. Create a Record
     await db.insert('records', {
@@ -94,7 +102,7 @@ void main() {
       'person_id': 'p1',
       'created_at_ms': 0,
       'updated_at_ms': 0,
-      'status': 'archived'
+      'status': 'archived',
     });
 
     // 3. Create Tags
@@ -103,14 +111,15 @@ void main() {
 
     // 4. Create Image with Tags
     final img = MedicalImage(
-        id: 'i1',
-        recordId: 'r1',
-        encryptionKey: 'k',
-        thumbnailEncryptionKey: 'tk',
-        filePath: 'p',
-        thumbnailPath: 't',
-        createdAt: DateTime.now(),
-        tagIds: ['t1', 't2']);
+      id: 'i1',
+      recordId: 'r1',
+      encryptionKey: 'k',
+      thumbnailEncryptionKey: 'tk',
+      filePath: 'p',
+      thumbnailPath: 't',
+      createdAt: DateTime.now(),
+      tagIds: ['t1', 't2'],
+    );
 
     // 5. Save Image
     await imageRepo.saveImages([img]);
@@ -138,7 +147,7 @@ void main() {
       'color': '#FFFFFF',
       'order_index': 0,
       'is_custom': 0,
-      'created_at_ms': 1234567890
+      'created_at_ms': 1234567890,
     });
 
     final tags = await tagRepo.getAllTags();

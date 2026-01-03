@@ -82,8 +82,9 @@ class _ReviewEditPageState extends ConsumerState<ReviewEditPage> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('归档失败: $e')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('归档失败: $e')));
       }
     }
   }
@@ -104,8 +105,10 @@ class _ReviewEditPageState extends ConsumerState<ReviewEditPage> {
         actions: [
           TextButton(
             onPressed: _approve,
-            child: const Text('确认归档',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            child: const Text(
+              '确认归档',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
           ),
         ],
       ),
@@ -128,8 +131,8 @@ class _ReviewEditPageState extends ConsumerState<ReviewEditPage> {
                       if (img.ocrRawJson != null) {
                         try {
                           currentOcr = OCRResult.fromJson(
-                              jsonDecode(img.ocrRawJson!)
-                                  as Map<String, dynamic>);
+                            jsonDecode(img.ocrRawJson!) as Map<String, dynamic>,
+                          );
                         } catch (_) {}
                       }
 
@@ -138,18 +141,23 @@ class _ReviewEditPageState extends ConsumerState<ReviewEditPage> {
                           imagePath: img.filePath,
                           encryptionKey: img.encryptionKey,
                           fit: BoxFit.contain,
-                          builder: (BuildContext context,
-                              ImageProvider<Object> imageProvider) {
-                            return OCRHighlightView(
-                              imageProvider: imageProvider,
-                              ocrResult: currentOcr,
-                              actualImageSize:
-                                  (img.width != null && img.height != null)
-                                      ? Size(img.width!.toDouble(),
-                                          img.height!.toDouble())
+                          builder:
+                              (
+                                BuildContext context,
+                                ImageProvider<Object> imageProvider,
+                              ) {
+                                return OCRHighlightView(
+                                  imageProvider: imageProvider,
+                                  ocrResult: currentOcr,
+                                  actualImageSize:
+                                      (img.width != null && img.height != null)
+                                      ? Size(
+                                          img.width!.toDouble(),
+                                          img.height!.toDouble(),
+                                        )
                                       : null,
-                            );
-                          },
+                                );
+                              },
                         ),
                       );
                     },
@@ -167,15 +175,20 @@ class _ReviewEditPageState extends ConsumerState<ReviewEditPage> {
                               color: Colors.black.withValues(alpha: 0.6),
                               shape: BoxShape.circle,
                               border: Border.all(
-                                  color: Colors.white.withValues(alpha: 0.3),
-                                  width: 1),
+                                color: Colors.white.withValues(alpha: 0.3),
+                                width: 1,
+                              ),
                             ),
                             child: IconButton(
-                              icon: const Icon(Icons.chevron_left,
-                                  color: Colors.white, size: 28),
+                              icon: const Icon(
+                                Icons.chevron_left,
+                                color: Colors.white,
+                                size: 28,
+                              ),
                               onPressed: () => _pageController.previousPage(
-                                  duration: const Duration(milliseconds: 300),
-                                  curve: Curves.easeInOut),
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeInOut,
+                              ),
                             ),
                           ),
                         ),
@@ -191,15 +204,20 @@ class _ReviewEditPageState extends ConsumerState<ReviewEditPage> {
                               color: Colors.black.withValues(alpha: 0.6),
                               shape: BoxShape.circle,
                               border: Border.all(
-                                  color: Colors.white.withValues(alpha: 0.3),
-                                  width: 1),
+                                color: Colors.white.withValues(alpha: 0.3),
+                                width: 1,
+                              ),
                             ),
                             child: IconButton(
-                              icon: const Icon(Icons.chevron_right,
-                                  color: Colors.white, size: 28),
+                              icon: const Icon(
+                                Icons.chevron_right,
+                                color: Colors.white,
+                                size: 28,
+                              ),
                               onPressed: () => _pageController.nextPage(
-                                  duration: const Duration(milliseconds: 300),
-                                  curve: Curves.easeInOut),
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeInOut,
+                              ),
                             ),
                           ),
                         ),
@@ -213,19 +231,23 @@ class _ReviewEditPageState extends ConsumerState<ReviewEditPage> {
                     child: Center(
                       child: Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 6),
+                          horizontal: 16,
+                          vertical: 6,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.black.withValues(alpha: 0.5),
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(
-                              color: Colors.white.withValues(alpha: 0.2)),
+                            color: Colors.white.withValues(alpha: 0.2),
+                          ),
                         ),
                         child: Text(
                           '图片 ${_currentImageIndex + 1} / ${images.length} (请核对每页信息)',
                           style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold),
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
@@ -245,9 +267,13 @@ class _ReviewEditPageState extends ConsumerState<ReviewEditPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('基本信息 (可点击修改)',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16)),
+                    const Text(
+                      '基本信息 (可点击修改)',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
                     const SizedBox(height: 16),
                     TextField(
                       controller: _hospitalController,
@@ -291,19 +317,23 @@ class _ReviewEditPageState extends ConsumerState<ReviewEditPage> {
                           color: AppTheme.primaryTeal.withValues(alpha: 0.05),
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(
-                              color:
-                                  AppTheme.primaryTeal.withValues(alpha: 0.2)),
+                            color: AppTheme.primaryTeal.withValues(alpha: 0.2),
+                          ),
                         ),
                         child: Row(
                           children: [
-                            const Icon(Icons.auto_awesome,
-                                size: 16, color: AppTheme.primaryTeal),
+                            const Icon(
+                              Icons.auto_awesome,
+                              size: 16,
+                              color: AppTheme.primaryTeal,
+                            ),
                             const SizedBox(width: 8),
                             Text(
                               'OCR 置信度: ${(currentImage.ocrConfidence! * 100).toStringAsFixed(1)}%',
                               style: const TextStyle(
-                                  color: AppTheme.primaryTeal,
-                                  fontWeight: FontWeight.w500),
+                                color: AppTheme.primaryTeal,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ],
                         ),

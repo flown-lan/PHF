@@ -32,38 +32,33 @@ class ImageRepository extends BaseRepository implements IImageRepository {
     final batch = db.batch();
 
     for (var image in images) {
-      batch.insert(
-        'images',
-        {
-          'id': image.id,
-          'record_id': image.recordId,
-          'file_path': image.filePath,
-          'thumbnail_path': image.thumbnailPath,
-          'encryption_key': image.encryptionKey,
-          'thumbnail_encryption_key': image.thumbnailEncryptionKey,
-          'width': image.width,
-          'height': image.height,
-          'mime_type': image.mimeType,
-          'file_size': image.fileSize,
-          'page_index': image.displayOrder, // mapped
-          'created_at_ms': image.createdAt.millisecondsSinceEpoch,
-          'hospital_name': image.hospitalName,
-          'visit_date_ms': image.visitDate?.millisecondsSinceEpoch,
-          // Store tags (List<String> Ids) as JSON string in 'tags' column
-          'tags': jsonEncode(image.tagIds),
-        },
-        conflictAlgorithm: ConflictAlgorithm.replace,
-      );
+      batch.insert('images', {
+        'id': image.id,
+        'record_id': image.recordId,
+        'file_path': image.filePath,
+        'thumbnail_path': image.thumbnailPath,
+        'encryption_key': image.encryptionKey,
+        'thumbnail_encryption_key': image.thumbnailEncryptionKey,
+        'width': image.width,
+        'height': image.height,
+        'mime_type': image.mimeType,
+        'file_size': image.fileSize,
+        'page_index': image.displayOrder, // mapped
+        'created_at_ms': image.createdAt.millisecondsSinceEpoch,
+        'hospital_name': image.hospitalName,
+        'visit_date_ms': image.visitDate?.millisecondsSinceEpoch,
+        // Store tags (List<String> Ids) as JSON string in 'tags' column
+        'tags': jsonEncode(image.tagIds),
+      }, conflictAlgorithm: ConflictAlgorithm.replace);
 
       // Handle Tags Relationship
       if (image.tagIds.isNotEmpty) {
         // 1. Insert into image_tags
         for (var tagId in image.tagIds) {
-          batch.insert(
-            'image_tags',
-            {'image_id': image.id, 'tag_id': tagId},
-            conflictAlgorithm: ConflictAlgorithm.ignore,
-          );
+          batch.insert('image_tags', {
+            'image_id': image.id,
+            'tag_id': tagId,
+          }, conflictAlgorithm: ConflictAlgorithm.ignore);
         }
       }
     }
@@ -116,25 +111,35 @@ class ImageRepository extends BaseRepository implements IImageRepository {
 
     await db.transaction((txn) async {
       // 1. Delete OCR Task for this image
-      await txn
-          .delete('ocr_queue', where: 'image_id = ?', whereArgs: [imageId]);
+      await txn.delete(
+        'ocr_queue',
+        where: 'image_id = ?',
+        whereArgs: [imageId],
+      );
 
       // 2. Delete image and its tags
       await txn.delete('images', where: 'id = ?', whereArgs: [imageId]);
-      await txn
-          .delete('image_tags', where: 'image_id = ?', whereArgs: [imageId]);
+      await txn.delete(
+        'image_tags',
+        where: 'image_id = ?',
+        whereArgs: [imageId],
+      );
 
       // 3. Check remaining images for this record
       final List<Map<String, dynamic>> remaining = await txn.rawQuery(
-          'SELECT COUNT(*) as count FROM images WHERE record_id = ?',
-          [recordId]);
+        'SELECT COUNT(*) as count FROM images WHERE record_id = ?',
+        [recordId],
+      );
       final int count = Sqflite.firstIntValue(remaining) ?? 0;
 
       if (count == 0) {
         // 4. No images left, delete the entire Record and its search index
         await txn.delete('records', where: 'id = ?', whereArgs: [recordId]);
-        await txn.delete('ocr_search_index',
-            where: 'record_id = ?', whereArgs: [recordId]);
+        await txn.delete(
+          'ocr_search_index',
+          where: 'record_id = ?',
+          whereArgs: [recordId],
+        );
       } else {
         // 5. Still has images, sync caches
         await _syncRecordTagsCache(txn, recordId);
@@ -159,18 +164,24 @@ class ImageRepository extends BaseRepository implements IImageRepository {
 
     await db.transaction((txn) async {
       // 1. Update image tags column (local cache)
-      await txn.update('images', {'tags': jsonEncode(tagIds)},
-          where: 'id = ?', whereArgs: [imageId]);
+      await txn.update(
+        'images',
+        {'tags': jsonEncode(tagIds)},
+        where: 'id = ?',
+        whereArgs: [imageId],
+      );
 
       // 2. Update relational table
-      await txn
-          .delete('image_tags', where: 'image_id = ?', whereArgs: [imageId]);
+      await txn.delete(
+        'image_tags',
+        where: 'image_id = ?',
+        whereArgs: [imageId],
+      );
       for (var tagId in tagIds) {
-        await txn.insert(
-          'image_tags',
-          {'image_id': imageId, 'tag_id': tagId},
-          conflictAlgorithm: ConflictAlgorithm.ignore,
-        );
+        await txn.insert('image_tags', {
+          'image_id': imageId,
+          'tag_id': tagId,
+        }, conflictAlgorithm: ConflictAlgorithm.ignore);
       }
 
       // 3. Sync record cache
@@ -192,8 +203,11 @@ class ImageRepository extends BaseRepository implements IImageRepository {
   }
 
   @override
-  Future<void> updateImageMetadata(String imageId,
-      {String? hospitalName, DateTime? visitDate}) async {
+  Future<void> updateImageMetadata(
+    String imageId, {
+    String? hospitalName,
+    DateTime? visitDate,
+  }) async {
     final db = await dbService.database;
 
     // Get recordId before update
@@ -223,16 +237,16 @@ class ImageRepository extends BaseRepository implements IImageRepository {
   }
 
   @override
-  Future<void> updateOCRData(String imageId, String text,
-      {String? rawJson, double confidence = 0.0}) async {
+  Future<void> updateOCRData(
+    String imageId,
+    String text, {
+    String? rawJson,
+    double confidence = 0.0,
+  }) async {
     final db = await dbService.database;
     await db.update(
       'images',
-      {
-        'ocr_text': text,
-        'ocr_raw_json': rawJson,
-        'ocr_confidence': confidence,
-      },
+      {'ocr_text': text, 'ocr_raw_json': rawJson, 'ocr_confidence': confidence},
       where: 'id = ?',
       whereArgs: [imageId],
     );
@@ -241,17 +255,21 @@ class ImageRepository extends BaseRepository implements IImageRepository {
   Future<void> _syncRecordTagsCache(Transaction txn, String recordId) async {
     // 1. Query all tags for this record
     // Join images -> image_tags -> tags to get Names
-    final List<Map<String, dynamic>> results = await txn.rawQuery('''
+    final List<Map<String, dynamic>> results = await txn.rawQuery(
+      '''
       SELECT DISTINCT t.name 
       FROM tags t
       INNER JOIN image_tags it ON t.id = it.tag_id
       INNER JOIN images i ON it.image_id = i.id
       WHERE i.record_id = ?
       ORDER BY t.created_at_ms ASC
-    ''', [recordId]);
+    ''',
+      [recordId],
+    );
 
-    final List<String> tagNames =
-        results.map((row) => row['name'] as String).toList();
+    final List<String> tagNames = results
+        .map((row) => row['name'] as String)
+        .toList();
 
     // 2. Update record
     await txn.update(
@@ -263,7 +281,9 @@ class ImageRepository extends BaseRepository implements IImageRepository {
   }
 
   Future<void> _syncRecordMetadataCache(
-      DatabaseExecutor txn, String recordId) async {
+    DatabaseExecutor txn,
+    String recordId,
+  ) async {
     // 1. 获取所有属于该 Record 的图片汇总信息
     final List<Map<String, dynamic>> images = await txn.query(
       'images',
@@ -314,8 +334,9 @@ class ImageRepository extends BaseRepository implements IImageRepository {
     final Map<String, dynamic> updates = {};
     if (minDate != null) {
       updates['visit_date_ms'] = minDate;
-      updates['visit_date_iso'] =
-          DateTime.fromMillisecondsSinceEpoch(minDate).toIso8601String();
+      updates['visit_date_iso'] = DateTime.fromMillisecondsSinceEpoch(
+        minDate,
+      ).toIso8601String();
     }
     if (maxDate != null) {
       updates['visit_end_date_ms'] = maxDate;
@@ -364,13 +385,14 @@ class ImageRepository extends BaseRepository implements IImageRepository {
       'ocrText': row['ocr_text'],
       'ocrRawJson': row['ocr_raw_json'],
       'ocrConfidence': row['ocr_confidence'],
-      'createdAt':
-          DateTime.fromMillisecondsSinceEpoch(row['created_at_ms'] as int)
-              .toIso8601String(),
+      'createdAt': DateTime.fromMillisecondsSinceEpoch(
+        row['created_at_ms'] as int,
+      ).toIso8601String(),
       'hospitalName': row['hospital_name'],
       'visitDate': row['visit_date_ms'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(row['visit_date_ms'] as int)
-              .toIso8601String()
+          ? DateTime.fromMillisecondsSinceEpoch(
+              row['visit_date_ms'] as int,
+            ).toIso8601String()
           : null,
       'tagIds': tags,
     });

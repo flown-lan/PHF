@@ -143,7 +143,9 @@ class IngestionController extends _$IngestionController {
   Future<void> submit() async {
     if (state.rawImages.isEmpty) {
       state = state.copyWith(
-          status: IngestionStatus.error, errorMessage: "需至少包含一张图片");
+        status: IngestionStatus.error,
+        errorMessage: "需至少包含一张图片",
+      );
       return;
     }
 
@@ -166,53 +168,57 @@ class IngestionController extends _$IngestionController {
       final List<MedicalImage> medicalImages = [];
 
       // Process images concurrently
-      await Future.wait(state.rawImages.asMap().entries.map((entry) async {
-        final index = entry.key;
-        final xFile = entry.value;
-        final rawBytes = await xFile.readAsBytes();
+      await Future.wait(
+        state.rawImages.asMap().entries.map((entry) async {
+          final index = entry.key;
+          final xFile = entry.value;
+          final rawBytes = await xFile.readAsBytes();
 
-        // 1. Optimized Image Processing (Single Decode)
-        final result = await imageProcessing.processFull(
-          data: rawBytes,
-          rotationAngle: state.rotations[index],
-          quality: 80,
-        );
+          // 1. Optimized Image Processing (Single Decode)
+          final result = await imageProcessing.processFull(
+            data: rawBytes,
+            rotationAngle: state.rotations[index],
+            quality: 80,
+          );
 
-        // 2. Encrypt & Save Main File (Generate New Key)
-        final fileResult = await fileSecurity.saveEncryptedFile(
-          data: result.mainBytes,
-          targetDir: pathService.imagesDirPath,
-        );
+          // 2. Encrypt & Save Main File (Generate New Key)
+          final fileResult = await fileSecurity.saveEncryptedFile(
+            data: result.mainBytes,
+            targetDir: pathService.imagesDirPath,
+          );
 
-        // 3. Encrypt & Save Thumbnail (NEW INDEPENDENT Key - T16.1)
-        final thumbDir = '${pathService.sandboxRoot}/images/thumbnails';
-        final thumbResult = await fileSecurity.saveEncryptedFile(
-          data: result.thumbBytes,
-          targetDir: thumbDir,
-        );
+          // 3. Encrypt & Save Thumbnail (NEW INDEPENDENT Key - T16.1)
+          final thumbDir = '${pathService.sandboxRoot}/images/thumbnails';
+          final thumbResult = await fileSecurity.saveEncryptedFile(
+            data: result.thumbBytes,
+            targetDir: thumbDir,
+          );
 
-        // 4. Create Entity
-        medicalImages.add(MedicalImage(
-          id: const Uuid().v4(),
-          recordId: recordId,
-          encryptionKey: fileResult.base64Key,
-          thumbnailEncryptionKey: thumbResult.base64Key, // Independent key
-          filePath: 'images/${fileResult.relativePath}',
-          thumbnailPath: 'images/thumbnails/${thumbResult.relativePath}',
-          mimeType: 'image/jpeg',
-          fileSize: result.mainBytes.lengthInBytes,
-          displayOrder: index,
-          width: result.width,
-          height: result.height,
-          createdAt: DateTime.now(),
-          hospitalName: defaultHospital,
-          visitDate: defaultDate,
-          tagIds: state.selectedTagIds,
-        ));
+          // 4. Create Entity
+          medicalImages.add(
+            MedicalImage(
+              id: const Uuid().v4(),
+              recordId: recordId,
+              encryptionKey: fileResult.base64Key,
+              thumbnailEncryptionKey: thumbResult.base64Key, // Independent key
+              filePath: 'images/${fileResult.relativePath}',
+              thumbnailPath: 'images/thumbnails/${thumbResult.relativePath}',
+              mimeType: 'image/jpeg',
+              fileSize: result.mainBytes.lengthInBytes,
+              displayOrder: index,
+              width: result.width,
+              height: result.height,
+              createdAt: DateTime.now(),
+              hospitalName: defaultHospital,
+              visitDate: defaultDate,
+              tagIds: state.selectedTagIds,
+            ),
+          );
 
-        // 5. 关键优化：一旦完成处理并安全存入加密沙盒，立即擦除原始临时文件
-        await SecureWipeHelper.wipe(File(xFile.path)).catchError((_) {});
-      }));
+          // 5. 关键优化：一旦完成处理并安全存入加密沙盒，立即擦除原始临时文件
+          await SecureWipeHelper.wipe(File(xFile.path)).catchError((_) {});
+        }),
+      );
 
       // 6. Create Record
       final record = MedicalRecord(
@@ -257,7 +263,9 @@ class IngestionController extends _$IngestionController {
       state = const IngestionState(status: IngestionStatus.success);
     } catch (e) {
       state = state.copyWith(
-          status: IngestionStatus.error, errorMessage: e.toString());
+        status: IngestionStatus.error,
+        errorMessage: e.toString(),
+      );
       // Cleanup even on error
       await _cleanupFiles(state.rawImages);
     }

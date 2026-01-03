@@ -38,9 +38,11 @@ void main() {
 
     when(mockPathService.sandboxRoot).thenReturn('/tmp');
     final validPng = base64Decode(
-        'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==');
-    when(mockFileHelper.decryptDataFromFile(any, any))
-        .thenAnswer((_) async => validPng);
+      'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==',
+    );
+    when(
+      mockFileHelper.decryptDataFromFile(any, any),
+    ).thenAnswer((_) async => validPng);
   });
 
   Widget createSubject(String recordId) {
@@ -52,9 +54,7 @@ void main() {
         pathProviderServiceProvider.overrideWithValue(mockPathService),
         ocrPendingCountProvider.overrideWith((ref) => Stream.value(0)),
       ],
-      child: MaterialApp(
-        home: RecordDetailPage(recordId: recordId),
-      ),
+      child: MaterialApp(home: RecordDetailPage(recordId: recordId)),
     );
   }
 
@@ -82,34 +82,44 @@ void main() {
       createdAt: DateTime.now(),
     );
 
-    when(mockRecordRepo.getRecordById(recordId))
-        .thenAnswer((_) async => record);
-    when(mockImageRepo.getImagesForRecord(recordId))
-        .thenAnswer((_) async => [image]);
+    when(
+      mockRecordRepo.getRecordById(recordId),
+    ).thenAnswer((_) async => record);
+    when(
+      mockImageRepo.getImagesForRecord(recordId),
+    ).thenAnswer((_) async => [image]);
 
     await tester.pumpWidget(createSubject(recordId));
     await tester.pump(const Duration(milliseconds: 500));
 
     // Verify Metadata
     expect(find.text('Detail Hospital'), findsOneWidget);
-    expect(find.text('2023-10-01'),
-        findsOneWidget); // DateFormat changed to yyyy-MM-dd
-    expect(find.text('Some notes'),
-        findsNothing); // Notes removed from detail view in T16
-    expect(find.text('Tag1'),
-        findsNothing); // Record-level Tags removed from split-view detail
+    expect(
+      find.text('2023-10-01'),
+      findsOneWidget,
+    ); // DateFormat changed to yyyy-MM-dd
+    expect(
+      find.text('Some notes'),
+      findsNothing,
+    ); // Notes removed from detail view in T16
+    expect(
+      find.text('Tag1'),
+      findsNothing,
+    ); // Record-level Tags removed from split-view detail
     expect(find.text('Tag2'), findsNothing);
 
     // Verify Image Grid
     expect(find.byType(SecureImage), findsOneWidget);
   });
 
-  testWidgets('RecordDetailPage shows error if record not found',
-      (tester) async {
+  testWidgets('RecordDetailPage shows error if record not found', (
+    tester,
+  ) async {
     const recordId = 'r_missing';
     when(mockRecordRepo.getRecordById(recordId)).thenAnswer((_) async => null);
-    when(mockImageRepo.getImagesForRecord(recordId))
-        .thenAnswer((_) async => []);
+    when(
+      mockImageRepo.getImagesForRecord(recordId),
+    ).thenAnswer((_) async => []);
 
     await tester.pumpWidget(createSubject(recordId));
     await tester.pump(const Duration(milliseconds: 500));
@@ -139,10 +149,12 @@ void main() {
       ocrText: 'Recognized Text Content',
     );
 
-    when(mockRecordRepo.getRecordById(recordId))
-        .thenAnswer((_) async => record);
-    when(mockImageRepo.getImagesForRecord(recordId))
-        .thenAnswer((_) async => [image]);
+    when(
+      mockRecordRepo.getRecordById(recordId),
+    ).thenAnswer((_) async => record);
+    when(
+      mockImageRepo.getImagesForRecord(recordId),
+    ).thenAnswer((_) async => [image]);
 
     await tester.pumpWidget(createSubject(recordId));
     await tester.pump(const Duration(milliseconds: 500));
@@ -158,8 +170,9 @@ void main() {
     expect(find.text('Recognized Text Content'), findsOneWidget);
   });
 
-  testWidgets('RecordDetailPage allows editing and saving metadata',
-      (tester) async {
+  testWidgets('RecordDetailPage allows editing and saving metadata', (
+    tester,
+  ) async {
     const recordId = 'r1';
     final record = MedicalRecord(
       id: recordId,
@@ -183,18 +196,26 @@ void main() {
       visitDate: DateTime(2023, 10, 1),
     );
 
-    when(mockRecordRepo.getRecordById(recordId))
-        .thenAnswer((_) async => record);
-    when(mockImageRepo.getImagesForRecord(recordId))
-        .thenAnswer((_) async => [image]);
-    when(mockImageRepo.updateImageMetadata('i1',
-            hospitalName: anyNamed('hospitalName'),
-            visitDate: anyNamed('visitDate')))
-        .thenAnswer((_) async {});
-    when(mockRecordRepo.updateRecordMetadata(recordId,
-            hospitalName: anyNamed('hospitalName'),
-            visitDate: anyNamed('visitDate')))
-        .thenAnswer((_) async {});
+    when(
+      mockRecordRepo.getRecordById(recordId),
+    ).thenAnswer((_) async => record);
+    when(
+      mockImageRepo.getImagesForRecord(recordId),
+    ).thenAnswer((_) async => [image]);
+    when(
+      mockImageRepo.updateImageMetadata(
+        'i1',
+        hospitalName: anyNamed('hospitalName'),
+        visitDate: anyNamed('visitDate'),
+      ),
+    ).thenAnswer((_) async {});
+    when(
+      mockRecordRepo.updateRecordMetadata(
+        recordId,
+        hospitalName: anyNamed('hospitalName'),
+        visitDate: anyNamed('visitDate'),
+      ),
+    ).thenAnswer((_) async {});
 
     await tester.pumpWidget(createSubject(recordId));
     await tester.pump(const Duration(milliseconds: 500));
@@ -213,17 +234,21 @@ void main() {
     await tester.pump(const Duration(milliseconds: 500));
 
     // Verify repository calls
-    verify(mockImageRepo.updateImageMetadata(
-      'i1',
-      hospitalName: 'New Hospital',
-      visitDate: anyNamed('visitDate'),
-    )).called(1);
+    verify(
+      mockImageRepo.updateImageMetadata(
+        'i1',
+        hospitalName: 'New Hospital',
+        visitDate: anyNamed('visitDate'),
+      ),
+    ).called(1);
 
-    verify(mockRecordRepo.updateRecordMetadata(
-      recordId,
-      hospitalName: 'New Hospital',
-      visitDate: anyNamed('visitDate'),
-    )).called(1);
+    verify(
+      mockRecordRepo.updateRecordMetadata(
+        recordId,
+        hospitalName: 'New Hospital',
+        visitDate: anyNamed('visitDate'),
+      ),
+    ).called(1);
 
     expect(find.text('保存成功'), findsOneWidget);
   });

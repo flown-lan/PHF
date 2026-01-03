@@ -25,8 +25,9 @@ void main() {
       final existingKey = Uint8List.fromList(List.filled(32, 1));
       final base64Key = base64Encode(existingKey);
 
-      when(mockStorage.read(key: 'phf_master_key_v1'))
-          .thenAnswer((_) async => base64Key);
+      when(
+        mockStorage.read(key: 'phf_master_key_v1'),
+      ).thenAnswer((_) async => base64Key);
 
       // Act
       final result = await manager.getMasterKey();
@@ -35,13 +36,15 @@ void main() {
       expect(result, existingKey);
       verify(mockStorage.read(key: 'phf_master_key_v1')).called(1);
       verifyNever(
-          mockStorage.write(key: anyNamed('key'), value: anyNamed('value')));
+        mockStorage.write(key: anyNamed('key'), value: anyNamed('value')),
+      );
     });
 
     test('getMasterKey generates new key if missing', () async {
       // Arrange
-      when(mockStorage.read(key: 'phf_master_key_v1'))
-          .thenAnswer((_) async => null);
+      when(
+        mockStorage.read(key: 'phf_master_key_v1'),
+      ).thenAnswer((_) async => null);
 
       // Act
       final result = await manager.getMasterKey();
@@ -51,8 +54,12 @@ void main() {
       verify(mockStorage.read(key: 'phf_master_key_v1')).called(1);
 
       // Capture the write
-      final verification = verify(mockStorage.write(
-          key: 'phf_master_key_v1', value: captureAnyNamed('value')));
+      final verification = verify(
+        mockStorage.write(
+          key: 'phf_master_key_v1',
+          value: captureAnyNamed('value'),
+        ),
+      );
       verification.called(1);
 
       // Verify stored value matches returned value
@@ -65,8 +72,9 @@ void main() {
       final existingSalt = Uint8List.fromList(List.filled(16, 2));
       final base64Salt = base64Encode(existingSalt);
 
-      when(mockStorage.read(key: 'phf_user_salt_v1'))
-          .thenAnswer((_) async => base64Salt);
+      when(
+        mockStorage.read(key: 'phf_user_salt_v1'),
+      ).thenAnswer((_) async => base64Salt);
 
       // Act
       final result = await manager.getUserSalt();
@@ -77,8 +85,9 @@ void main() {
 
     test('getUserSalt generates new salt if missing', () async {
       // Arrange
-      when(mockStorage.read(key: 'phf_user_salt_v1'))
-          .thenAnswer((_) async => null);
+      when(
+        mockStorage.read(key: 'phf_user_salt_v1'),
+      ).thenAnswer((_) async => null);
 
       // Act
       final result = await manager.getUserSalt();
@@ -86,9 +95,9 @@ void main() {
       // Assert
       expect(result.length, 16);
 
-      verify(mockStorage.write(
-              key: 'phf_user_salt_v1', value: anyNamed('value')))
-          .called(1);
+      verify(
+        mockStorage.write(key: 'phf_user_salt_v1', value: anyNamed('value')),
+      ).called(1);
     });
 
     test('wipeAll deletes both keys', () async {

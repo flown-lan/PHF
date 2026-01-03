@@ -27,13 +27,13 @@ void main() {
   });
 
   group('SQLCipherDatabaseService Initialization Logic', () {
-    test('Should retrieve master key and path before opening database',
-        () async {
+    test('Should retrieve master key and path before opening database', () async {
       // Arrange
       final dummyKey = Uint8List.fromList(List.filled(32, 1));
       when(mockKeyManager.getMasterKey()).thenAnswer((_) async => dummyKey);
-      when(mockPathService.getDatabasePath(any))
-          .thenReturn('/mock/path/phf_encrypted.db');
+      when(
+        mockPathService.getDatabasePath(any),
+      ).thenReturn('/mock/path/phf_encrypted.db');
 
       // Note: We cannot easily mock the static/global openDatabase from sqflite
       // without Dependency Injection or FFI in this unit test scope.

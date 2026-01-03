@@ -79,8 +79,11 @@ class _GlobalSearchPageState extends ConsumerState<GlobalSearchPage> {
           }
           if (results.isEmpty) {
             return const Center(
-                child: Text('输入关键词开始搜索',
-                    style: TextStyle(color: AppTheme.textHint)));
+              child: Text(
+                '输入关键词开始搜索',
+                style: TextStyle(color: AppTheme.textHint),
+              ),
+            );
           }
           return ListView.separated(
             padding: const EdgeInsets.all(16),
@@ -128,7 +131,8 @@ class _SearchResultCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute<void>(
-              builder: (_) => RecordDetailPage(recordId: result.record.id)),
+            builder: (_) => RecordDetailPage(recordId: result.record.id),
+          ),
         );
       },
       child: Container(
@@ -141,7 +145,7 @@ class _SearchResultCard extends StatelessWidget {
               color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 4,
               offset: const Offset(0, 2),
-            )
+            ),
           ],
         ),
         child: Column(
@@ -152,21 +156,28 @@ class _SearchResultCard extends StatelessWidget {
               padding: const EdgeInsets.all(12),
               child: Row(
                 children: [
-                  const Icon(Icons.local_hospital,
-                      size: 16, color: AppTheme.primaryTeal),
+                  const Icon(
+                    Icons.local_hospital,
+                    size: 16,
+                    color: AppTheme.primaryTeal,
+                  ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       result.record.hospitalName ?? '未填写',
                       style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 14),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   Text(
                     DateFormat('yyyy-MM-dd').format(result.record.notedAt),
-                    style: AppTheme.monoStyle
-                        .copyWith(fontSize: 12, color: AppTheme.textHint),
+                    style: AppTheme.monoStyle.copyWith(
+                      fontSize: 12,
+                      color: AppTheme.textHint,
+                    ),
                   ),
                 ],
               ),
@@ -179,13 +190,14 @@ class _SearchResultCard extends StatelessWidget {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Icon(Icons.text_snippet_outlined,
-                        size: 16, color: AppTheme.textHint),
+                    const Icon(
+                      Icons.text_snippet_outlined,
+                      size: 16,
+                      color: AppTheme.textHint,
+                    ),
                     const SizedBox(width: 8),
                     Expanded(
-                      child: RichText(
-                        text: _parseSnippet(result.snippet),
-                      ),
+                      child: RichText(text: _parseSnippet(result.snippet)),
                     ),
                   ],
                 ),
@@ -215,30 +227,36 @@ class _SearchResultCard extends StatelessWidget {
     for (final match in exp.allMatches(snippet)) {
       // Add text before <b>
       if (match.start > lastIndex) {
-        spans.add(TextSpan(
-          text: snippet.substring(lastIndex, match.start),
-          style: const TextStyle(color: AppTheme.textSecondary, fontSize: 13),
-        ));
+        spans.add(
+          TextSpan(
+            text: snippet.substring(lastIndex, match.start),
+            style: const TextStyle(color: AppTheme.textSecondary, fontSize: 13),
+          ),
+        );
       }
       // Add text inside <b>
-      spans.add(TextSpan(
-        text: match.group(2), // The content inside <b>...</b>
-        style: const TextStyle(
-          color: AppTheme.primaryTeal,
-          fontWeight: FontWeight.bold,
-          backgroundColor: Color(0xFFE0F2F1), // Light teal bg
-          fontSize: 13,
+      spans.add(
+        TextSpan(
+          text: match.group(2), // The content inside <b>...</b>
+          style: const TextStyle(
+            color: AppTheme.primaryTeal,
+            fontWeight: FontWeight.bold,
+            backgroundColor: Color(0xFFE0F2F1), // Light teal bg
+            fontSize: 13,
+          ),
         ),
-      ));
+      );
       lastIndex = match.end;
     }
 
     // Add remaining text
     if (lastIndex < snippet.length) {
-      spans.add(TextSpan(
-        text: snippet.substring(lastIndex),
-        style: const TextStyle(color: AppTheme.textSecondary, fontSize: 13),
-      ));
+      spans.add(
+        TextSpan(
+          text: snippet.substring(lastIndex),
+          style: const TextStyle(color: AppTheme.textSecondary, fontSize: 13),
+        ),
+      );
     }
 
     return TextSpan(children: spans);

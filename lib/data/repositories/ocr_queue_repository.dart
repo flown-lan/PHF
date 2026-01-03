@@ -82,16 +82,21 @@ class OCRQueueRepository extends BaseRepository implements IOCRQueueRepository {
       status: OCRJobStatus.values.firstWhere((e) => e.name == row['status']),
       retryCount: row['retry_count'] as int,
       lastError: row['last_error'] as String?,
-      createdAt:
-          DateTime.fromMillisecondsSinceEpoch(row['created_at_ms'] as int),
-      updatedAt:
-          DateTime.fromMillisecondsSinceEpoch(row['updated_at_ms'] as int),
+      createdAt: DateTime.fromMillisecondsSinceEpoch(
+        row['created_at_ms'] as int,
+      ),
+      updatedAt: DateTime.fromMillisecondsSinceEpoch(
+        row['updated_at_ms'] as int,
+      ),
     );
   }
 
   @override
-  Future<void> updateStatus(String id, OCRJobStatus status,
-      {String? error}) async {
+  Future<void> updateStatus(
+    String id,
+    OCRJobStatus status, {
+    String? error,
+  }) async {
     final db = await dbService.database;
     await db.update(
       'ocr_queue',
@@ -117,10 +122,11 @@ class OCRQueueRepository extends BaseRepository implements IOCRQueueRepository {
   @override
   Future<int> getPendingCount() async {
     final db = await dbService.database;
-    final count = Sqflite.firstIntValue(await db.rawQuery(
-      'SELECT COUNT(*) FROM ocr_queue WHERE status = ?',
-      [OCRJobStatus.pending.name],
-    ));
+    final count = Sqflite.firstIntValue(
+      await db.rawQuery('SELECT COUNT(*) FROM ocr_queue WHERE status = ?', [
+        OCRJobStatus.pending.name,
+      ]),
+    );
     return count ?? 0;
   }
 

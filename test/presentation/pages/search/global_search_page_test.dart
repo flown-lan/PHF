@@ -9,9 +9,7 @@ import 'package:phf/data/repositories/interfaces/search_repository.dart';
 import 'package:phf/logic/providers/core_providers.dart';
 import 'package:phf/presentation/pages/search/global_search_page.dart';
 
-@GenerateNiceMocks([
-  MockSpec<ISearchRepository>(),
-])
+@GenerateNiceMocks([MockSpec<ISearchRepository>()])
 import 'global_search_page_test.mocks.dart';
 
 void main() {
@@ -23,12 +21,8 @@ void main() {
 
   Widget createSubject() {
     return ProviderScope(
-      overrides: [
-        searchRepositoryProvider.overrideWithValue(mockSearchRepo),
-      ],
-      child: const MaterialApp(
-        home: GlobalSearchPage(),
-      ),
+      overrides: [searchRepositoryProvider.overrideWithValue(mockSearchRepo)],
+      child: const MaterialApp(home: GlobalSearchPage()),
     );
   }
 
@@ -42,8 +36,10 @@ void main() {
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
     );
-    final result =
-        SearchResult(record: record, snippet: 'Found <b>Hospital</b>');
+    final result = SearchResult(
+      record: record,
+      snippet: 'Found <b>Hospital</b>',
+    );
 
     when(mockSearchRepo.search(any, any)).thenAnswer((_) async => [result]);
 

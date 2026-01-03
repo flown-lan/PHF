@@ -34,12 +34,14 @@ void main() {
       final log = <MethodCall>[];
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(
-              const MethodChannel(
-                  'be.tramckrijte.workmanager/foreground_channel_work_manager'),
-              (methodCall) async {
-        log.add(methodCall);
-        return true;
-      });
+            const MethodChannel(
+              'be.tramckrijte.workmanager/foreground_channel_work_manager',
+            ),
+            (methodCall) async {
+              log.add(methodCall);
+              return true;
+            },
+          );
 
       await service.initialize();
 
@@ -56,12 +58,14 @@ void main() {
       final log = <MethodCall>[];
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(
-              const MethodChannel(
-                  'be.tramckrijte.workmanager/foreground_channel_work_manager'),
-              (methodCall) async {
-        log.add(methodCall);
-        return true;
-      });
+            const MethodChannel(
+              'be.tramckrijte.workmanager/foreground_channel_work_manager',
+            ),
+            (methodCall) async {
+              log.add(methodCall);
+              return true;
+            },
+          );
 
       await service.triggerProcessing();
 
@@ -81,12 +85,14 @@ void main() {
       final log = <MethodCall>[];
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(
-              const MethodChannel(
-                  'be.tramckrijte.workmanager/foreground_channel_work_manager'),
-              (methodCall) async {
-        log.add(methodCall);
-        return true;
-      });
+            const MethodChannel(
+              'be.tramckrijte.workmanager/foreground_channel_work_manager',
+            ),
+            (methodCall) async {
+              log.add(methodCall);
+              return true;
+            },
+          );
 
       await service.initialize();
 
@@ -103,12 +109,14 @@ void main() {
       final log = <MethodCall>[];
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(
-              const MethodChannel(
-                  'be.tramckrijte.workmanager/foreground_channel_work_manager'),
-              (methodCall) async {
-        log.add(methodCall);
-        return true;
-      });
+            const MethodChannel(
+              'be.tramckrijte.workmanager/foreground_channel_work_manager',
+            ),
+            (methodCall) async {
+              log.add(methodCall);
+              return true;
+            },
+          );
 
       await service.triggerProcessing();
 

@@ -55,8 +55,9 @@ void main() {
 
     void setupMocks() {
       when(mockPathProviderService.sandboxRoot).thenReturn('/mock/sandbox');
-      when(mockPathProviderService.getSecureFile(any))
-          .thenAnswer((realInvocation) {
+      when(mockPathProviderService.getSecureFile(any)).thenAnswer((
+        realInvocation,
+      ) {
         final path = realInvocation.positionalArguments[0] as String;
         return Future.value(File('/mock/sandbox/$path'));
       });
@@ -114,11 +115,12 @@ void main() {
         0x08, 0x06, 0x00, 0x00, 0x00, 0x1F, 0x15, 0xC4, 0x89, 0x00, 0x00, 0x00,
         0x0A, 0x49, 0x44, 0x41, 0x54, 0x78, 0x9C, 0x63, 0x00, 0x01, 0x00, 0x00,
         0x05, 0x00, 0x01, 0x0D, 0x0A, 0x2D, 0xB4, 0x00, 0x00, 0x00, 0x00, 0x49,
-        0x45, 0x4E, 0x44, 0xAE, 0x42, 0x60, 0x82
+        0x45, 0x4E, 0x44, 0xAE, 0x42, 0x60, 0x82,
       ]);
 
-      when(mockFileSecurityHelper.decryptDataFromFile(any, any))
-          .thenAnswer((_) async => fakePng);
+      when(
+        mockFileSecurityHelper.decryptDataFromFile(any, any),
+      ).thenAnswer((_) async => fakePng);
 
       await widgetTester.pumpWidget(createSubject(recordWithImage));
 
@@ -133,7 +135,11 @@ void main() {
     testWidgets('displays tags if present on images', (widgetTester) async {
       setupMocks();
       final tag = Tag(
-          id: 't1', name: 'Tag A', createdAt: DateTime.now(), color: '#008080');
+        id: 't1',
+        name: 'Tag A',
+        createdAt: DateTime.now(),
+        color: '#008080',
+      );
       when(mockTagRepository.getAllTags()).thenAnswer((_) async => [tag]);
 
       final image = MedicalImage(

@@ -19,7 +19,6 @@ import 'interfaces/image_service.dart';
 
 class ImageProcessingService implements IImageService {
   @override
-
   /// 将原始图片数据转换为 WebP 格式
   ///
   /// [quality] 控制压缩质量。
@@ -41,7 +40,6 @@ class ImageProcessingService implements IImageService {
   }
 
   @override
-
   /// 生成缩略图数据 (WebP 格式)
   Future<Uint8List> generateThumbnail({
     required Uint8List data,
@@ -64,7 +62,6 @@ class ImageProcessingService implements IImageService {
   }
 
   @override
-
   /// 旋转图像
   Future<Uint8List> rotateImage({
     required Uint8List data,

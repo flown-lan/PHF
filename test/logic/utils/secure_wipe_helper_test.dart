@@ -10,7 +10,8 @@ void main() {
     setUp(() async {
       final tempDir = Directory.systemTemp;
       testFile = File(
-          '${tempDir.path}/wipe_test_${DateTime.now().millisecondsSinceEpoch}.bin');
+        '${tempDir.path}/wipe_test_${DateTime.now().millisecondsSinceEpoch}.bin',
+      );
     });
 
     tearDown(() async {

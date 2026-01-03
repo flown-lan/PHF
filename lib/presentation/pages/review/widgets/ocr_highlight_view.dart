@@ -30,10 +30,7 @@ class OCRHighlightView extends StatelessWidget {
             actualImageSize!,
             BoxFit.contain, // Default fit
           ),
-          child: Image(
-            image: imageProvider,
-            fit: BoxFit.contain,
-          ),
+          child: Image(image: imageProvider, fit: BoxFit.contain),
         );
       },
     );

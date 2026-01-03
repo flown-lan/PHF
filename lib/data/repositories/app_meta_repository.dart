@@ -42,11 +42,10 @@ class AppMetaRepository {
   /// 通用写入
   Future<void> put(String key, String value) async {
     final db = await _dbService.database;
-    await db.insert(
-      _table,
-      {'key': key, 'value': value},
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+    await db.insert(_table, {
+      'key': key,
+      'value': value,
+    }, conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
   /// 检查是否已设置应用锁

@@ -8,8 +8,10 @@ void main() {
       final result = SmartExtractor.extract(text, 0.95);
 
       expect(result.visitDate, DateTime(2023, 5, 12));
-      expect(result.confidenceScore,
-          closeTo(0.85, 0.01)); // -0.1 for missing hospital
+      expect(
+        result.confidenceScore,
+        closeTo(0.85, 0.01),
+      ); // -0.1 for missing hospital
     });
 
     test('Should extract date in Chinese format', () {
@@ -60,8 +62,10 @@ void main() {
       const text = '科室: 骨科中心\n打印日期: 2023-10-10\n广州华侨医院';
       final result = SmartExtractor.extract(text, 1.0);
 
-      expect(result.hospitalName,
-          '广州华侨医院'); // "骨科中心" might be matched if not careful, but "医院" is stronger or context based
+      expect(
+        result.hospitalName,
+        '广州华侨医院',
+      ); // "骨科中心" might be matched if not careful, but "医院" is stronger or context based
       expect(result.visitDate, DateTime(2023, 10, 10));
     });
 

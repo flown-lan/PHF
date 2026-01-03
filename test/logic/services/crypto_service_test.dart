@@ -28,10 +28,7 @@ void main() {
       final key = service.generateRandomKey();
       final plaintext = Uint8List.fromList([1, 2, 3, 4, 5]);
 
-      final ciphertext = await service.encrypt(
-        data: plaintext,
-        key: key,
-      );
+      final ciphertext = await service.encrypt(data: plaintext, key: key);
 
       // Packet: Nonce(12) + Cipher(5) + Tag(16) = 33 bytes
       expect(ciphertext.length, 12 + 5 + 16);
@@ -49,10 +46,7 @@ void main() {
       final badKey = service.generateRandomKey();
       final plaintext = Uint8List.fromList([1, 2, 3]);
 
-      final ciphertext = await service.encrypt(
-        data: plaintext,
-        key: key,
-      );
+      final ciphertext = await service.encrypt(data: plaintext, key: key);
 
       expect(
         () => service.decrypt(encryptedData: ciphertext, key: badKey),

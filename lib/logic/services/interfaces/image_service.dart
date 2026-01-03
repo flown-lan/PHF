@@ -19,10 +19,7 @@ abstract class IImageService {
   /// 将原始图片数据转换为标准的 WebP 格式
   ///
   /// [quality] 默认为 80。
-  Future<Uint8List> compressImage({
-    required Uint8List data,
-    int quality = 80,
-  });
+  Future<Uint8List> compressImage({required Uint8List data, int quality = 80});
 
   /// 生成缩略图数据 (WebP 格式)
   ///
@@ -41,10 +38,7 @@ abstract class IImageService {
   Future<ImageDimensions> getDimensions(Uint8List data);
 
   /// 旋转图像
-  Future<Uint8List> rotateImage({
-    required Uint8List data,
-    required int angle,
-  });
+  Future<Uint8List> rotateImage({required Uint8List data, required int angle});
 
   /// 全量处理：旋转 + 压缩 + 缩略图 (优化内存，仅解码一次)
   Future<ImageProcessingResult> processFull({

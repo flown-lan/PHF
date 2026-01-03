@@ -91,9 +91,9 @@ class _SecurityOnboardingPageState
           _isConfirming = false; // Restart
         });
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('PIN 码不一致，请重新输入')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('PIN 码不一致，请重新输入')));
         }
       }
     }
@@ -118,9 +118,9 @@ class _SecurityOnboardingPageState
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('保存失败: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('保存失败: $e')));
         setState(() {
           _isProcessing = false;
         });
@@ -135,9 +135,9 @@ class _SecurityOnboardingPageState
       _finishOnboarding();
     } else {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('生物识别验证失败或取消')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('生物识别验证失败或取消')));
       }
     }
   }
@@ -202,10 +202,7 @@ class _SecurityOnboardingPageState
 
             // Keyboard
             if (!_isProcessing)
-              PinKeyboard(
-                onInput: _onPinInput,
-                onDelete: _onDelete,
-              ),
+              PinKeyboard(onInput: _onPinInput, onDelete: _onDelete),
             const SizedBox(height: 32),
           ],
         ),
@@ -222,11 +219,7 @@ class _SecurityOnboardingPageState
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(
-                Icons.fingerprint,
-                size: 80,
-                color: AppTheme.primary,
-              ),
+              const Icon(Icons.fingerprint, size: 80, color: AppTheme.primary),
               const SizedBox(height: 24),
               const Text(
                 '启用生物识别',
@@ -240,10 +233,7 @@ class _SecurityOnboardingPageState
               const Text(
                 '使用 FaceID 或指纹更快捷地解锁应用',
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: AppTheme.textSecondary,
-                ),
+                style: TextStyle(fontSize: 14, color: AppTheme.textSecondary),
               ),
               const SizedBox(height: 48),
               SizedBox(

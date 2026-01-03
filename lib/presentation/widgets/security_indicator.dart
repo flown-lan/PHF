@@ -16,10 +16,7 @@ import '../theme/app_theme.dart';
 class SecurityIndicator extends StatelessWidget {
   final bool isSecure;
 
-  const SecurityIndicator({
-    super.key,
-    this.isSecure = true,
-  });
+  const SecurityIndicator({super.key, this.isSecure = true});
 
   @override
   Widget build(BuildContext context) {

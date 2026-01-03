@@ -11,10 +11,7 @@ import '../../widgets/pin_keyboard.dart';
 class LockScreen extends ConsumerStatefulWidget {
   final VoidCallback onAuthenticated;
 
-  const LockScreen({
-    super.key,
-    required this.onAuthenticated,
-  });
+  const LockScreen({super.key, required this.onAuthenticated});
 
   @override
   ConsumerState<LockScreen> createState() => _LockScreenState();
@@ -73,9 +70,9 @@ class _LockScreenState extends ConsumerState<LockScreen> {
         _isProcessing = false;
       });
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('PIN 码错误，请重新输入')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('PIN 码错误，请重新输入')));
       }
     }
   }
@@ -124,10 +121,7 @@ class _LockScreenState extends ConsumerState<LockScreen> {
 
             // Keyboard
             if (!_isProcessing)
-              PinKeyboard(
-                onInput: _onPinInput,
-                onDelete: _onDelete,
-              ),
+              PinKeyboard(onInput: _onPinInput, onDelete: _onDelete),
             const SizedBox(height: 32),
           ],
         ),

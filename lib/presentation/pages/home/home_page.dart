@@ -23,9 +23,9 @@ class HomePage extends ConsumerWidget {
   const HomePage({super.key});
 
   void _onFabPressed(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(builder: (_) => const IngestionPage()),
-    );
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute<void>(builder: (_) => const IngestionPage()));
   }
 
   @override
@@ -36,7 +36,9 @@ class HomePage extends ConsumerWidget {
         title: const Text(
           'PaperHealth',
           style: TextStyle(
-              fontWeight: FontWeight.bold, color: AppTheme.primaryTeal),
+            fontWeight: FontWeight.bold,
+            color: AppTheme.primaryTeal,
+          ),
         ),
         actions: [
           IconButton(
@@ -56,7 +58,8 @@ class HomePage extends ConsumerWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute<void>(
-                    builder: (_) => const GlobalSearchPage()),
+                  builder: (_) => const GlobalSearchPage(),
+                ),
               );
             },
           ),

@@ -15,7 +15,7 @@ class GalleryImportService implements IGalleryService {
   final ImagePicker _picker;
 
   GalleryImportService({ImagePicker? picker})
-      : _picker = picker ?? ImagePicker();
+    : _picker = picker ?? ImagePicker();
 
   @override
   Future<List<XFile>> pickImages() async {

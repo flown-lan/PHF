@@ -33,13 +33,20 @@ abstract class IImageRepository {
   Future<void> deleteImage(String id);
 
   /// 更新单张图片的元数据 (医院、日期)
-  Future<void> updateImageMetadata(String imageId,
-      {String? hospitalName, DateTime? visitDate});
+  Future<void> updateImageMetadata(
+    String imageId, {
+    String? hospitalName,
+    DateTime? visitDate,
+  });
 
   /// 获取单张图片元数据
   Future<MedicalImage?> getImageById(String id);
 
   /// 更新图片 OCR 识别结果
-  Future<void> updateOCRData(String imageId, String text,
-      {String? rawJson, double confidence = 0.0});
+  Future<void> updateOCRData(
+    String imageId,
+    String text, {
+    String? rawJson,
+    double confidence = 0.0,
+  });
 }
