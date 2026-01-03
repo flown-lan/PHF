@@ -91,7 +91,7 @@ class EventCard extends ConsumerWidget {
               child: allTagsAsync.when(
                 data: (allTags) => _buildImageGrid(record.images, allTags),
                 loading: () => _buildImageGrid(record.images, []),
-                error: (_, __) => _buildImageGrid(record.images, []),
+                error: (_, _) => _buildImageGrid(record.images, []),
               ),
             )
           else

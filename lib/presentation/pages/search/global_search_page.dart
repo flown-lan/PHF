@@ -88,7 +88,7 @@ class _GlobalSearchPageState extends ConsumerState<GlobalSearchPage> {
           return ListView.separated(
             padding: const EdgeInsets.all(16),
             itemCount: results.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 16),
+            separatorBuilder: (_, _) => const SizedBox(height: 16),
             itemBuilder: (context, index) {
               return _SearchResultCard(result: results[index]);
             },

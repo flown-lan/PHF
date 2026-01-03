@@ -34,7 +34,7 @@ class ReviewListPage extends ConsumerWidget {
           return ListView.separated(
             padding: const EdgeInsets.all(16),
             itemCount: records.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 16),
+            separatorBuilder: (_, _) => const SizedBox(height: 16),
             itemBuilder: (context, index) {
               final MedicalRecord record = records[index];
               final firstImage = record.images.isNotEmpty
