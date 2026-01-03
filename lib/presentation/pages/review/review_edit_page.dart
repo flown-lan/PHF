@@ -94,13 +94,6 @@ class _ReviewEditPageState extends ConsumerState<ReviewEditPage> {
     if (images.isEmpty) return const SizedBox(); // Should not happen
 
     final currentImage = images[_currentImageIndex];
-    OCRResult? ocrResult;
-    if (currentImage.ocrRawJson != null) {
-      try {
-        ocrResult = OCRResult.fromJson(
-            jsonDecode(currentImage.ocrRawJson!) as Map<String, dynamic>);
-      } catch (_) {}
-    }
 
     return Scaffold(
       appBar: AppBar(

@@ -264,10 +264,12 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
       }
     });
 
-    if (_isLoading)
+    if (_isLoading) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
-    if (_record == null || _images.isEmpty)
+    }
+    if (_record == null || _images.isEmpty) {
       return const Scaffold(body: Center(child: Text('记录不存在')));
+    }
 
     final currentImage = _images[_currentIndex];
 

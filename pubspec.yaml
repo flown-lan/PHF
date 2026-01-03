@@ -54,7 +54,6 @@ dev_dependencies:
 
   path_provider_platform_interface: any
   plugin_platform_interface: any
-  path: any
   local_auth_android: any
   local_auth_darwin: any
   local_auth_windows: any

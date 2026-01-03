@@ -8,7 +8,6 @@
 // - Body: 使用 SecureImage 展示首张缩略图。
 // - Footer: 展示去重后的 Tags 列表。
 
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -178,7 +177,7 @@ class EventCard extends ConsumerWidget {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
                     decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.6),
+                      color: Colors.black.withValues(alpha: 0.6),
                       borderRadius: BorderRadius.circular(2),
                     ),
                     child: Text(
@@ -195,7 +194,7 @@ class EventCard extends ConsumerWidget {
                   width: itemSize,
                   height: itemSize,
                   decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.4),
+                    color: Colors.black.withValues(alpha: 0.4),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: const Center(
@@ -213,35 +212,6 @@ class EventCard extends ConsumerWidget {
         }),
       );
     });
-  }
-
-  Widget _buildTagChip(String label) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-      decoration: BoxDecoration(
-        color: AppTheme.primaryLight.withOpacity(0.1),
-        border: Border.all(color: AppTheme.primaryLight.withOpacity(0.3)),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Text(
-        label,
-        style: const TextStyle(
-          fontSize: 11,
-          color: AppTheme.primary,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-    );
-  }
-
-  List<String> _parseTags(String? jsonCache) {
-    if (jsonCache == null || jsonCache.isEmpty) return [];
-    try {
-      final List<dynamic> list = jsonDecode(jsonCache) as List<dynamic>;
-      return list.map((e) => e.toString()).toList();
-    } catch (e) {
-      return [];
-    }
   }
 
   String _formatDateRange(DateTime start, DateTime? end) {

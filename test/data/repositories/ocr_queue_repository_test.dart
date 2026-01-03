@@ -65,7 +65,7 @@ void main() {
     test('dequeue returns oldest pending item (FIFO)', () async {
       // Insert in order
       await queueRepo.enqueue('img_1');
-      await Future.delayed(
+      await Future<void>.delayed(
           const Duration(milliseconds: 10)); // Ensure timestamp diff
       await queueRepo.enqueue('img_2');
 
@@ -86,7 +86,7 @@ void main() {
 
     test('updateStatus changes status and last_error', () async {
       await queueRepo.enqueue('img_1');
-      var item = await queueRepo.dequeue();
+      final item = await queueRepo.dequeue();
 
       await queueRepo.updateStatus(item!.id, OCRJobStatus.failed,
           error: 'Network Error');
@@ -102,10 +102,10 @@ void main() {
 
     test('incrementRetry increases count and updates timestamp', () async {
       await queueRepo.enqueue('img_1');
-      var item = await queueRepo.dequeue();
+      final item = await queueRepo.dequeue();
 
       final before = DateTime.now();
-      await Future.delayed(const Duration(milliseconds: 10));
+      await Future<void>.delayed(const Duration(milliseconds: 10));
 
       await queueRepo.incrementRetry(item!.id);
 
@@ -120,7 +120,7 @@ void main() {
 
     test('deleteJob removes item', () async {
       await queueRepo.enqueue('img_1');
-      var item = await queueRepo.dequeue();
+      final item = await queueRepo.dequeue();
 
       await queueRepo.deleteJob(item!.id);
 

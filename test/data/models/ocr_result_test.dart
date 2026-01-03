@@ -30,14 +30,13 @@ void main() {
         height: 50.0,
       );
 
-      final result = OCRResult(
+      const result = OCRResult(
         text: 'Hello World',
         blocks: [block],
         confidence: 0.95,
       );
 
       final json = result.toJson();
-      print('JSON Output: $json');
       expect(json['text'], 'Hello World');
       expect(json['confidence'], 0.95);
       expect((json['blocks'] as List).length, 1);

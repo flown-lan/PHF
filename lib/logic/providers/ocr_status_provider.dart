@@ -44,9 +44,9 @@ Stream<int> ocrPendingCount(Ref ref) async* {
 
     // 动态调整探测频率
     if (lastCount > 0) {
-      await Future.delayed(const Duration(seconds: 2));
+      await Future<void>.delayed(const Duration(seconds: 2));
     } else {
-      await Future.delayed(const Duration(seconds: 5));
+      await Future<void>.delayed(const Duration(seconds: 5));
     }
   }
 }

@@ -1,10 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
-import 'package:mockito/mockito.dart';
 import 'package:phf/logic/services/background_worker_service.dart';
-import 'package:workmanager/workmanager.dart';
 
 // Mock Workmanager?
 // Workmanager is a static/singleton wrapper mostly. We can't easily mock the static calls directly

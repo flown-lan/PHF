@@ -22,7 +22,7 @@ import 'dart:typed_data';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class MasterKeyManager {
-  static const _keyParams = AndroidOptions(encryptedSharedPreferences: true);
+  static const _keyParams = AndroidOptions();
   static const _iosParams =
       IOSOptions(accessibility: KeychainAccessibility.first_unlock);
 
@@ -62,12 +62,12 @@ class MasterKeyManager {
   /// 内部通用逻辑：读取 -> (空则生成 -> 保存) -> 返回
   Future<Uint8List> _getOrGenerate(String storageKey, int lengthInBytes) async {
     try {
-      String? encodedKey = await _storage.read(key: storageKey);
+      final String? encodedKey = await _storage.read(key: storageKey);
       if (encodedKey != null) {
         return base64Decode(encodedKey);
       }
 
-      final newKey = _generateRandomBytes(lengthInBytes);
+      final Uint8List newKey = _generateRandomBytes(lengthInBytes);
       await _storage.write(key: storageKey, value: base64Encode(newKey));
       return newKey;
     } catch (e) {

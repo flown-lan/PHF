@@ -181,14 +181,16 @@ class OCRProcessor {
       await _queueRepository.updateStatus(item.id, OCRJobStatus.completed);
 
       _talker?.info('[OCRProcessor] Processing Completed: ${item.id}');
-      if (_talker == null)
+      if (_talker == null) {
         log('Processing Completed: ${item.id}', name: 'OCRProcessor');
+      }
       return true;
     } catch (e, stack) {
       _talker?.handle(e, stack, '[OCRProcessor] Processing Failed: ${item.id}');
-      if (_talker == null)
+      if (_talker == null) {
         log('Processing Failed: ${item.id}. Error: $e',
             name: 'OCRProcessor', error: e, stackTrace: stack);
+      }
       decryptedBytes = null; // Ensure clear on error
 
       await _queueRepository.updateStatus(

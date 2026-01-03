@@ -131,7 +131,6 @@ class BackgroundWorkerService {
         defaultTargetPlatform == TargetPlatform.iOS) {
       await Workmanager().initialize(
         callbackDispatcher,
-        isInDebugMode: kDebugMode,
       );
       _talker?.info(
           '[BackgroundWorkerService] Initialized for ${defaultTargetPlatform.name}');

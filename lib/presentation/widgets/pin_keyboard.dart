@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 
 class PinKeyboard extends StatelessWidget {
-  final Function(String) onInput;
+  final void Function(String) onInput;
   final VoidCallback onDelete;
 
   const PinKeyboard({

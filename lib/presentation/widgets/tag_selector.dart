@@ -25,8 +25,8 @@ import '../theme/app_theme.dart';
 
 class TagSelector extends ConsumerWidget {
   final List<String> selectedTagIds;
-  final Function(String) onToggle;
-  final Function(int, int) onReorder;
+  final void Function(String) onToggle;
+  final void Function(int, int) onReorder;
 
   const TagSelector({
     super.key,

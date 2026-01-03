@@ -44,7 +44,7 @@ abstract class ICryptoService {
     Uint8List? associatedData,
   });
 
-  /// [Streaming] 对物理文件执行流式加密
+  /// STREAMING: 对物理文件执行流式加密
   ///
   /// 符合 `Constitution#I. Privacy`：避免大文件加载导致 OOM。
   ///
@@ -57,7 +57,7 @@ abstract class ICryptoService {
     required Uint8List key,
   });
 
-  /// [Streaming] 对物理文件执行流式解密
+  /// STREAMING: 对物理文件执行流式解密
   ///
   /// [sourcePath]: 加密后的密文文件路径（含 IV 头部）。
   /// [destPath]: 解密后明文临时存储路径（处理完需立即 Wipe）。

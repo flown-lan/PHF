@@ -5,7 +5,6 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:phf/core/security/master_key_manager.dart';
 import 'package:phf/core/services/path_provider_service.dart';
 import 'package:phf/data/datasources/local/database_service.dart';
-import 'dart:convert';
 import 'dart:io';
 
 import 'dart:typed_data';
@@ -112,8 +111,7 @@ void main() {
           "SELECT * FROM ocr_search_index WHERE content MATCH 'hello'");
       expect(searchResult.length, 1);
     } catch (e) {
-      // If FTS5 is not supported in the test environment, we might skip this assertion or log warning
-      print('FTS5 check skipped or failed: $e');
+      // If FTS5 is not supported in the test environment, we might skip this assertion
     }
 
     await service.close();

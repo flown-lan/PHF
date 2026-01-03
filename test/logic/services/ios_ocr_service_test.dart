@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -64,8 +63,8 @@ void main() {
 
     expect(log, hasLength(1));
     expect(log.first.method, 'recognizeText');
-    expect(log.first.arguments, isA<Map>());
-    expect((log.first.arguments as Map)['imagePath'], contains('ocr_temp_'));
+    expect(log.first.arguments, isA<Map<dynamic, dynamic>>());
+    expect((log.first.arguments as Map<dynamic, dynamic>)['imagePath'], contains('ocr_temp_'));
 
     expect(result.text, 'Mock Text');
     expect(result.blocks.length, 1);
