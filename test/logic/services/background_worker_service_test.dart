@@ -67,8 +67,10 @@ void main() {
 
       await service.triggerProcessing();
 
-      expect(fakePlatform.registeredTaskName,
-          'com.example.phf.ocr.processing_task');
+      expect(
+        fakePlatform.registeredTaskName,
+        'com.example.phf.ocr.processing_task',
+      );
 
       debugDefaultTargetPlatformOverride = null;
     });
@@ -89,8 +91,10 @@ void main() {
 
       await service.triggerProcessing();
 
-      expect(fakePlatform.registeredTaskName,
-          'com.example.phf.ocr.processing_task');
+      expect(
+        fakePlatform.registeredTaskName,
+        'com.example.phf.ocr.processing_task',
+      );
 
       debugDefaultTargetPlatformOverride = null;
     });

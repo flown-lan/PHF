@@ -31,7 +31,9 @@ void main() {
       overrides: [
         recordRepositoryProvider.overrideWithValue(mockRecordRepo),
         imageRepositoryProvider.overrideWithValue(mockImageRepo),
-        ocrPendingCountProvider.overrideWith((ref) => Stream.value(pendingCount)),
+        ocrPendingCountProvider.overrideWith(
+          (ref) => Stream.value(pendingCount),
+        ),
       ],
       child: const MaterialApp(home: Scaffold(body: TimelinePage())),
     );
