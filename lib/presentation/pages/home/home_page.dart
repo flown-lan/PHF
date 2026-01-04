@@ -119,10 +119,10 @@ class HomePage extends ConsumerWidget {
           const SizedBox(width: 8),
         ],
       ),
-      body: Column(
+      body: const Column(
         children: [
-          const PersonnelTabs(),
-          Expanded(child: const TimelinePage()),
+          PersonnelTabs(),
+          Expanded(child: TimelinePage()),
         ],
       ),
 
