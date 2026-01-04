@@ -39,8 +39,9 @@ void main() {
       overrides: [
         recordRepositoryProvider.overrideWithValue(mockRecordRepo),
         imageRepositoryProvider.overrideWithValue(mockImageRepo),
-        currentPersonIdControllerProvider
-            .overrideWith(() => MockCurrentPersonIdController('p1')),
+        currentPersonIdControllerProvider.overrideWith(
+          () => MockCurrentPersonIdController('p1'),
+        ),
         ocrPendingCountProvider.overrideWith(
           (ref) => Stream.value(pendingCount),
         ),
