@@ -26,6 +26,8 @@ import '../../data/repositories/interfaces/ocr_queue_repository.dart';
 import '../../data/repositories/ocr_queue_repository.dart';
 import '../../data/models/tag.dart';
 import 'person_provider.dart';
+import '../services/interfaces/backup_service.dart';
+import '../services/backup_service.dart';
 import '../services/crypto_service.dart';
 import '../services/interfaces/security_service.dart';
 import '../services/security_service.dart';
@@ -100,14 +102,10 @@ IBackupService backupService(Ref ref) {
   final crypto = ref.watch(cryptoServiceProvider);
   final path = ref.watch(pathProviderServiceProvider);
   final key = ref.watch(masterKeyManagerProvider);
-  final db = ref.watch(databaseServiceProvider);
-  final talker = ref.watch(talkerProvider);
   return BackupService(
     cryptoService: crypto,
     pathService: path,
     keyManager: key,
-    dbService: db,
-    talker: talker,
   );
 }
 

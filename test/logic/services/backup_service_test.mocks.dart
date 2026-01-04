@@ -3,17 +3,15 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i8;
+import 'dart:async' as _i5;
 import 'dart:io' as _i2;
-import 'dart:typed_data' as _i7;
+import 'dart:typed_data' as _i4;
 
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i9;
-import 'package:phf/core/security/master_key_manager.dart' as _i3;
-import 'package:phf/core/services/path_provider_service.dart' as _i4;
-import 'package:phf/data/datasources/local/database_service.dart' as _i10;
-import 'package:phf/logic/services/interfaces/crypto_service.dart' as _i6;
-import 'package:sqflite_sqlcipher/sqflite.dart' as _i5;
+import 'package:mockito/src/dummies.dart' as _i7;
+import 'package:phf/core/security/master_key_manager.dart' as _i8;
+import 'package:phf/core/services/path_provider_service.dart' as _i6;
+import 'package:phf/logic/services/interfaces/crypto_service.dart' as _i3;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -35,41 +33,24 @@ class _FakeFile_0 extends _i1.SmartFake implements _i2.File {
     : super(parent, parentInvocation);
 }
 
-class _FakeMasterKeyManager_1 extends _i1.SmartFake
-    implements _i3.MasterKeyManager {
-  _FakeMasterKeyManager_1(Object parent, Invocation parentInvocation)
-    : super(parent, parentInvocation);
-}
-
-class _FakePathProviderService_2 extends _i1.SmartFake
-    implements _i4.PathProviderService {
-  _FakePathProviderService_2(Object parent, Invocation parentInvocation)
-    : super(parent, parentInvocation);
-}
-
-class _FakeDatabase_3 extends _i1.SmartFake implements _i5.Database {
-  _FakeDatabase_3(Object parent, Invocation parentInvocation)
-    : super(parent, parentInvocation);
-}
-
 /// A class which mocks [ICryptoService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockICryptoService extends _i1.Mock implements _i6.ICryptoService {
+class MockICryptoService extends _i1.Mock implements _i3.ICryptoService {
   @override
-  _i7.Uint8List generateRandomKey() =>
+  _i4.Uint8List generateRandomKey() =>
       (super.noSuchMethod(
             Invocation.method(#generateRandomKey, []),
-            returnValue: _i7.Uint8List(0),
-            returnValueForMissingStub: _i7.Uint8List(0),
+            returnValue: _i4.Uint8List(0),
+            returnValueForMissingStub: _i4.Uint8List(0),
           )
-          as _i7.Uint8List);
+          as _i4.Uint8List);
 
   @override
-  _i8.Future<_i7.Uint8List> encrypt({
-    required _i7.Uint8List? data,
-    required _i7.Uint8List? key,
-    _i7.Uint8List? associatedData,
+  _i5.Future<_i4.Uint8List> encrypt({
+    required _i4.Uint8List? data,
+    required _i4.Uint8List? key,
+    _i4.Uint8List? associatedData,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#encrypt, [], {
@@ -77,18 +58,18 @@ class MockICryptoService extends _i1.Mock implements _i6.ICryptoService {
               #key: key,
               #associatedData: associatedData,
             }),
-            returnValue: _i8.Future<_i7.Uint8List>.value(_i7.Uint8List(0)),
-            returnValueForMissingStub: _i8.Future<_i7.Uint8List>.value(
-              _i7.Uint8List(0),
+            returnValue: _i5.Future<_i4.Uint8List>.value(_i4.Uint8List(0)),
+            returnValueForMissingStub: _i5.Future<_i4.Uint8List>.value(
+              _i4.Uint8List(0),
             ),
           )
-          as _i8.Future<_i7.Uint8List>);
+          as _i5.Future<_i4.Uint8List>);
 
   @override
-  _i8.Future<_i7.Uint8List> decrypt({
-    required _i7.Uint8List? encryptedData,
-    required _i7.Uint8List? key,
-    _i7.Uint8List? associatedData,
+  _i5.Future<_i4.Uint8List> decrypt({
+    required _i4.Uint8List? encryptedData,
+    required _i4.Uint8List? key,
+    _i4.Uint8List? associatedData,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#decrypt, [], {
@@ -96,18 +77,18 @@ class MockICryptoService extends _i1.Mock implements _i6.ICryptoService {
               #key: key,
               #associatedData: associatedData,
             }),
-            returnValue: _i8.Future<_i7.Uint8List>.value(_i7.Uint8List(0)),
-            returnValueForMissingStub: _i8.Future<_i7.Uint8List>.value(
-              _i7.Uint8List(0),
+            returnValue: _i5.Future<_i4.Uint8List>.value(_i4.Uint8List(0)),
+            returnValueForMissingStub: _i5.Future<_i4.Uint8List>.value(
+              _i4.Uint8List(0),
             ),
           )
-          as _i8.Future<_i7.Uint8List>);
+          as _i5.Future<_i4.Uint8List>);
 
   @override
-  _i8.Future<void> encryptFile({
+  _i5.Future<void> encryptFile({
     required String? sourcePath,
     required String? destPath,
-    required _i7.Uint8List? key,
+    required _i4.Uint8List? key,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#encryptFile, [], {
@@ -115,16 +96,16 @@ class MockICryptoService extends _i1.Mock implements _i6.ICryptoService {
               #destPath: destPath,
               #key: key,
             }),
-            returnValue: _i8.Future<void>.value(),
-            returnValueForMissingStub: _i8.Future<void>.value(),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
           )
-          as _i8.Future<void>);
+          as _i5.Future<void>);
 
   @override
-  _i8.Future<void> decryptFile({
+  _i5.Future<void> decryptFile({
     required String? sourcePath,
     required String? destPath,
-    required _i7.Uint8List? key,
+    required _i4.Uint8List? key,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#decryptFile, [], {
@@ -132,26 +113,26 @@ class MockICryptoService extends _i1.Mock implements _i6.ICryptoService {
               #destPath: destPath,
               #key: key,
             }),
-            returnValue: _i8.Future<void>.value(),
-            returnValueForMissingStub: _i8.Future<void>.value(),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
           )
-          as _i8.Future<void>);
+          as _i5.Future<void>);
 }
 
 /// A class which mocks [PathProviderService].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockPathProviderService extends _i1.Mock
-    implements _i4.PathProviderService {
+    implements _i6.PathProviderService {
   @override
   String get sandboxRoot =>
       (super.noSuchMethod(
             Invocation.getter(#sandboxRoot),
-            returnValue: _i9.dummyValue<String>(
+            returnValue: _i7.dummyValue<String>(
               this,
               Invocation.getter(#sandboxRoot),
             ),
-            returnValueForMissingStub: _i9.dummyValue<String>(
+            returnValueForMissingStub: _i7.dummyValue<String>(
               this,
               Invocation.getter(#sandboxRoot),
             ),
@@ -162,11 +143,11 @@ class MockPathProviderService extends _i1.Mock
   String get dbDirPath =>
       (super.noSuchMethod(
             Invocation.getter(#dbDirPath),
-            returnValue: _i9.dummyValue<String>(
+            returnValue: _i7.dummyValue<String>(
               this,
               Invocation.getter(#dbDirPath),
             ),
-            returnValueForMissingStub: _i9.dummyValue<String>(
+            returnValueForMissingStub: _i7.dummyValue<String>(
               this,
               Invocation.getter(#dbDirPath),
             ),
@@ -177,11 +158,11 @@ class MockPathProviderService extends _i1.Mock
   String get imagesDirPath =>
       (super.noSuchMethod(
             Invocation.getter(#imagesDirPath),
-            returnValue: _i9.dummyValue<String>(
+            returnValue: _i7.dummyValue<String>(
               this,
               Invocation.getter(#imagesDirPath),
             ),
-            returnValueForMissingStub: _i9.dummyValue<String>(
+            returnValueForMissingStub: _i7.dummyValue<String>(
               this,
               Invocation.getter(#imagesDirPath),
             ),
@@ -192,11 +173,11 @@ class MockPathProviderService extends _i1.Mock
   String get tempDirPath =>
       (super.noSuchMethod(
             Invocation.getter(#tempDirPath),
-            returnValue: _i9.dummyValue<String>(
+            returnValue: _i7.dummyValue<String>(
               this,
               Invocation.getter(#tempDirPath),
             ),
-            returnValueForMissingStub: _i9.dummyValue<String>(
+            returnValueForMissingStub: _i7.dummyValue<String>(
               this,
               Invocation.getter(#tempDirPath),
             ),
@@ -204,13 +185,13 @@ class MockPathProviderService extends _i1.Mock
           as String);
 
   @override
-  _i8.Future<void> initialize() =>
+  _i5.Future<void> initialize() =>
       (super.noSuchMethod(
             Invocation.method(#initialize, []),
-            returnValue: _i8.Future<void>.value(),
-            returnValueForMissingStub: _i8.Future<void>.value(),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
           )
-          as _i8.Future<void>);
+          as _i5.Future<void>);
 
   @override
   void reset() => super.noSuchMethod(
@@ -222,11 +203,11 @@ class MockPathProviderService extends _i1.Mock
   String getDatabasePath(String? fileName) =>
       (super.noSuchMethod(
             Invocation.method(#getDatabasePath, [fileName]),
-            returnValue: _i9.dummyValue<String>(
+            returnValue: _i7.dummyValue<String>(
               this,
               Invocation.method(#getDatabasePath, [fileName]),
             ),
-            returnValueForMissingStub: _i9.dummyValue<String>(
+            returnValueForMissingStub: _i7.dummyValue<String>(
               this,
               Invocation.method(#getDatabasePath, [fileName]),
             ),
@@ -234,133 +215,66 @@ class MockPathProviderService extends _i1.Mock
           as String);
 
   @override
-  _i8.Future<_i2.File> getSecureFile(String? relativePath) =>
+  _i5.Future<_i2.File> getSecureFile(String? relativePath) =>
       (super.noSuchMethod(
             Invocation.method(#getSecureFile, [relativePath]),
-            returnValue: _i8.Future<_i2.File>.value(
+            returnValue: _i5.Future<_i2.File>.value(
               _FakeFile_0(
                 this,
                 Invocation.method(#getSecureFile, [relativePath]),
               ),
             ),
-            returnValueForMissingStub: _i8.Future<_i2.File>.value(
+            returnValueForMissingStub: _i5.Future<_i2.File>.value(
               _FakeFile_0(
                 this,
                 Invocation.method(#getSecureFile, [relativePath]),
               ),
             ),
           )
-          as _i8.Future<_i2.File>);
+          as _i5.Future<_i2.File>);
 
   @override
-  _i8.Future<void> clearTemp() =>
+  _i5.Future<void> clearTemp() =>
       (super.noSuchMethod(
             Invocation.method(#clearTemp, []),
-            returnValue: _i8.Future<void>.value(),
-            returnValueForMissingStub: _i8.Future<void>.value(),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
           )
-          as _i8.Future<void>);
+          as _i5.Future<void>);
 }
 
 /// A class which mocks [MasterKeyManager].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockMasterKeyManager extends _i1.Mock implements _i3.MasterKeyManager {
+class MockMasterKeyManager extends _i1.Mock implements _i8.MasterKeyManager {
   @override
-  _i8.Future<_i7.Uint8List> getMasterKey() =>
+  _i5.Future<_i4.Uint8List> getMasterKey() =>
       (super.noSuchMethod(
             Invocation.method(#getMasterKey, []),
-            returnValue: _i8.Future<_i7.Uint8List>.value(_i7.Uint8List(0)),
-            returnValueForMissingStub: _i8.Future<_i7.Uint8List>.value(
-              _i7.Uint8List(0),
+            returnValue: _i5.Future<_i4.Uint8List>.value(_i4.Uint8List(0)),
+            returnValueForMissingStub: _i5.Future<_i4.Uint8List>.value(
+              _i4.Uint8List(0),
             ),
           )
-          as _i8.Future<_i7.Uint8List>);
+          as _i5.Future<_i4.Uint8List>);
 
   @override
-  _i8.Future<_i7.Uint8List> getUserSalt() =>
+  _i5.Future<_i4.Uint8List> getUserSalt() =>
       (super.noSuchMethod(
             Invocation.method(#getUserSalt, []),
-            returnValue: _i8.Future<_i7.Uint8List>.value(_i7.Uint8List(0)),
-            returnValueForMissingStub: _i8.Future<_i7.Uint8List>.value(
-              _i7.Uint8List(0),
+            returnValue: _i5.Future<_i4.Uint8List>.value(_i4.Uint8List(0)),
+            returnValueForMissingStub: _i5.Future<_i4.Uint8List>.value(
+              _i4.Uint8List(0),
             ),
           )
-          as _i8.Future<_i7.Uint8List>);
+          as _i5.Future<_i4.Uint8List>);
 
   @override
-  _i8.Future<void> wipeAll() =>
+  _i5.Future<void> wipeAll() =>
       (super.noSuchMethod(
             Invocation.method(#wipeAll, []),
-            returnValue: _i8.Future<void>.value(),
-            returnValueForMissingStub: _i8.Future<void>.value(),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
           )
-          as _i8.Future<void>);
-}
-
-/// A class which mocks [SQLCipherDatabaseService].
-///
-/// See the documentation for Mockito's code generation for more information.
-class MockSQLCipherDatabaseService extends _i1.Mock
-    implements _i10.SQLCipherDatabaseService {
-  @override
-  _i3.MasterKeyManager get keyManager =>
-      (super.noSuchMethod(
-            Invocation.getter(#keyManager),
-            returnValue: _FakeMasterKeyManager_1(
-              this,
-              Invocation.getter(#keyManager),
-            ),
-            returnValueForMissingStub: _FakeMasterKeyManager_1(
-              this,
-              Invocation.getter(#keyManager),
-            ),
-          )
-          as _i3.MasterKeyManager);
-
-  @override
-  _i4.PathProviderService get pathService =>
-      (super.noSuchMethod(
-            Invocation.getter(#pathService),
-            returnValue: _FakePathProviderService_2(
-              this,
-              Invocation.getter(#pathService),
-            ),
-            returnValueForMissingStub: _FakePathProviderService_2(
-              this,
-              Invocation.getter(#pathService),
-            ),
-          )
-          as _i4.PathProviderService);
-
-  @override
-  _i8.Future<_i5.Database> get database =>
-      (super.noSuchMethod(
-            Invocation.getter(#database),
-            returnValue: _i8.Future<_i5.Database>.value(
-              _FakeDatabase_3(this, Invocation.getter(#database)),
-            ),
-            returnValueForMissingStub: _i8.Future<_i5.Database>.value(
-              _FakeDatabase_3(this, Invocation.getter(#database)),
-            ),
-          )
-          as _i8.Future<_i5.Database>);
-
-  @override
-  _i8.Future<void> close() =>
-      (super.noSuchMethod(
-            Invocation.method(#close, []),
-            returnValue: _i8.Future<void>.value(),
-            returnValueForMissingStub: _i8.Future<void>.value(),
-          )
-          as _i8.Future<void>);
-
-  @override
-  _i8.Future<void> onCreate(_i5.Database? db, int? version) =>
-      (super.noSuchMethod(
-            Invocation.method(#onCreate, [db, version]),
-            returnValue: _i8.Future<void>.value(),
-            returnValueForMissingStub: _i8.Future<void>.value(),
-          )
-          as _i8.Future<void>);
+          as _i5.Future<void>);
 }

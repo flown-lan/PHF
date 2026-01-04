@@ -9,7 +9,6 @@ import 'package:phf/core/security/master_key_manager.dart';
 import 'package:phf/core/services/path_provider_service.dart';
 import 'package:phf/logic/services/backup_service.dart';
 import 'package:phf/logic/services/interfaces/crypto_service.dart';
-import 'package:phf/data/datasources/local/database_service.dart';
 import 'package:archive/archive_io.dart';
 import 'package:path/path.dart' as p;
 
@@ -17,7 +16,6 @@ import 'package:path/path.dart' as p;
   MockSpec<ICryptoService>(),
   MockSpec<PathProviderService>(),
   MockSpec<MasterKeyManager>(),
-  MockSpec<SQLCipherDatabaseService>(),
 ])
 import 'backup_service_test.mocks.dart';
 
@@ -25,7 +23,6 @@ void main() {
   late MockICryptoService mockCryptoService;
   late MockPathProviderService mockPathService;
   late MockMasterKeyManager mockKeyManager;
-  late MockSQLCipherDatabaseService mockDbService;
   late BackupService backupService;
   late Directory tempTestDir;
 
@@ -33,7 +30,6 @@ void main() {
     mockCryptoService = MockICryptoService();
     mockPathService = MockPathProviderService();
     mockKeyManager = MockMasterKeyManager();
-    mockDbService = MockSQLCipherDatabaseService();
 
     // Setup temporary directory for file operations
     tempTestDir = await Directory.systemTemp.createTemp('backup_test_');
@@ -71,7 +67,6 @@ void main() {
       cryptoService: mockCryptoService,
       pathService: mockPathService,
       keyManager: mockKeyManager,
-      dbService: mockDbService,
     );
   });
 
