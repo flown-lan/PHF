@@ -116,6 +116,20 @@ class TagRepository implements ITagRepository {
     });
   }
 
+  @override
+  Future<List<Tag>> suggestTags(String text, {String? personId}) async {
+    final allTags = await getAllTags(personId: personId);
+    if (text.isEmpty) return [];
+
+    final suggestions = <Tag>[];
+    for (final tag in allTags) {
+      if (text.contains(tag.name)) {
+        suggestions.add(tag);
+      }
+    }
+    return suggestions;
+  }
+
   // --- Mappers ---
 
   Tag _mapToTag(Map<String, dynamic> row) {
