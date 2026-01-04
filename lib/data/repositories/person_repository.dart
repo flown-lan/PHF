@@ -54,10 +54,12 @@ class PersonRepository implements IPersonRepository {
     final db = await _dbService.database;
 
     // Check constraints
-    final count = Sqflite.firstIntValue(await db.rawQuery(
-      'SELECT COUNT(*) FROM records WHERE person_id = ? AND status != ?',
-      [id, 'deleted'],
-    ));
+    final count = Sqflite.firstIntValue(
+      await db.rawQuery(
+        'SELECT COUNT(*) FROM records WHERE person_id = ? AND status != ?',
+        [id, 'deleted'],
+      ),
+    );
 
     if (count != null && count > 0) {
       throw Exception('Cannot delete person with existing records.');

@@ -1,4 +1,3 @@
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -70,8 +69,18 @@ void main() {
     });
 
     test('updateOrder', () async {
-      final p1 = Person(id: 'p1', nickname: 'P1', createdAt: DateTime.now(), orderIndex: 0);
-      final p2 = Person(id: 'p2', nickname: 'P2', createdAt: DateTime.now(), orderIndex: 1);
+      final p1 = Person(
+        id: 'p1',
+        nickname: 'P1',
+        createdAt: DateTime.now(),
+        orderIndex: 0,
+      );
+      final p2 = Person(
+        id: 'p2',
+        nickname: 'P2',
+        createdAt: DateTime.now(),
+        orderIndex: 1,
+      );
 
       await personRepo.createPerson(p1);
       await personRepo.createPerson(p2);
@@ -97,7 +106,7 @@ void main() {
         'person_id': 'p1',
         'created_at_ms': DateTime.now().millisecondsSinceEpoch,
         'updated_at_ms': DateTime.now().millisecondsSinceEpoch,
-        'status': 'processing'
+        'status': 'processing',
       });
 
       expect(() => personRepo.deletePerson('p1'), throwsException);
@@ -114,7 +123,12 @@ void main() {
   group('TagRepository Tests', () {
     test('createTag and filtering', () async {
       final t1 = Tag(id: 't1', name: 'Global', createdAt: DateTime.now());
-      final t2 = Tag(id: 't2', name: 'Personal', personId: 'p1', createdAt: DateTime.now());
+      final t2 = Tag(
+        id: 't2',
+        name: 'Personal',
+        personId: 'p1',
+        createdAt: DateTime.now(),
+      );
 
       await tagRepo.createTag(t1);
       await tagRepo.createTag(t2);
@@ -135,8 +149,17 @@ void main() {
       final db = await dbService.database;
 
       // Need a record first
-      await db.insert('persons', {'id': 'p1', 'nickname': 'N', 'created_at_ms': 0});
-      await db.insert('records', {'id': 'r1', 'person_id': 'p1', 'created_at_ms': 0, 'updated_at_ms': 0});
+      await db.insert('persons', {
+        'id': 'p1',
+        'nickname': 'N',
+        'created_at_ms': 0,
+      });
+      await db.insert('records', {
+        'id': 'r1',
+        'person_id': 'p1',
+        'created_at_ms': 0,
+        'updated_at_ms': 0,
+      });
 
       await db.insert('images', {
         'id': 'i1',
@@ -146,12 +169,16 @@ void main() {
         'encryption_key': 'key',
         'thumbnail_encryption_key': 'key',
         'created_at_ms': 0,
-        'tags': '["t1", "other"]'
+        'tags': '["t1", "other"]',
       });
 
       await tagRepo.deleteTag('t1');
 
-      final result = await db.query('images', where: 'id = ?', whereArgs: ['i1']);
+      final result = await db.query(
+        'images',
+        where: 'id = ?',
+        whereArgs: ['i1'],
+      );
       final tagsJson = result.first['tags'] as String;
 
       expect(tagsJson.contains('t1'), false);
