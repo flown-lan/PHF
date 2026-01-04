@@ -210,5 +210,33 @@ void main() {
       expect(tagsJson.contains('t1'), false);
       expect(tagsJson.contains('other'), true);
     });
+
+    test('suggestTags', () async {
+      await personRepo.createPerson(
+        Person(id: 'p1', nickname: 'N', createdAt: DateTime.now()),
+      );
+      final t1 = Tag(
+        id: 't1',
+        name: 'Blood',
+        color: 'red',
+        createdAt: DateTime.now(),
+      );
+      final t2 = Tag(
+        id: 't2',
+        name: 'X-Ray',
+        color: 'black',
+        createdAt: DateTime.now(),
+      );
+
+      await tagRepo.createTag(t1);
+      await tagRepo.createTag(t2);
+
+      final suggestions = await tagRepo.suggestTags('Found Blood Analysis');
+      expect(suggestions.length, 1);
+      expect(suggestions.first.name, 'Blood');
+
+      final none = await tagRepo.suggestTags('Nothing here');
+      expect(none.isEmpty, true);
+    });
   });
 }
