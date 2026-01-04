@@ -52,6 +52,10 @@ Phase 3 (Governance & Store Readiness) has started.
     - Updated `TimelineController`, `SearchController`, and `ReviewListController` to automatically isolate data by `person_id`.
     - Refactored `ocrPendingCountProvider` and `allTagsProvider` to be responsive to the current personnel context.
     - Updated `AppMetaRepository` to persist the selected user ID across app restarts.
+- [x] **T3.4.1**: UI - PersonnelTabs Component.
+    - Implemented capsule-style sliding tabs for person switching.
+    - Integrated with `currentPersonIdControllerProvider` for persistence and isolation.
+    - Follows `Constitution` UI standards (Teal, Monospace, specific radii).
 
 ## 🟢 Phase 2 Complete
 All Phase 2 tasks (T17-T20) are implemented and verified. The system now supports:
