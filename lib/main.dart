@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'presentation/theme/app_theme.dart';
 import 'presentation/pages/home/home_page.dart';
 import 'presentation/pages/onboarding/security_onboarding_page.dart';
+import 'presentation/pages/settings/settings_page.dart';
 import 'presentation/pages/auth/lock_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:phf/logic/providers/core_providers.dart';
@@ -64,6 +65,7 @@ class PaperHealthApp extends ConsumerWidget {
       routes: {
         '/home': (context) => const HomePage(),
         '/onboarding': (context) => const SecurityOnboardingPage(),
+        '/settings': (context) => const SettingsPage(),
       },
     );
   }
