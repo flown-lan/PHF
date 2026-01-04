@@ -15,6 +15,8 @@ import '../../data/repositories/image_repository.dart';
 import '../../data/repositories/interfaces/image_repository.dart';
 import '../../data/repositories/interfaces/record_repository.dart';
 import '../../data/repositories/record_repository.dart';
+import '../../data/repositories/interfaces/person_repository.dart';
+import '../../data/repositories/person_repository.dart';
 import '../../data/repositories/app_meta_repository.dart';
 import '../../data/repositories/interfaces/tag_repository.dart';
 import '../../data/repositories/tag_repository.dart';
@@ -23,7 +25,12 @@ import '../../data/repositories/search_repository.dart';
 import '../../data/repositories/interfaces/ocr_queue_repository.dart';
 import '../../data/repositories/ocr_queue_repository.dart';
 import '../../data/models/tag.dart';
+import 'person_provider.dart';
+import 'logging_provider.dart';
+import '../services/interfaces/backup_service.dart';
+import '../services/backup_service.dart';
 import '../services/crypto_service.dart';
+import '../services/interfaces/security_service.dart';
 import '../services/security_service.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../services/gallery_import_service.dart';
@@ -55,7 +62,9 @@ MasterKeyManager masterKeyManager(Ref ref) {
 SQLCipherDatabaseService databaseService(Ref ref) {
   final km = ref.watch(masterKeyManagerProvider);
   final pp = ref.watch(pathProviderServiceProvider);
-  return SQLCipherDatabaseService(keyManager: km, pathService: pp);
+  final service = SQLCipherDatabaseService(keyManager: km, pathService: pp);
+  ref.onDispose(() => service.close());
+  return service;
 }
 
 @Riverpod(keepAlive: true)
@@ -90,9 +99,31 @@ ICryptoService cryptoService(Ref ref) {
 }
 
 @Riverpod(keepAlive: true)
+IBackupService backupService(Ref ref) {
+  final crypto = ref.watch(cryptoServiceProvider);
+  final path = ref.watch(pathProviderServiceProvider);
+  final key = ref.watch(masterKeyManagerProvider);
+  final db = ref.watch(databaseServiceProvider);
+  final talker = ref.watch(talkerProvider);
+  return BackupService(
+    cryptoService: crypto,
+    pathService: path,
+    keyManager: key,
+    dbService: db,
+    talker: talker,
+  );
+}
+
+@Riverpod(keepAlive: true)
 IImageRepository imageRepository(Ref ref) {
   final db = ref.watch(databaseServiceProvider);
   return ImageRepository(db);
+}
+
+@Riverpod(keepAlive: true)
+IPersonRepository personRepository(Ref ref) {
+  final db = ref.watch(databaseServiceProvider);
+  return PersonRepository(db);
 }
 
 @Riverpod(keepAlive: true)
@@ -102,11 +133,13 @@ AppMetaRepository appMetaRepository(Ref ref) {
 }
 
 @Riverpod(keepAlive: true)
-SecurityService securityService(Ref ref) {
+ISecurityService securityService(Ref ref) {
   final metaRepo = ref.watch(appMetaRepositoryProvider);
+  final talker = ref.watch(talkerProvider);
   return SecurityService(
     secureStorage: const FlutterSecureStorage(),
     metaRepo: metaRepo,
+    talker: talker,
   );
 }
 
@@ -130,6 +163,7 @@ IOCRQueueRepository ocrQueueRepository(Ref ref) {
 
 @riverpod
 Future<List<Tag>> allTags(Ref ref) async {
+  final personId = await ref.watch(currentPersonIdControllerProvider.future);
   final repo = ref.watch(tagRepositoryProvider);
-  return repo.getAllTags();
+  return repo.getAllTags(personId: personId);
 }

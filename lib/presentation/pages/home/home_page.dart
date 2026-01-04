@@ -18,6 +18,7 @@ import '../search/global_search_page.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import '../../../logic/providers/logging_provider.dart';
+import '../../widgets/personnel_tabs.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
@@ -75,7 +76,13 @@ class HomePage extends ConsumerWidget {
         elevation: 0,
         centerTitle: false,
       ),
-      body: const TimelinePage(),
+      body: const Column(
+        children: [
+          PersonnelTabs(),
+          Expanded(child: TimelinePage()),
+        ],
+      ),
+
       floatingActionButton: FloatingActionButton(
         onPressed: () => _onFabPressed(context),
         backgroundColor: AppTheme.primaryTeal,
