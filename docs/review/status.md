@@ -72,6 +72,17 @@ Phase 3 (Governance & Store Readiness) has started.
     - Integrated `TagRepository.createTag` with UUID generation.
     - Updated `RecordDetailPage` to handle new tag creation callback.
 
+## 🟢 Phase 3 In Progress
+Phase 3 (Governance & Store Readiness) has started.
+
+### Completed (Phase 3)
+- [x] **T3.1**: Infrastructure & Schema (V7 Migration).
+    - `persons` table: Added `order_index`, `profile_color`.
+    - `tags` table: Added `is_custom`, `order_index`.
+    - `ocr_search_index`: Optimized FTS5 structure (hospital, tags, ocr_text, notes).
+    - `DatabaseSeeder`: Enhanced default seed data.
+    - Entities updated and `build_runner` executed.
+
 ## 🟢 Phase 2 Complete
 All Phase 2 tasks (T17-T20) are implemented and verified. The system now supports:
 - Offline OCR (Android/iOS).
