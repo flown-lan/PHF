@@ -37,11 +37,6 @@
 Phase 3 (Governance & Store Readiness) has started.
 
 ### Completed (Phase 3)
-- [x] **T3.4.4**: UI - Global Full-screen Search.
-    - Refactored `GlobalSearchPage` for improved "Full-screen" UX.
-    - Integrated with `AppCard` and `AppTheme` standards.
-    - Enhanced FTS5 highlighting logic and added personnel context indicator.
-    - Implemented debounced search and better empty/initial states.
 - [x] **T3.3.5**: Security Settings Service.
     - Implemented `ISecurityService` interface and refined `SecurityService`.
     - Added PIN modification logic with old PIN validation.
@@ -62,36 +57,6 @@ Phase 3 (Governance & Store Readiness) has started.
     - Implemented capsule-style sliding tabs for person switching.
     - Integrated with `currentPersonIdControllerProvider` for persistence and isolation.
     - Follows `Constitution` UI standards (Teal, Monospace, specific radii).
-- [x] **T3.5.1**: UI - Collapsible OCR Text Component.
-    - Implemented `CollapsibleOcrCard` widget with expansion logic.
-    - Integrated into `RecordDetailPage` info view.
-    - Follows Monospace font standards for medical data.
-- [x] **T3.5.2**: UI - Inline Tag Management (Issue #25).
-    - Refactored `TagSelector` to support inline creation, search, and sorting.
-    - Added "Create Tag" workflow with immediate `allTagsProvider` refresh.
-    - Integrated `TagRepository.createTag` with UUID generation.
-    - Updated `RecordDetailPage` to handle new tag creation callback.
-
-## 🟢 Phase 3 In Progress
-Phase 3 (Governance & Store Readiness) has started.
-
-### Completed (Phase 3)
-- [x] **T3.3.5**: Security Settings Service.
-    - Implemented `ISecurityService` interface and refined `SecurityService`.
-    - Added PIN modification logic with old PIN validation.
-    - Added biometric persistence and toggle logic.
-    - Implemented `SecuritySettingsController` for reactive UI updates.
-- [x] **T3.1**: Infrastructure & Schema (V7 Migration).
-    - `persons` table: Added `order_index`, `profile_color`.
-    - `tags` table: Added `is_custom`, `order_index`.
-    - `ocr_search_index`: Optimized FTS5 structure (hospital, tags, ocr_text, notes).
-    - `DatabaseSeeder`: Enhanced default seed data.
-    - Entities updated and `build_runner` executed.
-- [x] **T3.3.1**: Multi-Person Isolation Provider.
-    - Implemented `currentPersonIdControllerProvider` and `currentPersonProvider` in Riverpod.
-    - Updated `TimelineController`, `SearchController`, and `ReviewListController` to automatically isolate data by `person_id`.
-    - Refactored `ocrPendingCountProvider` and `allTagsProvider` to be responsive to the current personnel context.
-    - Updated `AppMetaRepository` to persist the selected user ID across app restarts.
 
 ## 🟢 Phase 2 Complete
 All Phase 2 tasks (T17-T20) are implemented and verified. The system now supports:

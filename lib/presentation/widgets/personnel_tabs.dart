@@ -13,7 +13,6 @@
 /// ## Security
 /// - **Privacy**: 仅显示人员昵称，不涉及敏感医疗数据。
 /// - **Memory**: 使用 Riverpod 驱动，确保资源及时释放。
-library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -46,26 +45,28 @@ class _PersonnelTabsState extends ConsumerState<PersonnelTabs> {
       data: (persons) => currentIdAsync.when(
         data: (currentId) => _buildTabs(context, persons, currentId),
         loading: () => const SizedBox(height: 56),
-        error: (err, st) => const SizedBox.shrink(),
+        error: (_, __) => const SizedBox.shrink(),
       ),
       loading: () => const SizedBox(height: 56),
-      error: (err, st) => const SizedBox.shrink(),
+      error: (_, __) => const SizedBox.shrink(),
     );
   }
 
-  Widget _buildTabs(
-    BuildContext context,
-    List<Person> persons,
-    String? currentId,
-  ) {
+  Widget _buildTabs(BuildContext context, List<Person> persons, String? currentId) {
     if (persons.isEmpty) return const SizedBox.shrink();
+
+    // 确定当前选中的索引，默认为 0
+    final selectedIndex = persons.indexWhere((p) => p.id == currentId);
+    final safeIndex = selectedIndex != -1 ? selectedIndex : 0;
 
     return Container(
       height: 56,
       padding: const EdgeInsets.symmetric(vertical: 10),
       decoration: const BoxDecoration(
         color: AppTheme.bgWhite,
-        border: Border(bottom: BorderSide(color: Color(0xFFE5E5EA), width: 1)),
+        border: Border(
+          bottom: BorderSide(color: Color(0xFFE5E5EA), width: 1),
+        ),
       ),
       child: ListView.builder(
         controller: _scrollController,
@@ -87,9 +88,7 @@ class _PersonnelTabsState extends ConsumerState<PersonnelTabs> {
   }
 
   Future<void> _onTabSelected(String personId, int index) async {
-    await ref
-        .read(currentPersonIdControllerProvider.notifier)
-        .selectPerson(personId);
+    await ref.read(currentPersonIdControllerProvider.notifier).selectPerson(personId);
     // TODO: 自动滚动使选中项居中
   }
 }
