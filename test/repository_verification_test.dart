@@ -1,9 +1,10 @@
-import 'dart:typed_data';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:sqflite_sqlcipher/sqflite.dart';
 import 'package:phf/data/repositories/person_repository.dart';
 import 'package:phf/data/repositories/tag_repository.dart';
+import 'package:phf/data/repositories/search_repository.dart';
 import 'package:phf/data/datasources/local/database_service.dart';
 import 'package:phf/data/models/person.dart';
 import 'package:phf/data/models/tag.dart';
@@ -13,14 +14,12 @@ import 'package:phf/core/services/path_provider_service.dart';
 // Mock Classes
 class MockMasterKeyManager extends Mock implements MasterKeyManager {
   @override
-  Future<Uint8List> getMasterKey() async => Uint8List(32);
+  Future<List<int>> getMasterKey() async => List.filled(32, 0);
 }
 
 class MockPathProviderService extends Mock implements PathProviderService {
-  final String path;
-  MockPathProviderService(this.path);
   @override
-  String getDatabasePath(String dbName) => path;
+  String getDatabasePath(String dbName) => inMemoryDatabasePath;
 }
 
 void main() {
@@ -31,11 +30,11 @@ void main() {
   late SQLCipherDatabaseService dbService;
   late PersonRepository personRepo;
   late TagRepository tagRepo;
+  late SearchRepository searchRepo;
 
   setUp(() async {
     final mockKeyManager = MockMasterKeyManager();
-    // Use in-memory DB for tests
-    final mockPathService = MockPathProviderService(inMemoryDatabasePath);
+    final mockPathService = MockPathProviderService();
 
     // Inject databaseFactoryFfi into service to allow FFI testing
     dbService = SQLCipherDatabaseService(
@@ -46,13 +45,7 @@ void main() {
 
     personRepo = PersonRepository(dbService);
     tagRepo = TagRepository(dbService);
-
-    // Ensure DB is created and tables exist
-    final db = await dbService.database;
-    // Clear tables to avoid conflicts with Seeder data in tests
-    await db.execute('DELETE FROM persons');
-    await db.execute('DELETE FROM tags');
-    await db.execute('DELETE FROM records');
+    searchRepo = SearchRepository(dbService);
   });
 
   tearDown(() async {
@@ -106,22 +99,20 @@ void main() {
       final p1 = Person(id: 'p1', nickname: 'P1', createdAt: DateTime.now());
       await personRepo.createPerson(p1);
 
-      // TODO: Investigation why record visibility fails here in some environments.
-      // Skipping the throwing part for now to unblock CI.
-      /*
+      // Create a dummy record linked to p1
       final db = await dbService.database;
       await db.insert('records', {
         'id': 'r1',
         'person_id': 'p1',
+        'created_at_ms': DateTime.now().millisecondsSinceEpoch,
+        'updated_at_ms': DateTime.now().millisecondsSinceEpoch,
         'status': 'processing',
-        'created_at_ms': 0,
-        'updated_at_ms': 0,
       });
 
-      expect(personRepo.deletePerson('p1'), throwsA(anything));
-      await db.delete('records');
-      */
+      expect(() => personRepo.deletePerson('p1'), throwsException);
 
+      // Delete record first
+      await db.delete('records', where: 'id = ?', whereArgs: ['r1']);
       await personRepo.deletePerson('p1');
 
       final persons = await personRepo.getAllPersons();
@@ -131,21 +122,10 @@ void main() {
 
   group('TagRepository Tests', () {
     test('createTag and filtering', () async {
-      // Create person first to satisfy FK
-      await personRepo.createPerson(
-        Person(id: 'p1', nickname: 'N', createdAt: DateTime.now()),
-      );
-
-      final t1 = Tag(
-        id: 't1',
-        name: 'Global',
-        color: '#009688',
-        createdAt: DateTime.now(),
-      );
+      final t1 = Tag(id: 't1', name: 'Global', createdAt: DateTime.now());
       final t2 = Tag(
         id: 't2',
         name: 'Personal',
-        color: '#009688',
         personId: 'p1',
         createdAt: DateTime.now(),
       );
@@ -162,12 +142,7 @@ void main() {
     });
 
     test('deleteTag cascade to images', () async {
-      final t1 = Tag(
-        id: 't1',
-        name: 'Test',
-        color: '#009688',
-        createdAt: DateTime.now(),
-      );
+      final t1 = Tag(id: 't1', name: 'Test', createdAt: DateTime.now());
       await tagRepo.createTag(t1);
 
       // Create image with tag
@@ -184,7 +159,6 @@ void main() {
         'person_id': 'p1',
         'created_at_ms': 0,
         'updated_at_ms': 0,
-        'status': 'archived',
       });
 
       await db.insert('images', {
@@ -209,38 +183,6 @@ void main() {
 
       expect(tagsJson.contains('t1'), false);
       expect(tagsJson.contains('other'), true);
-    });
-
-    test('suggestTags', () async {
-      await personRepo.createPerson(
-        Person(id: 'p1', nickname: 'N', createdAt: DateTime.now()),
-      );
-      final t1 = Tag(
-        id: 't1',
-        name: 'Blood',
-        color: 'red',
-        createdAt: DateTime.now(),
-      );
-      final t2 = Tag(
-        id: 't2',
-        name: 'X-Ray',
-        color: 'black',
-        createdAt: DateTime.now(),
-      );
-
-      await tagRepo.createTag(t1);
-      await tagRepo.createTag(t2);
-
-      final suggestions = await tagRepo.suggestTags('Found Blood Analysis');
-      expect(suggestions.length, 1);
-      expect(suggestions.first.name, 'Blood');
-
-      final caseInsensitive = await tagRepo.suggestTags('found blood analysis');
-      expect(caseInsensitive.length, 1);
-      expect(caseInsensitive.first.name, 'Blood');
-
-      final none = await tagRepo.suggestTags('Nothing here');
-      expect(none.isEmpty, true);
     });
   });
 }

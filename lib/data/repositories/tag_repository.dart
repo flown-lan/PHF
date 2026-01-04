@@ -9,10 +9,6 @@
 /// ## Logic
 /// - **Sync**: 删除标签时，需手动更新 `images.tags` 字段，因为该字段是 JSON 缓存。
 /// - **Filtering**: 支持 `personId` 隔离。
-///
-/// ## 修复记录
-/// - [issue#14] 重构 `deleteTag` 逻辑，消除 `dynamic` 类型的使用，增强类型安全性，符合 Constitution 规范。
-/// - [issue#17] 优化 `suggestTags` 逻辑：支持不区分大小写的匹配，提升关键词提取的准确性 (T3.3.4)。
 library;
 
 import 'dart:convert';
@@ -97,9 +93,7 @@ class TagRepository implements ITagRepository {
         if (tagsStr == null) continue;
 
         try {
-          final decoded = jsonDecode(tagsStr);
-          if (decoded is! List) continue;
-          final currentTags = decoded.map((e) => e.toString()).toList();
+          final List<dynamic> currentTags = jsonDecode(tagsStr);
           final newTags = currentTags.where((t) => t != id).toList();
 
           if (newTags.length != currentTags.length) {
@@ -115,22 +109,6 @@ class TagRepository implements ITagRepository {
         }
       }
     });
-  }
-
-  @override
-  Future<List<Tag>> suggestTags(String text, {String? personId}) async {
-    final allTags = await getAllTags(personId: personId);
-    if (text.isEmpty) return [];
-
-    final suggestions = <Tag>[];
-    final lowercaseText = text.toLowerCase();
-
-    for (final tag in allTags) {
-      if (lowercaseText.contains(tag.name.toLowerCase())) {
-        suggestions.add(tag);
-      }
-    }
-    return suggestions;
   }
 
   // --- Mappers ---
