@@ -10,6 +10,9 @@
 ///
 /// ## Architectural Principles
 /// - 符合 `Constitution#II. Architecture`：通过接口解耦逻辑层与具体的 SQL 实现。
+///
+/// ## 修复记录
+/// - [issue#22] 为 `searchRecords` 增加 `startDate` 和 `endDate` 过滤参数。
 library;
 
 import '../../../data/models/record.dart';
@@ -46,6 +49,8 @@ abstract class IRecordRepository {
     required String personId,
     String? query,
     List<String>? tags,
+    DateTime? startDate,
+    DateTime? endDate,
   });
 
   /// 汇总 Image 数据并同步到 Record 缓存字段

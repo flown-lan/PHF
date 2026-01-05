@@ -12,6 +12,9 @@
 ///
 /// ## Sync Logic
 /// - `tagsCache`: 此字段由 `ImageRepository` 更新操作触发同步，本类仅负责读取和简单的写入。
+///
+/// ## 修复记录
+/// - [issue#22] 实现 `searchRecords` 中的日期范围过滤逻辑。
 library;
 
 import 'package:sqflite_sqlcipher/sqflite.dart';
@@ -169,6 +172,8 @@ class RecordRepository extends BaseRepository implements IRecordRepository {
     required String personId,
     String? query,
     List<String>? tags,
+    DateTime? startDate,
+    DateTime? endDate,
   }) async {
     final db = await dbService.database;
     String sql;
@@ -181,15 +186,20 @@ class RecordRepository extends BaseRepository implements IRecordRepository {
 
     // 标签过滤
     if (tags != null && tags.isNotEmpty) {
-      // 简单实现: 检查 tags_cache 是否包含 (Performance: LIKE '%tag%')
-      // 更严谨实现: JOIN image_tags (但 tags 是 aggregated on record...) -> tags_cache 是设计用来做这个的
-      // 注意: tags_cache 是 json string list ["tag1", "tag2"]
-      // SQLite LIKE 不太好处理 JSON array 包含，FTS5 更好。
-      // 这里先用简单的 LIKE %tag name% 叠加
       for (var tag in tags) {
         whereClause += ' AND r.tags_cache LIKE ?';
         args.add('%"$tag"%'); // 匹配 JSON 字符串
       }
+    }
+
+    // 日期范围过滤
+    if (startDate != null) {
+      whereClause += ' AND r.visit_date_ms >= ?';
+      args.add(startDate.millisecondsSinceEpoch);
+    }
+    if (endDate != null) {
+      whereClause += ' AND r.visit_date_ms <= ?';
+      args.add(endDate.millisecondsSinceEpoch);
     }
 
     // 文本搜索 (OCR FTS5)
