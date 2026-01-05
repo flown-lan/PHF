@@ -9,6 +9,7 @@ import 'package:phf/data/repositories/interfaces/record_repository.dart';
 import 'package:phf/logic/providers/core_providers.dart';
 import 'package:phf/logic/providers/ocr_status_provider.dart';
 import 'package:phf/logic/providers/person_provider.dart';
+import 'package:phf/logic/providers/timeline_provider.dart';
 import 'package:phf/presentation/pages/timeline/timeline_page.dart';
 import 'package:phf/presentation/widgets/event_card.dart';
 

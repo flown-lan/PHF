@@ -21,8 +21,9 @@ import 'package:phf/presentation/pages/search/global_search_page.dart';
 import 'package:phf/presentation/pages/timeline/widgets/filter_sheet.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:talker_flutter/talker_flutter.dart';
-import '../../../logic/providers/logging_provider.dart';
-import '../../widgets/personnel_tabs.dart';
+import 'package:phf/logic/providers/logging_provider.dart';
+import 'package:phf/logic/providers/timeline_provider.dart';
+import 'package:phf/presentation/widgets/personnel_tabs.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
