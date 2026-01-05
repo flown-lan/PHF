@@ -26,7 +26,9 @@ class SettingsPage extends StatelessWidget {
             subtitle: '添加或编辑人员档案',
             onTap: () => Navigator.push(
               context,
-              MaterialPageRoute<void>(builder: (_) => const PersonnelManagementPage()),
+              MaterialPageRoute<void>(
+                builder: (_) => const PersonnelManagementPage(),
+              ),
             ),
           ),
           _buildListTile(
@@ -36,7 +38,9 @@ class SettingsPage extends StatelessWidget {
             subtitle: '维护病历分类标签',
             onTap: () => Navigator.push(
               context,
-              MaterialPageRoute<void>(builder: (_) => const TagManagementPage()),
+              MaterialPageRoute<void>(
+                builder: (_) => const TagManagementPage(),
+              ),
             ),
           ),
           const Divider(),
