@@ -9,16 +9,21 @@
 //
 // FAB
 // - 只有在 Timeline Tab 显示悬浮按钮，用于录入新记录。
+//
+// ## 修复记录
+// - [issue#22] 在 AppBar 中增加筛选按钮及过滤状态指示器。
 
 import 'package:flutter/material.dart';
-import '../../theme/app_theme.dart';
-import '../timeline/timeline_page.dart';
-import '../ingestion/ingestion_page.dart';
-import '../search/global_search_page.dart';
+import 'package:phf/presentation/theme/app_theme.dart';
+import 'package:phf/presentation/pages/timeline/timeline_page.dart';
+import 'package:phf/presentation/pages/ingestion/ingestion_page.dart';
+import 'package:phf/presentation/pages/search/global_search_page.dart';
+import 'package:phf/presentation/pages/timeline/widgets/filter_sheet.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:talker_flutter/talker_flutter.dart';
-import '../../../logic/providers/logging_provider.dart';
-import '../../widgets/personnel_tabs.dart';
+import 'package:phf/logic/providers/logging_provider.dart';
+import 'package:phf/logic/providers/timeline_provider.dart';
+import 'package:phf/presentation/widgets/personnel_tabs.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
@@ -32,6 +37,12 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final talker = ref.watch(talkerProvider);
+    final timelineState = ref.watch(timelineControllerProvider).value;
+    final hasFilters =
+        (timelineState?.filterTags?.isNotEmpty ?? false) ||
+        timelineState?.startDate != null ||
+        timelineState?.endDate != null;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -64,6 +75,42 @@ class HomePage extends ConsumerWidget {
               );
             },
           ),
+          Stack(
+            children: [
+              IconButton(
+                icon: Icon(
+                  hasFilters ? Icons.filter_alt : Icons.filter_alt_outlined,
+                  color: hasFilters
+                      ? AppTheme.primaryTeal
+                      : AppTheme.textPrimary,
+                ),
+                onPressed: () {
+                  showModalBottomSheet<void>(
+                    context: context,
+                    isScrollControlled: true,
+                    backgroundColor: Colors.transparent,
+                    builder: (context) => const TimelineFilterSheet(),
+                  );
+                },
+              ),
+              if (hasFilters)
+                Positioned(
+                  right: 8,
+                  top: 8,
+                  child: Container(
+                    padding: const EdgeInsets.all(2),
+                    decoration: const BoxDecoration(
+                      color: AppTheme.errorRed,
+                      shape: BoxShape.circle,
+                    ),
+                    constraints: const BoxConstraints(
+                      minWidth: 8,
+                      minHeight: 8,
+                    ),
+                  ),
+                ),
+            ],
+          ),
           IconButton(
             icon: const Icon(Icons.settings_outlined),
             onPressed: () {
@@ -72,9 +119,6 @@ class HomePage extends ConsumerWidget {
           ),
           const SizedBox(width: 8),
         ],
-        backgroundColor: Colors.white,
-        elevation: 0,
-        centerTitle: false,
       ),
       body: const Column(
         children: [

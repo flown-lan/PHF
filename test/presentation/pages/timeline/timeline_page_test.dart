@@ -9,6 +9,7 @@ import 'package:phf/data/repositories/interfaces/record_repository.dart';
 import 'package:phf/logic/providers/core_providers.dart';
 import 'package:phf/logic/providers/ocr_status_provider.dart';
 import 'package:phf/logic/providers/person_provider.dart';
+import 'package:phf/logic/providers/timeline_provider.dart';
 import 'package:phf/presentation/pages/timeline/timeline_page.dart';
 import 'package:phf/presentation/widgets/event_card.dart';
 
@@ -62,7 +63,13 @@ void main() {
     );
 
     when(
-      mockRecordRepo.getRecordsByPerson(any),
+      mockRecordRepo.searchRecords(
+        personId: anyNamed('personId'),
+        query: anyNamed('query'),
+        tags: anyNamed('tags'),
+        startDate: anyNamed('startDate'),
+        endDate: anyNamed('endDate'),
+      ),
     ).thenAnswer((_) async => [record]);
     when(mockRecordRepo.getPendingCount(any)).thenAnswer((_) async => 0);
     when(mockImageRepo.getImagesForRecord(any)).thenAnswer((_) async => []);
@@ -75,7 +82,15 @@ void main() {
   });
 
   testWidgets('Timeline displays empty state when no records', (tester) async {
-    when(mockRecordRepo.getRecordsByPerson(any)).thenAnswer((_) async => []);
+    when(
+      mockRecordRepo.searchRecords(
+        personId: anyNamed('personId'),
+        query: anyNamed('query'),
+        tags: anyNamed('tags'),
+        startDate: anyNamed('startDate'),
+        endDate: anyNamed('endDate'),
+      ),
+    ).thenAnswer((_) async => []);
     when(mockRecordRepo.getPendingCount(any)).thenAnswer((_) async => 0);
 
     await tester.pumpWidget(createSubject());
@@ -87,12 +102,85 @@ void main() {
   testWidgets('Timeline displays pending banner when pendingCount > 0', (
     tester,
   ) async {
-    when(mockRecordRepo.getRecordsByPerson(any)).thenAnswer((_) async => []);
+    when(
+      mockRecordRepo.searchRecords(
+        personId: anyNamed('personId'),
+        query: anyNamed('query'),
+        tags: anyNamed('tags'),
+        startDate: anyNamed('startDate'),
+        endDate: anyNamed('endDate'),
+      ),
+    ).thenAnswer((_) async => []);
     when(mockRecordRepo.getPendingCount(any)).thenAnswer((_) async => 5);
 
     await tester.pumpWidget(createSubject(pendingCount: 5));
     await tester.pumpAndSettle();
 
     expect(find.text('有 5 项病历待确认'), findsOneWidget);
+  });
+
+  testWidgets('Timeline search/filter calls repository with correct args', (
+    tester,
+  ) async {
+    final record = MedicalRecord(
+      id: 'r1',
+      personId: 'p1',
+      hospitalName: 'Filtered Hospital',
+      notedAt: DateTime.now(),
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+      status: RecordStatus.archived,
+    );
+
+    when(
+      mockRecordRepo.searchRecords(
+        personId: anyNamed('personId'),
+        query: anyNamed('query'),
+        tags: anyNamed('tags'),
+        startDate: anyNamed('startDate'),
+        endDate: anyNamed('endDate'),
+      ),
+    ).thenAnswer((_) async => [record]);
+    when(mockRecordRepo.getPendingCount(any)).thenAnswer((_) async => 0);
+    when(mockImageRepo.getImagesForRecord(any)).thenAnswer((_) async => []);
+
+    final container = ProviderContainer(
+      overrides: [
+        recordRepositoryProvider.overrideWithValue(mockRecordRepo),
+        imageRepositoryProvider.overrideWithValue(mockImageRepo),
+        currentPersonIdControllerProvider.overrideWith(
+          () => MockCurrentPersonIdController('p1'),
+        ),
+        ocrPendingCountProvider.overrideWith((ref) => Stream.value(0)),
+      ],
+    );
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: const MaterialApp(home: Scaffold(body: TimelinePage())),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    // Call search manually
+    final start = DateTime(2023, 1, 1);
+    final end = DateTime(2023, 12, 31);
+    final tags = ['blood'];
+
+    await container
+        .read(timelineControllerProvider.notifier)
+        .search(query: 'test', tags: tags, startDate: start, endDate: end);
+    await tester.pump();
+
+    verify(
+      mockRecordRepo.searchRecords(
+        personId: 'p1',
+        query: 'test',
+        tags: tags,
+        startDate: start,
+        endDate: end,
+      ),
+    ).called(1);
   });
 }
