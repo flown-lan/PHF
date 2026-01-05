@@ -68,11 +68,28 @@ dev_dependencies:
   workmanager_platform_interface: ^0.9.1+1
 
   talker: any
+  flutter_launcher_icons: ^0.14.4
+  flutter_native_splash: ^2.4.7
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/source/icon.png"
+  min_sdk_android: 21
+
+flutter_native_splash:
+  color: "#008080"
+  image: "assets/source/icon.png"
+  android_12:
+    image: "assets/source/icon.png"
+    color: "#008080"
+  ios: true
+  android: true
+
 flutter:
   uses-material-design: true
+  assets:
+    - assets/privacy_policy.md
+    - assets/source/
   fonts:
     - family: Inconsolata
-      fonts:
-        - asset: assets/fonts/Inconsolata-Regular.ttf
-        - asset: assets/fonts/Inconsolata-Bold.ttf
-          weight: 700

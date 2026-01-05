@@ -97,6 +97,11 @@ Phase 3 (Governance & Store Readiness) has started.
     - Added `assets/privacy_policy.md` containing core privacy commitments.
     - Implemented `PrivacyPolicyPage` with themed Markdown styling.
     - Integrated entry point into `SettingsPage` under a new "About" section.
+- [x] **T3.7.2**: Store - Asset Adaptation (Issue #31).
+    - Integrated `flutter_launcher_icons` and `flutter_native_splash` for automated asset generation.
+    - Configured multi-platform icon specs and Android 12+ adaptive support.
+    - Set up native splash screen logic with brand colors (#008080).
+    - Created placeholder source assets and asset generation guide.
 - [x] **T3.3.2 & T3.3.3**: Secure Backup Engine.
     - Implemented `BackupService` with AES-256-GCM encryption and ZIP streaming.
     - Integrated with `share_plus` for encrypted backup distribution.
