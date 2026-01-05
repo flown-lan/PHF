@@ -3,6 +3,7 @@ import 'presentation/theme/app_theme.dart';
 import 'presentation/pages/home/home_page.dart';
 import 'presentation/pages/onboarding/security_onboarding_page.dart';
 import 'presentation/pages/onboarding/medical_disclaimer_page.dart';
+import 'presentation/pages/settings/settings_page.dart';
 import 'presentation/pages/auth/lock_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:phf/logic/providers/core_providers.dart';
@@ -66,6 +67,7 @@ class PaperHealthApp extends ConsumerWidget {
         '/home': (context) => const HomePage(),
         '/onboarding': (context) => const SecurityOnboardingPage(),
         '/disclaimer': (context) => const MedicalDisclaimerPage(),
+        '/settings': (context) => const SettingsPage(),
       },
     );
   }
@@ -89,8 +91,9 @@ class AppLoader extends ConsumerWidget {
           return const MedicalDisclaimerPage();
         }
 
-        // 检查应用锁设置
+        // 使用 hasLockProvider 替代 FutureBuilder，避免生命周期导致的重复加载
         final hasLockAsync = ref.watch(hasLockProvider);
+
         return hasLockAsync.when(
           data: (hasLock) {
             // 如果没有设置应用锁，进入引导流程
