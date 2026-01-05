@@ -56,6 +56,10 @@ Phase 3 (Governance & Store Readiness) has started.
     - Implemented capsule-style sliding tabs for person switching.
     - Integrated with `currentPersonIdControllerProvider` for persistence and isolation.
     - Follows `Constitution` UI standards (Teal, Monospace, specific radii).
+- [x] **T3.5.1**: UI - Collapsible OCR Text Component.
+    - Implemented `CollapsibleOcrCard` widget with expansion logic.
+    - Integrated into `RecordDetailPage` info view.
+    - Follows Monospace font standards for medical data.
 
 ## 🟢 Phase 2 Complete
 All Phase 2 tasks (T17-T20) are implemented and verified. The system now supports:
