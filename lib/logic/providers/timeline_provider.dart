@@ -10,6 +10,9 @@
 /// - `loadRecords`: 加载全部（分页暂未实现，Phase 1 全量）。
 /// - `search`: 根据关键字或 Tag 过滤。
 /// - `delete`: 执行软删除并刷新列表。
+///
+/// ## 修复记录
+/// - [issue#22] 重构 `TimelineController` 以支持持久化和多维过滤（日期、标签）。
 library;
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -54,11 +57,23 @@ class TimelineController extends _$TimelineController {
   }
 
   /// 内部获取当前用户的所有记录
-  Future<HomeState> _fetchRecords(String personId) async {
+  Future<HomeState> _fetchRecords(
+    String personId, {
+    String? query,
+    List<String>? tags,
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
     final repo = ref.read(recordRepositoryProvider);
     final imageRepo = ref.read(imageRepositoryProvider);
 
-    final records = await repo.getRecordsByPerson(personId);
+    final records = await repo.searchRecords(
+      personId: personId,
+      query: query,
+      tags: tags,
+      startDate: startDate,
+      endDate: endDate,
+    );
     final pendingCount = await repo.getPendingCount(personId);
 
     // Enrich with images (Phase 1 N+1)
@@ -68,7 +83,14 @@ class TimelineController extends _$TimelineController {
       enriched.add(rec.copyWith(images: images));
     }
 
-    return HomeState(records: enriched, pendingCount: pendingCount);
+    return HomeState(
+      records: enriched,
+      pendingCount: pendingCount,
+      filterTags: tags,
+      startDate: startDate,
+      endDate: endDate,
+      searchQuery: query,
+    );
   }
 
   /// 刷新列表
@@ -76,35 +98,43 @@ class TimelineController extends _$TimelineController {
     final personId = await ref.read(currentPersonIdControllerProvider.future);
     if (personId == null) return;
 
+    final currentQuery = state.value?.searchQuery;
+    final currentTags = state.value?.filterTags;
+    final currentStart = state.value?.startDate;
+    final currentEnd = state.value?.endDate;
+
     state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() => _fetchRecords(personId));
+    state = await AsyncValue.guard(
+      () => _fetchRecords(
+        personId,
+        query: currentQuery,
+        tags: currentTags,
+        startDate: currentStart,
+        endDate: currentEnd,
+      ),
+    );
   }
 
   /// 搜索与过滤
-  Future<void> search({String? query, List<String>? tags}) async {
+  Future<void> search({
+    String? query,
+    List<String>? tags,
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
     final personId = await ref.read(currentPersonIdControllerProvider.future);
     if (personId == null) return;
 
     state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() async {
-      final repo = ref.read(recordRepositoryProvider);
-      final imageRepo = ref.read(imageRepositoryProvider);
-
-      final records = await repo.searchRecords(
-        personId: personId,
+    state = await AsyncValue.guard(
+      () => _fetchRecords(
+        personId,
         query: query,
         tags: tags,
-      );
-      final pendingCount = await repo.getPendingCount(personId);
-
-      final List<MedicalRecord> enriched = [];
-      for (var rec in records) {
-        final images = await imageRepo.getImagesForRecord(rec.id);
-        enriched.add(rec.copyWith(images: images));
-      }
-
-      return HomeState(records: enriched, pendingCount: pendingCount);
-    });
+        startDate: startDate,
+        endDate: endDate,
+      ),
+    );
   }
 
   /// 删除记录

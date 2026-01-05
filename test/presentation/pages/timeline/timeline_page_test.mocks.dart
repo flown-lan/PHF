@@ -107,12 +107,16 @@ class MockIRecordRepository extends _i1.Mock implements _i2.IRecordRepository {
     required String? personId,
     String? query,
     List<String>? tags,
+    DateTime? startDate,
+    DateTime? endDate,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#searchRecords, [], {
               #personId: personId,
               #query: query,
               #tags: tags,
+              #startDate: startDate,
+              #endDate: endDate,
             }),
             returnValue: _i3.Future<List<_i4.MedicalRecord>>.value(
               <_i4.MedicalRecord>[],
