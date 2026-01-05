@@ -148,7 +148,10 @@ class _TagManagementPageState extends ConsumerState<TagManagementPage> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('排序失败: $e'), backgroundColor: AppTheme.errorRed),
+          SnackBar(
+            content: Text('排序失败: $e'),
+            backgroundColor: AppTheme.errorRed,
+          ),
         );
       }
     }
@@ -179,14 +182,17 @@ class _TagManagementPageState extends ConsumerState<TagManagementPage> {
         await ref.read(tagRepositoryProvider).deleteTag(tag.id);
         ref.invalidate(allTagsProvider);
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('删除成功')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('删除成功')));
         }
       } catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('删除失败: $e'), backgroundColor: AppTheme.errorRed),
+            SnackBar(
+              content: Text('删除失败: $e'),
+              backgroundColor: AppTheme.errorRed,
+            ),
           );
         }
       }
@@ -224,7 +230,9 @@ class _TagManagementPageState extends ConsumerState<TagManagementPage> {
                 if (isEditing) {
                   await repo.updateTag(tag.copyWith(name: name));
                 } else {
-                  final personId = await ref.read(currentPersonIdControllerProvider.future);
+                  final personId = await ref.read(
+                    currentPersonIdControllerProvider.future,
+                  );
                   final newTag = Tag(
                     id: const Uuid().v4(),
                     name: name,

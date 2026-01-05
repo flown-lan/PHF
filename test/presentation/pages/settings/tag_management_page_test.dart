@@ -58,8 +58,9 @@ void main() {
 
     when(mockPersonRepo.getAllPersons()).thenAnswer((_) async => testPersons);
     when(mockMetaRepo.getCurrentPersonId()).thenAnswer((_) async => 'p1');
-    when(mockTagRepo.getAllTags(personId: anyNamed('personId')))
-        .thenAnswer((_) async => testTags);
+    when(
+      mockTagRepo.getAllTags(personId: anyNamed('personId')),
+    ).thenAnswer((_) async => testTags);
   });
 
   Widget createWidgetUnderTest() {
@@ -112,7 +113,9 @@ void main() {
     expect(find.textContaining('确定要删除标签 "My Report" 吗？'), findsOneWidget);
   });
 
-  testWidgets('Confirming delete calls repository', (WidgetTester tester) async {
+  testWidgets('Confirming delete calls repository', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(createWidgetUnderTest());
     await tester.pumpAndSettle();
 
