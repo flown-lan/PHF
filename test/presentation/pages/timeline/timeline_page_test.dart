@@ -39,8 +39,9 @@ void main() {
     mockImageRepo = MockIImageRepository();
     mockTagRepo = MockITagRepository();
 
-    when(mockTagRepo.getAllTags(personId: anyNamed('personId')))
-        .thenAnswer((_) async => []);
+    when(
+      mockTagRepo.getAllTags(personId: anyNamed('personId')),
+    ).thenAnswer((_) async => []);
   });
 
   Widget createSubject({int pendingCount = 0}) {
@@ -53,12 +54,14 @@ void main() {
           () => MockCurrentPersonIdController('p1'),
         ),
         currentPersonProvider.overrideWith(
-          (ref) => Future.value(Person(
-            id: 'p1',
-            nickname: 'Me',
-            isDefault: true,
-            createdAt: DateTime.now(),
-          )),
+          (ref) => Future.value(
+            Person(
+              id: 'p1',
+              nickname: 'Me',
+              isDefault: true,
+              createdAt: DateTime.now(),
+            ),
+          ),
         ),
         ocrPendingCountProvider.overrideWith(
           (ref) => Stream.value(pendingCount),
@@ -170,12 +173,14 @@ void main() {
           () => MockCurrentPersonIdController('p1'),
         ),
         currentPersonProvider.overrideWith(
-          (ref) => Future.value(Person(
-            id: 'p1',
-            nickname: 'Me',
-            isDefault: true,
-            createdAt: DateTime.now(),
-          )),
+          (ref) => Future.value(
+            Person(
+              id: 'p1',
+              nickname: 'Me',
+              isDefault: true,
+              createdAt: DateTime.now(),
+            ),
+          ),
         ),
         ocrPendingCountProvider.overrideWith((ref) => Stream.value(0)),
       ],

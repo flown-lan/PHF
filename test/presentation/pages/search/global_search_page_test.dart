@@ -36,12 +36,14 @@ void main() {
           () => MockCurrentPersonIdController('p1'),
         ),
         currentPersonProvider.overrideWith(
-          (ref) => Future.value(Person(
-            id: 'p1',
-            nickname: 'Me',
-            isDefault: true,
-            createdAt: DateTime.now(),
-          )),
+          (ref) => Future.value(
+            Person(
+              id: 'p1',
+              nickname: 'Me',
+              isDefault: true,
+              createdAt: DateTime.now(),
+            ),
+          ),
         ),
       ],
       child: const MaterialApp(home: GlobalSearchPage()),
