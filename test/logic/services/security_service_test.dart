@@ -41,8 +41,9 @@ void main() {
     test('setPin should hash and store PIN', () async {
       await securityService.setPin(pin);
 
-      verify(mockStorage.write(key: 'user_pin_hash', value: anyNamed('value')))
-          .called(1);
+      verify(
+        mockStorage.write(key: 'user_pin_hash', value: anyNamed('value')),
+      ).called(1);
       verify(mockMetaRepo.setHasLock(true)).called(1);
     });
 
@@ -64,22 +65,26 @@ void main() {
 
       final success = await securityService.changePin(pin, '654321');
       expect(success, isTrue);
-      verify(mockStorage.write(key: 'user_pin_hash', value: anyNamed('value')))
-          .called(1);
+      verify(
+        mockStorage.write(key: 'user_pin_hash', value: anyNamed('value')),
+      ).called(1);
     });
 
     test('enableBiometrics should store flag on success', () async {
       // ignore: deprecated_member_use
-      when(mockLocalAuth.authenticate(
-        localizedReason: anyNamed('localizedReason'),
-        // ignore: deprecated_member_use
-        biometricOnly: anyNamed('biometricOnly'),
-      )).thenAnswer((_) async => true);
+      when(
+        mockLocalAuth.authenticate(
+          localizedReason: anyNamed('localizedReason'),
+          // ignore: deprecated_member_use
+          biometricOnly: anyNamed('biometricOnly'),
+        ),
+      ).thenAnswer((_) async => true);
 
       final result = await securityService.enableBiometrics();
       expect(result, isTrue);
-      verify(mockStorage.write(key: 'biometrics_enabled', value: 'true'))
-          .called(1);
+      verify(
+        mockStorage.write(key: 'biometrics_enabled', value: 'true'),
+      ).called(1);
     });
   });
 }

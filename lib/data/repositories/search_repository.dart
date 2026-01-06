@@ -89,7 +89,8 @@ class SearchRepository extends BaseRepository implements ISearchRepository {
           filePath: imgRow['file_path'] as String,
           thumbnailPath: imgRow['thumbnail_path'] as String,
           encryptionKey: imgRow['encryption_key'] as String,
-          thumbnailEncryptionKey: imgRow['thumbnail_encryption_key'] as String? ?? '',
+          thumbnailEncryptionKey:
+              imgRow['thumbnail_encryption_key'] as String? ?? '',
           width: imgRow['width'] as int?,
           height: imgRow['height'] as int?,
           mimeType: imgRow['mime_type'] as String? ?? 'image/webp',
@@ -101,7 +102,8 @@ class SearchRepository extends BaseRepository implements ISearchRepository {
           ),
           ocrText: imgRow['ocr_text'] as String?,
           ocrRawJson: imgRow['ocr_raw_json'] as String?,
-          ocrConfidence: (imgRow['ocr_confidence'] ?? imgRow['confidence']) as double?,
+          ocrConfidence:
+              (imgRow['ocr_confidence'] ?? imgRow['confidence']) as double?,
           hospitalName: imgRow['hospital_name'] as String?,
           visitDate: imgRow['visit_date_ms'] != null
               ? DateTime.fromMillisecondsSinceEpoch(
