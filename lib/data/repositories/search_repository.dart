@@ -32,12 +32,16 @@ class SearchRepository extends BaseRepository implements ISearchRepository {
     if (trimmedQuery.isEmpty) return [];
 
     // 先按空格分词，对每个原始词内部进行 CJK 分段并包裹引号，确保 CJK 连续词作为 Phrase 匹配
-    final tokens = trimmedQuery.split(RegExp(r'\s+')).where((t) => t.isNotEmpty);
-    final sanitizedQuery = tokens.map((t) {
-      final segmented = _segmentCJK(t);
-      final escaped = segmented.replaceAll('"', '""');
-      return '"$escaped"';
-    }).join(' ');
+    final tokens = trimmedQuery
+        .split(RegExp(r'\s+'))
+        .where((t) => t.isNotEmpty);
+    final sanitizedQuery = tokens
+        .map((t) {
+          final segmented = _segmentCJK(t);
+          final escaped = segmented.replaceAll('"', '""');
+          return '"$escaped"';
+        })
+        .join(' ');
 
     final database = await dbService.database;
 
