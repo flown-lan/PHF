@@ -88,7 +88,7 @@ void main() {
     await db.execute(
       "INSERT INTO persons (id, nickname, created_at_ms) VALUES ('p2', 'User 2', 0)",
     );
-    
+
     // Record for p1
     await db.insert('records', {
       'id': 'r1',
@@ -106,7 +106,7 @@ void main() {
       'thumbnail_encryption_key': 'tk1',
       'created_at_ms': 0,
     });
-    
+
     // Record for p2
     await db.insert('records', {
       'id': 'r2',
@@ -147,43 +147,42 @@ void main() {
     await db.close();
   });
 
-  test(
-    'Search index should isolate results by person_id',
-    () async {
-      // 1. Process p1's image
-      when(
-        mockSecurityHelper.decryptDataFromFile(any, any),
-      ).thenAnswer((_) async => Uint8List(0));
-      when(
-        mockOcrService.recognizeText(any, mimeType: anyNamed('mimeType')),
-      ).thenAnswer(
-        (_) async => const OcrResult(text: 'Secret content for P1', confidence: 0.95),
-      );
+  test('Search index should isolate results by person_id', () async {
+    // 1. Process p1's image
+    when(
+      mockSecurityHelper.decryptDataFromFile(any, any),
+    ).thenAnswer((_) async => Uint8List(0));
+    when(
+      mockOcrService.recognizeText(any, mimeType: anyNamed('mimeType')),
+    ).thenAnswer(
+      (_) async =>
+          const OcrResult(text: 'Secret content for P1', confidence: 0.95),
+    );
 
-      await processor.processNextItem();
+    await processor.processNextItem();
 
-      // 2. Process p2's image
-      when(
-        mockOcrService.recognizeText(any, mimeType: anyNamed('mimeType')),
-      ).thenAnswer(
-        (_) async => const OcrResult(text: 'Public content for P2', confidence: 0.95),
-      );
+    // 2. Process p2's image
+    when(
+      mockOcrService.recognizeText(any, mimeType: anyNamed('mimeType')),
+    ).thenAnswer(
+      (_) async =>
+          const OcrResult(text: 'Public content for P2', confidence: 0.95),
+    );
 
-      await processor.processNextItem();
+    await processor.processNextItem();
 
-      // 3. P1 searches for their own content
-      var results = await searchRepo.search('Secret', 'p1');
-      expect(results.length, 1);
-      expect(results.first.record.personId, 'p1');
+    // 3. P1 searches for their own content
+    var results = await searchRepo.search('Secret', 'p1');
+    expect(results.length, 1);
+    expect(results.first.record.personId, 'p1');
 
-      // 4. P2 searches for P1's content -> Should be EMPTY
-      results = await searchRepo.search('Secret', 'p2');
-      expect(results, isEmpty, reason: 'P2 should not find P1 content');
+    // 4. P2 searches for P1's content -> Should be EMPTY
+    results = await searchRepo.search('Secret', 'p2');
+    expect(results, isEmpty, reason: 'P2 should not find P1 content');
 
-      // 5. P2 searches for their own content
-      results = await searchRepo.search('Public', 'p2');
-      expect(results.length, 1);
-      expect(results.first.record.personId, 'p2');
-    },
-  );
+    // 5. P2 searches for their own content
+    results = await searchRepo.search('Public', 'p2');
+    expect(results.length, 1);
+    expect(results.first.record.personId, 'p2');
+  });
 }
