@@ -25,4 +25,7 @@ abstract interface class ISearchRepository {
 
   /// 删除索引
   Future<void> deleteIndex(String recordId);
+
+  /// 全量重索引
+  Future<void> reindexAll();
 }

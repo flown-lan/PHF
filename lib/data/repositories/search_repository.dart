@@ -13,6 +13,7 @@
 /// 解决了 BaseRepository 缺失 db getter 的调用问题；
 /// 优化了 FTS5 查询语法，直接引用表名以确保 MATCH 语义在不同 SQLite 版本下的稳定性。
 /// [2026-01-06] 加固：在 FTS5 索引中引入 `person_id` 物理列，实现更深层的数据隔离与搜索安全。
+/// [2026-01-06] 优化：改进了 CJK 分段逻辑与查询脱敏，修复了多词搜索回归问题，并确保 Snippet 还原的可读性。
 library;
 
 import 'dart:convert';
@@ -30,8 +31,14 @@ class SearchRepository extends BaseRepository implements ISearchRepository {
     final trimmedQuery = query.trim();
     if (trimmedQuery.isEmpty) return [];
 
-    final segmentedQuery = _segmentCJK(trimmedQuery);
-    final sanitizedQuery = _sanitizeFts5Query(segmentedQuery);
+    // 先按空格分词，对每个原始词内部进行 CJK 分段并包裹引号，确保 CJK 连续词作为 Phrase 匹配
+    final tokens = trimmedQuery.split(RegExp(r'\s+')).where((t) => t.isNotEmpty);
+    final sanitizedQuery = tokens.map((t) {
+      final segmented = _segmentCJK(t);
+      final escaped = segmented.replaceAll('"', '""');
+      return '"$escaped"';
+    }).join(' ');
+
     final database = await dbService.database;
 
     try {
@@ -157,32 +164,28 @@ class SearchRepository extends BaseRepository implements ISearchRepository {
 
   /// 移除为了 FTS5 分词而人工插入的 CJK 空格
   String _desegmentCJK(String text) {
+    if (text.isEmpty) return text;
+    // 移除所有与 CJK 字符相邻的空格
     return text
-        .replaceAllMapped(RegExp(r'([\u4e00-\u9fa5])\s+'), (m) => m.group(1)!)
-        .replaceAllMapped(RegExp(r'\s+([\u4e00-\u9fa5])'), (m) => m.group(1)!)
+        .replaceAll(RegExp(r'\s+(?=[\u4e00-\u9fa5])'), '')
+        .replaceAll(RegExp(r'(?<=[\u4e00-\u9fa5])\s+'), '')
         .trim();
-  }
-
-  /// 针对 FTS5 查询对输入进行脱敏
-  String _sanitizeFts5Query(String query) {
-    // 简单替换双引号以防止语法注入
-    final escaped = query.replaceAll('"', '""');
-    if (escaped.isEmpty) return '';
-    // 包装在双引号中以支持分词后的短语匹配
-    return '"$escaped"';
   }
 
   /// 为 CJK 字符插入空格以支持 FTS5 分词
   String _segmentCJK(String text) {
+    if (text.isEmpty) return text;
     // 匹配 CJK 字符区间
     final regExp = RegExp(r'([\u4e00-\u9fa5])');
-    return text.replaceAllMapped(regExp, (match) => ' ${match.group(0)} ');
+    return text
+        .replaceAllMapped(regExp, (match) => ' ${match.group(0)} ')
+        .replaceAll(RegExp(r'\s+'), ' ')
+        .trim();
   }
 
   @override
   Future<void> updateIndex(String recordId, String content) async {
     // Deprecated: Needs full context for person_id.
-    // Better to use syncRecordIndex.
     final database = await dbService.database;
     final List<Map<String, dynamic>> records = await database.query(
       'records',
@@ -202,7 +205,7 @@ class SearchRepository extends BaseRepository implements ISearchRepository {
       await txn.insert('ocr_search_index', {
         'record_id': recordId,
         'person_id': personId,
-        'content': content,
+        'content': _segmentCJK(content),
       });
     });
   }
@@ -303,5 +306,19 @@ class SearchRepository extends BaseRepository implements ISearchRepository {
       where: 'record_id = ?',
       whereArgs: [recordId],
     );
+  }
+
+  @override
+  Future<void> reindexAll() async {
+    final database = await dbService.database;
+    final List<Map<String, dynamic>> records = await database.query(
+      'records',
+      columns: ['id'],
+      where: "status != 'deleted'",
+    );
+
+    for (var row in records) {
+      await syncRecordIndex(row['id'] as String);
+    }
   }
 }

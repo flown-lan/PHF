@@ -67,4 +67,13 @@ class MockISearchRepository extends _i1.Mock implements _i2.ISearchRepository {
             returnValueForMissingStub: _i3.Future<void>.value(),
           )
           as _i3.Future<void>);
+
+  @override
+  _i3.Future<void> reindexAll() =>
+      (super.noSuchMethod(
+            Invocation.method(#reindexAll, []),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
 }

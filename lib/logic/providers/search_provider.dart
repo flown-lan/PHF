@@ -9,7 +9,21 @@ part 'search_provider.g.dart';
 class SearchController extends _$SearchController {
   @override
   FutureOr<List<SearchResult>> build() {
+    // 异步触发全量重索引，确保旧数据在升级后能被搜到
+    _ensureReindexed();
     return [];
+  }
+
+  Future<void> _ensureReindexed() async {
+    final metaRepo = ref.read(appMetaRepositoryProvider);
+    const reindexKey = 'fts_reindexed_v9';
+    final isDone = await metaRepo.get(reindexKey);
+
+    if (isDone != 'true') {
+      final repo = ref.read(searchRepositoryProvider);
+      await repo.reindexAll();
+      await metaRepo.put(reindexKey, 'true');
+    }
   }
 
   Future<void> search(String query) async {
