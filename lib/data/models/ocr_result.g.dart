@@ -122,9 +122,9 @@ _OcrResult _$OcrResultFromJson(Map<String, dynamic> json) => _OcrResult(
   confidence: (json['confidence'] as num?)?.toDouble() ?? 0.0,
   source: json['source'] as String? ?? 'unknown',
   language: json['language'] as String? ?? 'auto',
-  timestamp: json['timestamp'] == null
+  timestamp: _readTimestamp(json, 'timestamp') == null
       ? null
-      : DateTime.parse(json['timestamp'] as String),
+      : DateTime.parse(_readTimestamp(json, 'timestamp') as String),
   version: (json['version'] as num?)?.toInt() ?? 2,
 );
 

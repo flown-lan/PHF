@@ -1159,7 +1159,7 @@ mixin _$OcrResult {
 
  String get text;@JsonKey(readValue: _readPages) List<OcrPage> get pages; double get confidence;// Metadata (V2)
  String get source;// e.g., 'ios_vision', 'google_mlkit'
- String get language; DateTime? get timestamp; int get version;
+ String get language;@JsonKey(readValue: _readTimestamp) DateTime? get timestamp; int get version;
 /// Create a copy of OcrResult
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1192,7 +1192,7 @@ abstract mixin class $OcrResultCopyWith<$Res>  {
   factory $OcrResultCopyWith(OcrResult value, $Res Function(OcrResult) _then) = _$OcrResultCopyWithImpl;
 @useResult
 $Res call({
- String text,@JsonKey(readValue: _readPages) List<OcrPage> pages, double confidence, String source, String language, DateTime? timestamp, int version
+ String text,@JsonKey(readValue: _readPages) List<OcrPage> pages, double confidence, String source, String language,@JsonKey(readValue: _readTimestamp) DateTime? timestamp, int version
 });
 
 
@@ -1303,7 +1303,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String text, @JsonKey(readValue: _readPages)  List<OcrPage> pages,  double confidence,  String source,  String language,  DateTime? timestamp,  int version)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String text, @JsonKey(readValue: _readPages)  List<OcrPage> pages,  double confidence,  String source,  String language, @JsonKey(readValue: _readTimestamp)  DateTime? timestamp,  int version)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _OcrResult() when $default != null:
 return $default(_that.text,_that.pages,_that.confidence,_that.source,_that.language,_that.timestamp,_that.version);case _:
@@ -1324,7 +1324,7 @@ return $default(_that.text,_that.pages,_that.confidence,_that.source,_that.langu
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String text, @JsonKey(readValue: _readPages)  List<OcrPage> pages,  double confidence,  String source,  String language,  DateTime? timestamp,  int version)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String text, @JsonKey(readValue: _readPages)  List<OcrPage> pages,  double confidence,  String source,  String language, @JsonKey(readValue: _readTimestamp)  DateTime? timestamp,  int version)  $default,) {final _that = this;
 switch (_that) {
 case _OcrResult():
 return $default(_that.text,_that.pages,_that.confidence,_that.source,_that.language,_that.timestamp,_that.version);case _:
@@ -1344,7 +1344,7 @@ return $default(_that.text,_that.pages,_that.confidence,_that.source,_that.langu
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String text, @JsonKey(readValue: _readPages)  List<OcrPage> pages,  double confidence,  String source,  String language,  DateTime? timestamp,  int version)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String text, @JsonKey(readValue: _readPages)  List<OcrPage> pages,  double confidence,  String source,  String language, @JsonKey(readValue: _readTimestamp)  DateTime? timestamp,  int version)?  $default,) {final _that = this;
 switch (_that) {
 case _OcrResult() when $default != null:
 return $default(_that.text,_that.pages,_that.confidence,_that.source,_that.language,_that.timestamp,_that.version);case _:
@@ -1359,7 +1359,7 @@ return $default(_that.text,_that.pages,_that.confidence,_that.source,_that.langu
 
 @JsonSerializable(explicitToJson: true)
 class _OcrResult extends OcrResult {
-  const _OcrResult({required this.text, @JsonKey(readValue: _readPages) final  List<OcrPage> pages = const [], this.confidence = 0.0, this.source = 'unknown', this.language = 'auto', this.timestamp, this.version = 2}): _pages = pages,super._();
+  const _OcrResult({required this.text, @JsonKey(readValue: _readPages) final  List<OcrPage> pages = const [], this.confidence = 0.0, this.source = 'unknown', this.language = 'auto', @JsonKey(readValue: _readTimestamp) this.timestamp, this.version = 2}): _pages = pages,super._();
   factory _OcrResult.fromJson(Map<String, dynamic> json) => _$OcrResultFromJson(json);
 
 @override final  String text;
@@ -1375,7 +1375,7 @@ class _OcrResult extends OcrResult {
 @override@JsonKey() final  String source;
 // e.g., 'ios_vision', 'google_mlkit'
 @override@JsonKey() final  String language;
-@override final  DateTime? timestamp;
+@override@JsonKey(readValue: _readTimestamp) final  DateTime? timestamp;
 @override@JsonKey() final  int version;
 
 /// Create a copy of OcrResult
@@ -1411,7 +1411,7 @@ abstract mixin class _$OcrResultCopyWith<$Res> implements $OcrResultCopyWith<$Re
   factory _$OcrResultCopyWith(_OcrResult value, $Res Function(_OcrResult) _then) = __$OcrResultCopyWithImpl;
 @override @useResult
 $Res call({
- String text,@JsonKey(readValue: _readPages) List<OcrPage> pages, double confidence, String source, String language, DateTime? timestamp, int version
+ String text,@JsonKey(readValue: _readPages) List<OcrPage> pages, double confidence, String source, String language,@JsonKey(readValue: _readTimestamp) DateTime? timestamp, int version
 });
 
 
