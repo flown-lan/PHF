@@ -38,6 +38,17 @@ jobs:
       - name: 📦 Install dependencies
         run: flutter pub get
 
+      - name: 🔒 Snyk Setup
+        uses: snyk/actions/setup@master
+
+      - name: 🔍 Snyk Security Scan
+        shell: bash
+        run: |
+          # 扫描代码逻辑安全 (SAST)
+          snyk code test --severity-threshold=high
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
       - name: 🛠️ Verify Generated Code
         run: |
           dart run build_runner build --delete-conflicting-outputs
