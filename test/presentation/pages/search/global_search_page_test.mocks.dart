@@ -31,9 +31,17 @@ import 'package:sqflite_sqlcipher/sqflite.dart' as _i5;
 /// See the documentation for Mockito's code generation for more information.
 class MockISearchRepository extends _i1.Mock implements _i2.ISearchRepository {
   @override
-  _i3.Future<List<_i4.SearchResult>> search(String? query, String? personId) =>
+  _i3.Future<List<_i4.SearchResult>> search(
+    String? query,
+    String? personId, {
+    _i5.DatabaseExecutor? executor,
+  }) =>
       (super.noSuchMethod(
-            Invocation.method(#search, [query, personId]),
+            Invocation.method(
+              #search,
+              [query, personId],
+              {#executor: executor},
+            ),
             returnValue: _i3.Future<List<_i4.SearchResult>>.value(
               <_i4.SearchResult>[],
             ),
