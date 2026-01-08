@@ -31,67 +31,70 @@ class ImageRepository extends BaseRepository implements IImageRepository {
     : _searchRepository = searchRepository;
 
   @override
-  Future<void> saveImages(List<MedicalImage> images) async {
-    final db = await dbService.database;
-    final batch = db.batch();
+  Future<void> saveImages(
+    List<MedicalImage> images, {
+    DatabaseExecutor? executor,
+  }) async {
+    final exec = await getExecutor(executor);
 
-    for (var image in images) {
-      batch.insert('images', {
-        'id': image.id,
-        'record_id': image.recordId,
-        'file_path': image.filePath,
-        'thumbnail_path': image.thumbnailPath,
-        'encryption_key': image.encryptionKey,
-        'thumbnail_encryption_key': image.thumbnailEncryptionKey,
-        'width': image.width,
-        'height': image.height,
-        'mime_type': image.mimeType,
-        'file_size': image.fileSize,
-        'page_index': image.displayOrder, // mapped
-        'created_at_ms': image.createdAt.millisecondsSinceEpoch,
-        'hospital_name': image.hospitalName,
-        'visit_date_ms': image.visitDate?.millisecondsSinceEpoch,
-        // Store tags (List<String> Ids) as JSON string in 'tags' column
-        'tags': jsonEncode(image.tagIds),
-      }, conflictAlgorithm: ConflictAlgorithm.replace);
+    Future<void> logic(DatabaseExecutor e) async {
+      final batch = e.batch();
+      for (var image in images) {
+        batch.insert('images', {
+          'id': image.id,
+          'record_id': image.recordId,
+          'file_path': image.filePath,
+          'thumbnail_path': image.thumbnailPath,
+          'encryption_key': image.encryptionKey,
+          'thumbnail_encryption_key': image.thumbnailEncryptionKey,
+          'width': image.width,
+          'height': image.height,
+          'mime_type': image.mimeType,
+          'file_size': image.fileSize,
+          'page_index': image.displayOrder, // mapped
+          'created_at_ms': image.createdAt.millisecondsSinceEpoch,
+          'hospital_name': image.hospitalName,
+          'visit_date_ms': image.visitDate?.millisecondsSinceEpoch,
+          // Store tags (List<String> Ids) as JSON string in 'tags' column
+          'tags': jsonEncode(image.tagIds),
+        }, conflictAlgorithm: ConflictAlgorithm.replace);
 
-      // Handle Tags Relationship
-      if (image.tagIds.isNotEmpty) {
-        // 1. Insert into image_tags
-        for (var tagId in image.tagIds) {
-          batch.insert('image_tags', {
-            'image_id': image.id,
-            'tag_id': tagId,
-          }, conflictAlgorithm: ConflictAlgorithm.ignore);
+        // Handle Tags Relationship
+        if (image.tagIds.isNotEmpty) {
+          // 1. Insert into image_tags
+          for (var tagId in image.tagIds) {
+            batch.insert('image_tags', {
+              'image_id': image.id,
+              'tag_id': tagId,
+            }, conflictAlgorithm: ConflictAlgorithm.ignore);
+          }
         }
+      }
+      await batch.commit();
+
+      final recordIds = images.map((i) => i.recordId).toSet();
+      for (var recordId in recordIds) {
+        await _syncRecordTagsCache(e, recordId);
+        await _syncRecordMetadataCache(e, recordId);
+        // 同步 FTS 索引
+        await _searchRepository?.syncRecordIndex(recordId, executor: e);
       }
     }
 
-    await batch.commit();
-
-    // After commit, sync cache for distinct records
-    // Optimization: Collect distinct recordIds involved
-    final recordIds = images.map((i) => i.recordId).toSet();
-
-    // We can't do this inside the same batch easily if we want to run queries.
-    // So distinct implementation is needed.
-    // Actually `_syncRecordTagsCache` is async and runs queries.
-    // We should do it inside a transaction ideally, but batch commit is atomic.
-    // We can run sync after.
-    await db.transaction((txn) async {
-      for (var recordId in recordIds) {
-        await _syncRecordTagsCache(txn, recordId);
-        await _syncRecordMetadataCache(txn, recordId);
-        // 同步 FTS 索引
-        await _searchRepository?.syncRecordIndex(recordId);
-      }
-    });
+    if (executor == null && exec is Database) {
+      await exec.transaction((txn) => logic(txn));
+    } else {
+      await logic(exec);
+    }
   }
 
   @override
-  Future<List<MedicalImage>> getImagesForRecord(String recordId) async {
-    final db = await dbService.database;
-    final List<Map<String, dynamic>> maps = await db.query(
+  Future<List<MedicalImage>> getImagesForRecord(
+    String recordId, {
+    DatabaseExecutor? executor,
+  }) async {
+    final exec = await getExecutor(executor);
+    final List<Map<String, dynamic>> maps = await exec.query(
       'images',
       where: 'record_id = ?',
       whereArgs: [recordId],
@@ -102,37 +105,30 @@ class ImageRepository extends BaseRepository implements IImageRepository {
   }
 
   @override
-  Future<void> deleteImage(String imageId) async {
-    final db = await dbService.database;
-    // Get recordId before deletion for sync
-    final List<Map<String, dynamic>> maps = await db.query(
-      'images',
-      columns: ['record_id'],
-      where: 'id = ?',
-      whereArgs: [imageId],
-    );
+  Future<void> deleteImage(String imageId, {DatabaseExecutor? executor}) async {
+    final exec = await getExecutor(executor);
 
-    if (maps.isEmpty) return;
-    final String recordId = maps.first['record_id'] as String;
-
-    await db.transaction((txn) async {
-      // 1. Delete OCR Task for this image
-      await txn.delete(
-        'ocr_queue',
-        where: 'image_id = ?',
+    Future<void> logic(DatabaseExecutor e) async {
+      // Get recordId before deletion for sync
+      final List<Map<String, dynamic>> maps = await e.query(
+        'images',
+        columns: ['record_id'],
+        where: 'id = ?',
         whereArgs: [imageId],
       );
+
+      if (maps.isEmpty) return;
+      final String recordId = maps.first['record_id'] as String;
+
+      // 1. Delete OCR Task for this image
+      await e.delete('ocr_queue', where: 'image_id = ?', whereArgs: [imageId]);
 
       // 2. Delete image and its tags
-      await txn.delete('images', where: 'id = ?', whereArgs: [imageId]);
-      await txn.delete(
-        'image_tags',
-        where: 'image_id = ?',
-        whereArgs: [imageId],
-      );
+      await e.delete('images', where: 'id = ?', whereArgs: [imageId]);
+      await e.delete('image_tags', where: 'image_id = ?', whereArgs: [imageId]);
 
       // 3. Check remaining images for this record
-      final List<Map<String, dynamic>> remaining = await txn.rawQuery(
+      final List<Map<String, dynamic>> remaining = await e.rawQuery(
         'SELECT COUNT(*) as count FROM images WHERE record_id = ?',
         [recordId],
       );
@@ -140,37 +136,47 @@ class ImageRepository extends BaseRepository implements IImageRepository {
 
       if (count == 0) {
         // 4. No images left, delete the entire Record and its search index
-        await txn.delete('records', where: 'id = ?', whereArgs: [recordId]);
-        await txn.delete(
+        await e.delete('records', where: 'id = ?', whereArgs: [recordId]);
+        await e.delete(
           'ocr_search_index',
           where: 'record_id = ?',
           whereArgs: [recordId],
         );
       } else {
         // 5. Still has images, sync caches
-        await _syncRecordTagsCache(txn, recordId);
-        await _syncRecordMetadataCache(txn, recordId);
+        await _syncRecordTagsCache(e, recordId);
+        await _syncRecordMetadataCache(e, recordId);
       }
-    });
+    }
+
+    if (executor == null && exec is Database) {
+      await exec.transaction((txn) => logic(txn));
+    } else {
+      await logic(exec);
+    }
   }
 
   @override
-  Future<void> updateImageTags(String imageId, List<String> tagIds) async {
-    final db = await dbService.database;
+  Future<void> updateImageTags(
+    String imageId,
+    List<String> tagIds, {
+    DatabaseExecutor? executor,
+  }) async {
+    final exec = await getExecutor(executor);
 
-    // Get recordId
-    final List<Map<String, dynamic>> maps = await db.query(
-      'images',
-      columns: ['record_id'],
-      where: 'id = ?',
-      whereArgs: [imageId],
-    );
-    if (maps.isEmpty) return;
-    final String recordId = maps.first['record_id'] as String;
+    Future<void> logic(DatabaseExecutor e) async {
+      // Get recordId
+      final List<Map<String, dynamic>> maps = await e.query(
+        'images',
+        columns: ['record_id'],
+        where: 'id = ?',
+        whereArgs: [imageId],
+      );
+      if (maps.isEmpty) return;
+      final String recordId = maps.first['record_id'] as String;
 
-    await db.transaction((txn) async {
       // 1. Update image tags column (local cache)
-      await txn.update(
+      await e.update(
         'images',
         {'tags': jsonEncode(tagIds)},
         where: 'id = ?',
@@ -178,30 +184,35 @@ class ImageRepository extends BaseRepository implements IImageRepository {
       );
 
       // 2. Update relational table
-      await txn.delete(
-        'image_tags',
-        where: 'image_id = ?',
-        whereArgs: [imageId],
-      );
+      await e.delete('image_tags', where: 'image_id = ?', whereArgs: [imageId]);
       for (var tagId in tagIds) {
-        await txn.insert('image_tags', {
+        await e.insert('image_tags', {
           'image_id': imageId,
           'tag_id': tagId,
         }, conflictAlgorithm: ConflictAlgorithm.ignore);
       }
 
       // 3. Sync record cache
-      await _syncRecordTagsCache(txn, recordId);
+      await _syncRecordTagsCache(e, recordId);
 
       // 4. 同步 FTS 索引 (因为标签名在索引中)
-      await _searchRepository?.syncRecordIndex(recordId);
-    });
+      await _searchRepository?.syncRecordIndex(recordId, executor: e);
+    }
+
+    if (executor == null && exec is Database) {
+      await exec.transaction((txn) => logic(txn));
+    } else {
+      await logic(exec);
+    }
   }
 
   @override
-  Future<MedicalImage?> getImageById(String id) async {
-    final db = await dbService.database;
-    final List<Map<String, dynamic>> maps = await db.query(
+  Future<MedicalImage?> getImageById(
+    String id, {
+    DatabaseExecutor? executor,
+  }) async {
+    final exec = await getExecutor(executor);
+    final List<Map<String, dynamic>> maps = await exec.query(
       'images',
       where: 'id = ?',
       whereArgs: [id],
@@ -216,21 +227,22 @@ class ImageRepository extends BaseRepository implements IImageRepository {
     String imageId, {
     String? hospitalName,
     DateTime? visitDate,
+    DatabaseExecutor? executor,
   }) async {
-    final db = await dbService.database;
+    final exec = await getExecutor(executor);
 
-    // Get recordId before update
-    final List<Map<String, dynamic>> maps = await db.query(
-      'images',
-      columns: ['record_id'],
-      where: 'id = ?',
-      whereArgs: [imageId],
-    );
-    if (maps.isEmpty) return;
-    final String recordId = maps.first['record_id'] as String;
+    Future<void> logic(DatabaseExecutor e) async {
+      // Get recordId before update
+      final List<Map<String, dynamic>> maps = await e.query(
+        'images',
+        columns: ['record_id'],
+        where: 'id = ?',
+        whereArgs: [imageId],
+      );
+      if (maps.isEmpty) return;
+      final String recordId = maps.first['record_id'] as String;
 
-    await db.transaction((txn) async {
-      await txn.update(
+      await e.update(
         'images',
         {
           if (hospitalName != null) 'hospital_name': hospitalName,
@@ -241,11 +253,17 @@ class ImageRepository extends BaseRepository implements IImageRepository {
         whereArgs: [imageId],
       );
 
-      await _syncRecordMetadataCache(txn, recordId);
+      await _syncRecordMetadataCache(e, recordId);
 
       // 同步 FTS 索引
-      await _searchRepository?.syncRecordIndex(recordId);
-    });
+      await _searchRepository?.syncRecordIndex(recordId, executor: e);
+    }
+
+    if (executor == null && exec is Database) {
+      await exec.transaction((txn) => logic(txn));
+    } else {
+      await logic(exec);
+    }
   }
 
   @override
@@ -254,9 +272,10 @@ class ImageRepository extends BaseRepository implements IImageRepository {
     String text, {
     String? rawJson,
     double confidence = 0.0,
+    DatabaseExecutor? executor,
   }) async {
-    final db = await dbService.database;
-    await db.update(
+    final exec = await getExecutor(executor);
+    await exec.update(
       'images',
       {'ocr_text': text, 'ocr_raw_json': rawJson, 'ocr_confidence': confidence},
       where: 'id = ?',
@@ -264,10 +283,13 @@ class ImageRepository extends BaseRepository implements IImageRepository {
     );
   }
 
-  Future<void> _syncRecordTagsCache(Transaction txn, String recordId) async {
+  Future<void> _syncRecordTagsCache(
+    DatabaseExecutor exec,
+    String recordId,
+  ) async {
     // 1. Query all tags for this record
     // Join images -> image_tags -> tags to get Names
-    final List<Map<String, dynamic>> results = await txn.rawQuery(
+    final List<Map<String, dynamic>> results = await exec.rawQuery(
       '''
       SELECT DISTINCT t.name 
       FROM tags t
@@ -284,7 +306,7 @@ class ImageRepository extends BaseRepository implements IImageRepository {
         .toList();
 
     // 2. Update record
-    await txn.update(
+    await exec.update(
       'records',
       {'tags_cache': jsonEncode(tagNames)},
       where: 'id = ?',
@@ -293,11 +315,11 @@ class ImageRepository extends BaseRepository implements IImageRepository {
   }
 
   Future<void> _syncRecordMetadataCache(
-    DatabaseExecutor txn,
+    DatabaseExecutor exec,
     String recordId,
   ) async {
     // 1. 获取所有属于该 Record 的图片汇总信息
-    final List<Map<String, dynamic>> images = await txn.query(
+    final List<Map<String, dynamic>> images = await exec.query(
       'images',
       columns: ['visit_date_ms', 'hospital_name'],
       where: 'record_id = ?',
@@ -309,7 +331,7 @@ class ImageRepository extends BaseRepository implements IImageRepository {
       // 如果没有图片了，可能需要重置或保持现状？
       // 通常删除最后一张图片会连带删除 Record（或者 Record 变为空）。
       // 这里如果图片为空，尝试清空缓存字段。
-      await txn.update(
+      await exec.update(
         'records',
         {
           'hospital_name': null,
@@ -359,7 +381,7 @@ class ImageRepository extends BaseRepository implements IImageRepository {
 
     if (updates.isNotEmpty) {
       updates['updated_at_ms'] = DateTime.now().millisecondsSinceEpoch;
-      await txn.update(
+      await exec.update(
         'records',
         updates,
         where: 'id = ?',
@@ -390,7 +412,7 @@ class ImageRepository extends BaseRepository implements IImageRepository {
       'filePath': row['file_path'],
       'thumbnailPath': row['thumbnail_path'],
       'mimeType': row['mime_type'],
-      'fileSize': row['file_size'],
+      'file_size': row['file_size'],
       'displayOrder': row['page_index'],
       'width': row['width'],
       'height': row['height'],

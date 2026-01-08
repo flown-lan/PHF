@@ -194,6 +194,7 @@ class BackgroundWorkerService {
       ocrService: ocrService,
       securityHelper: fileSecurityHelper,
       pathService: pathService,
+      dbService: dbService,
       talker: talker,
     );
   }

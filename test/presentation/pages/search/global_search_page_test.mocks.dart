@@ -7,8 +7,9 @@ import 'dart:async' as _i3;
 
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:phf/data/models/search_result.dart' as _i4;
-import 'package:phf/data/repositories/app_meta_repository.dart' as _i5;
+import 'package:phf/data/repositories/app_meta_repository.dart' as _i6;
 import 'package:phf/data/repositories/interfaces/search_repository.dart' as _i2;
+import 'package:sqflite_sqlcipher/sqflite.dart' as _i5;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -43,27 +44,45 @@ class MockISearchRepository extends _i1.Mock implements _i2.ISearchRepository {
           as _i3.Future<List<_i4.SearchResult>>);
 
   @override
-  _i3.Future<void> updateIndex(String? recordId, String? content) =>
+  _i3.Future<void> updateIndex(
+    String? recordId,
+    String? content, {
+    _i5.DatabaseExecutor? executor,
+  }) =>
       (super.noSuchMethod(
-            Invocation.method(#updateIndex, [recordId, content]),
+            Invocation.method(
+              #updateIndex,
+              [recordId, content],
+              {#executor: executor},
+            ),
             returnValue: _i3.Future<void>.value(),
             returnValueForMissingStub: _i3.Future<void>.value(),
           )
           as _i3.Future<void>);
 
   @override
-  _i3.Future<void> syncRecordIndex(String? recordId) =>
+  _i3.Future<void> syncRecordIndex(
+    String? recordId, {
+    _i5.DatabaseExecutor? executor,
+  }) =>
       (super.noSuchMethod(
-            Invocation.method(#syncRecordIndex, [recordId]),
+            Invocation.method(
+              #syncRecordIndex,
+              [recordId],
+              {#executor: executor},
+            ),
             returnValue: _i3.Future<void>.value(),
             returnValueForMissingStub: _i3.Future<void>.value(),
           )
           as _i3.Future<void>);
 
   @override
-  _i3.Future<void> deleteIndex(String? recordId) =>
+  _i3.Future<void> deleteIndex(
+    String? recordId, {
+    _i5.DatabaseExecutor? executor,
+  }) =>
       (super.noSuchMethod(
-            Invocation.method(#deleteIndex, [recordId]),
+            Invocation.method(#deleteIndex, [recordId], {#executor: executor}),
             returnValue: _i3.Future<void>.value(),
             returnValueForMissingStub: _i3.Future<void>.value(),
           )
@@ -82,7 +101,7 @@ class MockISearchRepository extends _i1.Mock implements _i2.ISearchRepository {
 /// A class which mocks [AppMetaRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockAppMetaRepository extends _i1.Mock implements _i5.AppMetaRepository {
+class MockAppMetaRepository extends _i1.Mock implements _i6.AppMetaRepository {
   @override
   _i3.Future<String?> get(String? key) =>
       (super.noSuchMethod(

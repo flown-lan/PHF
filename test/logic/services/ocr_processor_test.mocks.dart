@@ -3,28 +3,20 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i6;
+import 'dart:async' as _i9;
 import 'dart:io' as _i4;
-import 'dart:typed_data' as _i15;
+import 'dart:typed_data' as _i10;
 
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i18;
+import 'package:mockito/src/dummies.dart' as _i12;
 import 'package:phf/core/security/encrypted_file_result.dart' as _i3;
-import 'package:phf/core/security/file_security_helper.dart' as _i16;
-import 'package:phf/core/services/path_provider_service.dart' as _i17;
-import 'package:phf/data/models/image.dart' as _i9;
-import 'package:phf/data/models/ocr_queue_item.dart' as _i7;
+import 'package:phf/core/security/file_security_helper.dart' as _i11;
+import 'package:phf/core/security/master_key_manager.dart' as _i5;
+import 'package:phf/core/services/path_provider_service.dart' as _i6;
+import 'package:phf/data/datasources/local/database_service.dart' as _i13;
 import 'package:phf/data/models/ocr_result.dart' as _i2;
-import 'package:phf/data/models/record.dart' as _i11;
-import 'package:phf/data/models/search_result.dart' as _i13;
-import 'package:phf/data/repositories/interfaces/image_repository.dart' as _i8;
-import 'package:phf/data/repositories/interfaces/ocr_queue_repository.dart'
-    as _i5;
-import 'package:phf/data/repositories/interfaces/record_repository.dart'
-    as _i10;
-import 'package:phf/data/repositories/interfaces/search_repository.dart'
-    as _i12;
-import 'package:phf/logic/services/interfaces/ocr_service.dart' as _i14;
+import 'package:phf/logic/services/interfaces/ocr_service.dart' as _i8;
+import 'package:sqflite_sqlcipher/sqflite.dart' as _i7;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -57,365 +49,30 @@ class _FakeFile_2 extends _i1.SmartFake implements _i4.File {
     : super(parent, parentInvocation);
 }
 
-/// A class which mocks [IOCRQueueRepository].
-///
-/// See the documentation for Mockito's code generation for more information.
-class MockIOCRQueueRepository extends _i1.Mock
-    implements _i5.IOCRQueueRepository {
-  @override
-  _i6.Future<void> enqueue(String? imageId) =>
-      (super.noSuchMethod(
-            Invocation.method(#enqueue, [imageId]),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
-          )
-          as _i6.Future<void>);
-
-  @override
-  _i6.Future<_i7.OCRQueueItem?> dequeue() =>
-      (super.noSuchMethod(
-            Invocation.method(#dequeue, []),
-            returnValue: _i6.Future<_i7.OCRQueueItem?>.value(),
-            returnValueForMissingStub: _i6.Future<_i7.OCRQueueItem?>.value(),
-          )
-          as _i6.Future<_i7.OCRQueueItem?>);
-
-  @override
-  _i6.Future<void> updateStatus(
-    String? id,
-    _i7.OCRJobStatus? status, {
-    String? error,
-  }) =>
-      (super.noSuchMethod(
-            Invocation.method(#updateStatus, [id, status], {#error: error}),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
-          )
-          as _i6.Future<void>);
-
-  @override
-  _i6.Future<void> incrementRetry(String? id) =>
-      (super.noSuchMethod(
-            Invocation.method(#incrementRetry, [id]),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
-          )
-          as _i6.Future<void>);
-
-  @override
-  _i6.Future<int> getPendingCount({String? personId}) =>
-      (super.noSuchMethod(
-            Invocation.method(#getPendingCount, [], {#personId: personId}),
-            returnValue: _i6.Future<int>.value(0),
-            returnValueForMissingStub: _i6.Future<int>.value(0),
-          )
-          as _i6.Future<int>);
-
-  @override
-  _i6.Future<void> deleteJob(String? id) =>
-      (super.noSuchMethod(
-            Invocation.method(#deleteJob, [id]),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
-          )
-          as _i6.Future<void>);
-
-  @override
-  _i6.Future<void> deleteByImageId(String? imageId) =>
-      (super.noSuchMethod(
-            Invocation.method(#deleteByImageId, [imageId]),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
-          )
-          as _i6.Future<void>);
+class _FakeMasterKeyManager_3 extends _i1.SmartFake
+    implements _i5.MasterKeyManager {
+  _FakeMasterKeyManager_3(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
-/// A class which mocks [IImageRepository].
-///
-/// See the documentation for Mockito's code generation for more information.
-class MockIImageRepository extends _i1.Mock implements _i8.IImageRepository {
-  @override
-  _i6.Future<List<_i9.MedicalImage>> getImagesForRecord(String? recordId) =>
-      (super.noSuchMethod(
-            Invocation.method(#getImagesForRecord, [recordId]),
-            returnValue: _i6.Future<List<_i9.MedicalImage>>.value(
-              <_i9.MedicalImage>[],
-            ),
-            returnValueForMissingStub: _i6.Future<List<_i9.MedicalImage>>.value(
-              <_i9.MedicalImage>[],
-            ),
-          )
-          as _i6.Future<List<_i9.MedicalImage>>);
-
-  @override
-  _i6.Future<void> saveImages(List<_i9.MedicalImage>? images) =>
-      (super.noSuchMethod(
-            Invocation.method(#saveImages, [images]),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
-          )
-          as _i6.Future<void>);
-
-  @override
-  _i6.Future<void> updateImageTags(String? imageId, List<String>? tagIds) =>
-      (super.noSuchMethod(
-            Invocation.method(#updateImageTags, [imageId, tagIds]),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
-          )
-          as _i6.Future<void>);
-
-  @override
-  _i6.Future<void> deleteImage(String? id) =>
-      (super.noSuchMethod(
-            Invocation.method(#deleteImage, [id]),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
-          )
-          as _i6.Future<void>);
-
-  @override
-  _i6.Future<void> updateImageMetadata(
-    String? imageId, {
-    String? hospitalName,
-    DateTime? visitDate,
-  }) =>
-      (super.noSuchMethod(
-            Invocation.method(
-              #updateImageMetadata,
-              [imageId],
-              {#hospitalName: hospitalName, #visitDate: visitDate},
-            ),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
-          )
-          as _i6.Future<void>);
-
-  @override
-  _i6.Future<_i9.MedicalImage?> getImageById(String? id) =>
-      (super.noSuchMethod(
-            Invocation.method(#getImageById, [id]),
-            returnValue: _i6.Future<_i9.MedicalImage?>.value(),
-            returnValueForMissingStub: _i6.Future<_i9.MedicalImage?>.value(),
-          )
-          as _i6.Future<_i9.MedicalImage?>);
-
-  @override
-  _i6.Future<void> updateOCRData(
-    String? imageId,
-    String? text, {
-    String? rawJson,
-    double? confidence = 0.0,
-  }) =>
-      (super.noSuchMethod(
-            Invocation.method(
-              #updateOCRData,
-              [imageId, text],
-              {#rawJson: rawJson, #confidence: confidence},
-            ),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
-          )
-          as _i6.Future<void>);
+class _FakePathProviderService_4 extends _i1.SmartFake
+    implements _i6.PathProviderService {
+  _FakePathProviderService_4(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
-/// A class which mocks [IRecordRepository].
-///
-/// See the documentation for Mockito's code generation for more information.
-class MockIRecordRepository extends _i1.Mock implements _i10.IRecordRepository {
-  @override
-  _i6.Future<List<_i11.MedicalRecord>> getRecordsByPerson(String? personId) =>
-      (super.noSuchMethod(
-            Invocation.method(#getRecordsByPerson, [personId]),
-            returnValue: _i6.Future<List<_i11.MedicalRecord>>.value(
-              <_i11.MedicalRecord>[],
-            ),
-            returnValueForMissingStub:
-                _i6.Future<List<_i11.MedicalRecord>>.value(
-                  <_i11.MedicalRecord>[],
-                ),
-          )
-          as _i6.Future<List<_i11.MedicalRecord>>);
-
-  @override
-  _i6.Future<_i11.MedicalRecord?> getRecordById(String? id) =>
-      (super.noSuchMethod(
-            Invocation.method(#getRecordById, [id]),
-            returnValue: _i6.Future<_i11.MedicalRecord?>.value(),
-            returnValueForMissingStub: _i6.Future<_i11.MedicalRecord?>.value(),
-          )
-          as _i6.Future<_i11.MedicalRecord?>);
-
-  @override
-  _i6.Future<void> saveRecord(_i11.MedicalRecord? record) =>
-      (super.noSuchMethod(
-            Invocation.method(#saveRecord, [record]),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
-          )
-          as _i6.Future<void>);
-
-  @override
-  _i6.Future<void> updateStatus(String? id, _i11.RecordStatus? status) =>
-      (super.noSuchMethod(
-            Invocation.method(#updateStatus, [id, status]),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
-          )
-          as _i6.Future<void>);
-
-  @override
-  _i6.Future<void> updateRecordMetadata(
-    String? id, {
-    String? hospitalName,
-    DateTime? visitDate,
-    String? notes,
-  }) =>
-      (super.noSuchMethod(
-            Invocation.method(
-              #updateRecordMetadata,
-              [id],
-              {
-                #hospitalName: hospitalName,
-                #visitDate: visitDate,
-                #notes: notes,
-              },
-            ),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
-          )
-          as _i6.Future<void>);
-
-  @override
-  _i6.Future<void> hardDeleteRecord(String? id) =>
-      (super.noSuchMethod(
-            Invocation.method(#hardDeleteRecord, [id]),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
-          )
-          as _i6.Future<void>);
-
-  @override
-  _i6.Future<List<_i11.MedicalRecord>> searchRecords({
-    required String? personId,
-    String? query,
-    List<String>? tags,
-    DateTime? startDate,
-    DateTime? endDate,
-  }) =>
-      (super.noSuchMethod(
-            Invocation.method(#searchRecords, [], {
-              #personId: personId,
-              #query: query,
-              #tags: tags,
-              #startDate: startDate,
-              #endDate: endDate,
-            }),
-            returnValue: _i6.Future<List<_i11.MedicalRecord>>.value(
-              <_i11.MedicalRecord>[],
-            ),
-            returnValueForMissingStub:
-                _i6.Future<List<_i11.MedicalRecord>>.value(
-                  <_i11.MedicalRecord>[],
-                ),
-          )
-          as _i6.Future<List<_i11.MedicalRecord>>);
-
-  @override
-  _i6.Future<void> syncRecordMetadata(String? recordId) =>
-      (super.noSuchMethod(
-            Invocation.method(#syncRecordMetadata, [recordId]),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
-          )
-          as _i6.Future<void>);
-
-  @override
-  _i6.Future<int> getPendingCount(String? personId) =>
-      (super.noSuchMethod(
-            Invocation.method(#getPendingCount, [personId]),
-            returnValue: _i6.Future<int>.value(0),
-            returnValueForMissingStub: _i6.Future<int>.value(0),
-          )
-          as _i6.Future<int>);
-
-  @override
-  _i6.Future<List<_i11.MedicalRecord>> getReviewRecords(String? personId) =>
-      (super.noSuchMethod(
-            Invocation.method(#getReviewRecords, [personId]),
-            returnValue: _i6.Future<List<_i11.MedicalRecord>>.value(
-              <_i11.MedicalRecord>[],
-            ),
-            returnValueForMissingStub:
-                _i6.Future<List<_i11.MedicalRecord>>.value(
-                  <_i11.MedicalRecord>[],
-                ),
-          )
-          as _i6.Future<List<_i11.MedicalRecord>>);
-}
-
-/// A class which mocks [ISearchRepository].
-///
-/// See the documentation for Mockito's code generation for more information.
-class MockISearchRepository extends _i1.Mock implements _i12.ISearchRepository {
-  @override
-  _i6.Future<List<_i13.SearchResult>> search(String? query, String? personId) =>
-      (super.noSuchMethod(
-            Invocation.method(#search, [query, personId]),
-            returnValue: _i6.Future<List<_i13.SearchResult>>.value(
-              <_i13.SearchResult>[],
-            ),
-            returnValueForMissingStub:
-                _i6.Future<List<_i13.SearchResult>>.value(
-                  <_i13.SearchResult>[],
-                ),
-          )
-          as _i6.Future<List<_i13.SearchResult>>);
-
-  @override
-  _i6.Future<void> updateIndex(String? recordId, String? content) =>
-      (super.noSuchMethod(
-            Invocation.method(#updateIndex, [recordId, content]),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
-          )
-          as _i6.Future<void>);
-
-  @override
-  _i6.Future<void> syncRecordIndex(String? recordId) =>
-      (super.noSuchMethod(
-            Invocation.method(#syncRecordIndex, [recordId]),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
-          )
-          as _i6.Future<void>);
-
-  @override
-  _i6.Future<void> deleteIndex(String? recordId) =>
-      (super.noSuchMethod(
-            Invocation.method(#deleteIndex, [recordId]),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
-          )
-          as _i6.Future<void>);
-
-  @override
-  _i6.Future<void> reindexAll() =>
-      (super.noSuchMethod(
-            Invocation.method(#reindexAll, []),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
-          )
-          as _i6.Future<void>);
+class _FakeDatabase_5 extends _i1.SmartFake implements _i7.Database {
+  _FakeDatabase_5(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 /// A class which mocks [IOCRService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockIOCRService extends _i1.Mock implements _i14.IOCRService {
+class MockIOCRService extends _i1.Mock implements _i8.IOCRService {
   @override
-  _i6.Future<_i2.OcrResult> recognizeText(
-    _i15.Uint8List? imageBytes, {
+  _i9.Future<_i2.OcrResult> recognizeText(
+    _i10.Uint8List? imageBytes, {
     String? mimeType,
     String? language = 'zh',
   }) =>
@@ -425,7 +82,7 @@ class MockIOCRService extends _i1.Mock implements _i14.IOCRService {
               [imageBytes],
               {#mimeType: mimeType, #language: language},
             ),
-            returnValue: _i6.Future<_i2.OcrResult>.value(
+            returnValue: _i9.Future<_i2.OcrResult>.value(
               _FakeOcrResult_0(
                 this,
                 Invocation.method(
@@ -435,7 +92,7 @@ class MockIOCRService extends _i1.Mock implements _i14.IOCRService {
                 ),
               ),
             ),
-            returnValueForMissingStub: _i6.Future<_i2.OcrResult>.value(
+            returnValueForMissingStub: _i9.Future<_i2.OcrResult>.value(
               _FakeOcrResult_0(
                 this,
                 Invocation.method(
@@ -446,25 +103,25 @@ class MockIOCRService extends _i1.Mock implements _i14.IOCRService {
               ),
             ),
           )
-          as _i6.Future<_i2.OcrResult>);
+          as _i9.Future<_i2.OcrResult>);
 
   @override
-  _i6.Future<void> dispose() =>
+  _i9.Future<void> dispose() =>
       (super.noSuchMethod(
             Invocation.method(#dispose, []),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
           )
-          as _i6.Future<void>);
+          as _i9.Future<void>);
 }
 
 /// A class which mocks [FileSecurityHelper].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockFileSecurityHelper extends _i1.Mock
-    implements _i16.FileSecurityHelper {
+    implements _i11.FileSecurityHelper {
   @override
-  _i6.Future<_i3.EncryptedFileResult> encryptMedia(
+  _i9.Future<_i3.EncryptedFileResult> encryptMedia(
     _i4.File? sourceFile, {
     required String? targetDir,
   }) =>
@@ -474,7 +131,7 @@ class MockFileSecurityHelper extends _i1.Mock
               [sourceFile],
               {#targetDir: targetDir},
             ),
-            returnValue: _i6.Future<_i3.EncryptedFileResult>.value(
+            returnValue: _i9.Future<_i3.EncryptedFileResult>.value(
               _FakeEncryptedFileResult_1(
                 this,
                 Invocation.method(
@@ -485,7 +142,7 @@ class MockFileSecurityHelper extends _i1.Mock
               ),
             ),
             returnValueForMissingStub:
-                _i6.Future<_i3.EncryptedFileResult>.value(
+                _i9.Future<_i3.EncryptedFileResult>.value(
                   _FakeEncryptedFileResult_1(
                     this,
                     Invocation.method(
@@ -496,11 +153,11 @@ class MockFileSecurityHelper extends _i1.Mock
                   ),
                 ),
           )
-          as _i6.Future<_i3.EncryptedFileResult>);
+          as _i9.Future<_i3.EncryptedFileResult>);
 
   @override
-  _i6.Future<_i3.EncryptedFileResult> saveEncryptedFile({
-    required _i15.Uint8List? data,
+  _i9.Future<_i3.EncryptedFileResult> saveEncryptedFile({
+    required _i10.Uint8List? data,
     required String? targetDir,
   }) =>
       (super.noSuchMethod(
@@ -508,7 +165,7 @@ class MockFileSecurityHelper extends _i1.Mock
               #data: data,
               #targetDir: targetDir,
             }),
-            returnValue: _i6.Future<_i3.EncryptedFileResult>.value(
+            returnValue: _i9.Future<_i3.EncryptedFileResult>.value(
               _FakeEncryptedFileResult_1(
                 this,
                 Invocation.method(#saveEncryptedFile, [], {
@@ -518,7 +175,7 @@ class MockFileSecurityHelper extends _i1.Mock
               ),
             ),
             returnValueForMissingStub:
-                _i6.Future<_i3.EncryptedFileResult>.value(
+                _i9.Future<_i3.EncryptedFileResult>.value(
                   _FakeEncryptedFileResult_1(
                     this,
                     Invocation.method(#saveEncryptedFile, [], {
@@ -528,10 +185,10 @@ class MockFileSecurityHelper extends _i1.Mock
                   ),
                 ),
           )
-          as _i6.Future<_i3.EncryptedFileResult>);
+          as _i9.Future<_i3.EncryptedFileResult>);
 
   @override
-  _i6.Future<_i4.File> decryptToTemp(
+  _i9.Future<_i4.File> decryptToTemp(
     String? encryptedPath,
     String? base64Key, {
     required String? tempDir,
@@ -542,7 +199,7 @@ class MockFileSecurityHelper extends _i1.Mock
               [encryptedPath, base64Key],
               {#tempDir: tempDir},
             ),
-            returnValue: _i6.Future<_i4.File>.value(
+            returnValue: _i9.Future<_i4.File>.value(
               _FakeFile_2(
                 this,
                 Invocation.method(
@@ -552,7 +209,7 @@ class MockFileSecurityHelper extends _i1.Mock
                 ),
               ),
             ),
-            returnValueForMissingStub: _i6.Future<_i4.File>.value(
+            returnValueForMissingStub: _i9.Future<_i4.File>.value(
               _FakeFile_2(
                 this,
                 Invocation.method(
@@ -563,37 +220,37 @@ class MockFileSecurityHelper extends _i1.Mock
               ),
             ),
           )
-          as _i6.Future<_i4.File>);
+          as _i9.Future<_i4.File>);
 
   @override
-  _i6.Future<_i15.Uint8List> decryptDataFromFile(
+  _i9.Future<_i10.Uint8List> decryptDataFromFile(
     String? path,
     String? base64Key,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#decryptDataFromFile, [path, base64Key]),
-            returnValue: _i6.Future<_i15.Uint8List>.value(_i15.Uint8List(0)),
-            returnValueForMissingStub: _i6.Future<_i15.Uint8List>.value(
-              _i15.Uint8List(0),
+            returnValue: _i9.Future<_i10.Uint8List>.value(_i10.Uint8List(0)),
+            returnValueForMissingStub: _i9.Future<_i10.Uint8List>.value(
+              _i10.Uint8List(0),
             ),
           )
-          as _i6.Future<_i15.Uint8List>);
+          as _i9.Future<_i10.Uint8List>);
 }
 
 /// A class which mocks [PathProviderService].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockPathProviderService extends _i1.Mock
-    implements _i17.PathProviderService {
+    implements _i6.PathProviderService {
   @override
   String get sandboxRoot =>
       (super.noSuchMethod(
             Invocation.getter(#sandboxRoot),
-            returnValue: _i18.dummyValue<String>(
+            returnValue: _i12.dummyValue<String>(
               this,
               Invocation.getter(#sandboxRoot),
             ),
-            returnValueForMissingStub: _i18.dummyValue<String>(
+            returnValueForMissingStub: _i12.dummyValue<String>(
               this,
               Invocation.getter(#sandboxRoot),
             ),
@@ -604,11 +261,11 @@ class MockPathProviderService extends _i1.Mock
   String get dbDirPath =>
       (super.noSuchMethod(
             Invocation.getter(#dbDirPath),
-            returnValue: _i18.dummyValue<String>(
+            returnValue: _i12.dummyValue<String>(
               this,
               Invocation.getter(#dbDirPath),
             ),
-            returnValueForMissingStub: _i18.dummyValue<String>(
+            returnValueForMissingStub: _i12.dummyValue<String>(
               this,
               Invocation.getter(#dbDirPath),
             ),
@@ -619,11 +276,11 @@ class MockPathProviderService extends _i1.Mock
   String get imagesDirPath =>
       (super.noSuchMethod(
             Invocation.getter(#imagesDirPath),
-            returnValue: _i18.dummyValue<String>(
+            returnValue: _i12.dummyValue<String>(
               this,
               Invocation.getter(#imagesDirPath),
             ),
-            returnValueForMissingStub: _i18.dummyValue<String>(
+            returnValueForMissingStub: _i12.dummyValue<String>(
               this,
               Invocation.getter(#imagesDirPath),
             ),
@@ -634,11 +291,11 @@ class MockPathProviderService extends _i1.Mock
   String get tempDirPath =>
       (super.noSuchMethod(
             Invocation.getter(#tempDirPath),
-            returnValue: _i18.dummyValue<String>(
+            returnValue: _i12.dummyValue<String>(
               this,
               Invocation.getter(#tempDirPath),
             ),
-            returnValueForMissingStub: _i18.dummyValue<String>(
+            returnValueForMissingStub: _i12.dummyValue<String>(
               this,
               Invocation.getter(#tempDirPath),
             ),
@@ -646,13 +303,13 @@ class MockPathProviderService extends _i1.Mock
           as String);
 
   @override
-  _i6.Future<void> initialize() =>
+  _i9.Future<void> initialize() =>
       (super.noSuchMethod(
             Invocation.method(#initialize, []),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
           )
-          as _i6.Future<void>);
+          as _i9.Future<void>);
 
   @override
   void reset() => super.noSuchMethod(
@@ -664,11 +321,11 @@ class MockPathProviderService extends _i1.Mock
   String getDatabasePath(String? fileName) =>
       (super.noSuchMethod(
             Invocation.method(#getDatabasePath, [fileName]),
-            returnValue: _i18.dummyValue<String>(
+            returnValue: _i12.dummyValue<String>(
               this,
               Invocation.method(#getDatabasePath, [fileName]),
             ),
-            returnValueForMissingStub: _i18.dummyValue<String>(
+            returnValueForMissingStub: _i12.dummyValue<String>(
               this,
               Invocation.method(#getDatabasePath, [fileName]),
             ),
@@ -676,30 +333,97 @@ class MockPathProviderService extends _i1.Mock
           as String);
 
   @override
-  _i6.Future<_i4.File> getSecureFile(String? relativePath) =>
+  _i9.Future<_i4.File> getSecureFile(String? relativePath) =>
       (super.noSuchMethod(
             Invocation.method(#getSecureFile, [relativePath]),
-            returnValue: _i6.Future<_i4.File>.value(
+            returnValue: _i9.Future<_i4.File>.value(
               _FakeFile_2(
                 this,
                 Invocation.method(#getSecureFile, [relativePath]),
               ),
             ),
-            returnValueForMissingStub: _i6.Future<_i4.File>.value(
+            returnValueForMissingStub: _i9.Future<_i4.File>.value(
               _FakeFile_2(
                 this,
                 Invocation.method(#getSecureFile, [relativePath]),
               ),
             ),
           )
-          as _i6.Future<_i4.File>);
+          as _i9.Future<_i4.File>);
 
   @override
-  _i6.Future<void> clearTemp() =>
+  _i9.Future<void> clearTemp() =>
       (super.noSuchMethod(
             Invocation.method(#clearTemp, []),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
           )
-          as _i6.Future<void>);
+          as _i9.Future<void>);
+}
+
+/// A class which mocks [SQLCipherDatabaseService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockSQLCipherDatabaseService extends _i1.Mock
+    implements _i13.SQLCipherDatabaseService {
+  @override
+  _i5.MasterKeyManager get keyManager =>
+      (super.noSuchMethod(
+            Invocation.getter(#keyManager),
+            returnValue: _FakeMasterKeyManager_3(
+              this,
+              Invocation.getter(#keyManager),
+            ),
+            returnValueForMissingStub: _FakeMasterKeyManager_3(
+              this,
+              Invocation.getter(#keyManager),
+            ),
+          )
+          as _i5.MasterKeyManager);
+
+  @override
+  _i6.PathProviderService get pathService =>
+      (super.noSuchMethod(
+            Invocation.getter(#pathService),
+            returnValue: _FakePathProviderService_4(
+              this,
+              Invocation.getter(#pathService),
+            ),
+            returnValueForMissingStub: _FakePathProviderService_4(
+              this,
+              Invocation.getter(#pathService),
+            ),
+          )
+          as _i6.PathProviderService);
+
+  @override
+  _i9.Future<_i7.Database> get database =>
+      (super.noSuchMethod(
+            Invocation.getter(#database),
+            returnValue: _i9.Future<_i7.Database>.value(
+              _FakeDatabase_5(this, Invocation.getter(#database)),
+            ),
+            returnValueForMissingStub: _i9.Future<_i7.Database>.value(
+              _FakeDatabase_5(this, Invocation.getter(#database)),
+            ),
+          )
+          as _i9.Future<_i7.Database>);
+
+  @override
+  _i9.Future<void> close() =>
+      (super.noSuchMethod(
+            Invocation.method(#close, []),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
+          )
+          as _i9.Future<void>);
+
+  @override
+  _i9.Future<void> onCreate(_i7.Database? db, int? version) =>
+      (super.noSuchMethod(
+            Invocation.method(#onCreate, [db, version]),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
+          )
+          as _i9.Future<void>);
 }
