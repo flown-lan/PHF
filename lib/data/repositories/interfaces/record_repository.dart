@@ -15,23 +15,28 @@
 /// - [issue#22] 为 `searchRecords` 增加 `startDate` 和 `endDate` 过滤参数。
 library;
 
-import '../../../data/models/record.dart';
+import 'package:sqflite_sqlcipher/sqflite.dart';
+import '../../models/record.dart';
 
-/// 医疗记录仓储契约
-abstract class IRecordRepository {
-  /// 获取特定用户的所有有效记录
-  ///
-  /// 结果应按 `notedAt` 倒序排列。
-  Future<List<MedicalRecord>> getRecordsByPerson(String personId);
+abstract interface class IRecordRepository {
+  /// 保存或更新就诊记录
+  Future<void> saveRecord(MedicalRecord record, {DatabaseExecutor? executor});
 
-  /// 根据 ID 获取单个详细记录（含图片元数据载入）
-  Future<MedicalRecord?> getRecordById(String id);
+  /// 根据 ID 获取记录
+  Future<MedicalRecord?> getRecordById(String id, {DatabaseExecutor? executor});
 
-  /// 保存记录（新建或覆盖）
-  Future<void> saveRecord(MedicalRecord record);
+  /// 获取指定人员的所有活跃记录
+  Future<List<MedicalRecord>> getRecordsByPerson(
+    String personId, {
+    DatabaseExecutor? executor,
+  });
 
-  /// 修改记录状态 (例如: 标记为已删除)
-  Future<void> updateStatus(String id, RecordStatus status);
+  /// 更新记录状态 (归档、删除、待校对)
+  Future<void> updateStatus(
+    String id,
+    RecordStatus status, {
+    DatabaseExecutor? executor,
+  });
 
   /// 更新记录元数据
   Future<void> updateRecordMetadata(
@@ -39,26 +44,34 @@ abstract class IRecordRepository {
     String? hospitalName,
     DateTime? visitDate,
     String? notes,
+    DatabaseExecutor? executor,
   });
 
-  /// 彻底删除记录实体（通常用于清理空记录）
-  Future<void> hardDeleteRecord(String id);
+  /// 彻底物理删除记录（慎用）
+  Future<void> hardDeleteRecord(String id, {DatabaseExecutor? executor});
 
-  /// 全文检索或标签过滤后的记录查询
+  /// 搜索记录 (支持文本、日期、标签过滤)
   Future<List<MedicalRecord>> searchRecords({
     required String personId,
     String? query,
     List<String>? tags,
     DateTime? startDate,
     DateTime? endDate,
+    DatabaseExecutor? executor,
   });
 
-  /// 汇总 Image 数据并同步到 Record 缓存字段
-  Future<void> syncRecordMetadata(String recordId);
+  /// 聚合 Record 下所有图片的元数据并同步到 Record 表缓存
+  Future<void> syncRecordMetadata(
+    String recordId, {
+    DatabaseExecutor? executor,
+  });
 
-  /// 获取待确认（review 状态）的记录数量
-  Future<int> getPendingCount(String personId);
+  /// 获取指定人员处于 review 状态的记录数量
+  Future<int> getPendingCount(String personId, {DatabaseExecutor? executor});
 
-  /// 获取待确认列表
-  Future<List<MedicalRecord>> getReviewRecords(String personId);
+  /// 获取所有待审核的记录
+  Future<List<MedicalRecord>> getReviewRecords(
+    String personId, {
+    DatabaseExecutor? executor,
+  });
 }

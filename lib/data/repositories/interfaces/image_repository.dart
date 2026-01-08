@@ -12,6 +12,7 @@
 /// - 符合 `Spec#4.1 Data Schema`：维护 `image_tags` 表的关联一致性。
 library;
 
+import 'package:sqflite_sqlcipher/sqflite.dart';
 import '../../../data/models/image.dart';
 
 /// 医疗图像仓储契约
@@ -19,28 +20,39 @@ abstract class IImageRepository {
   /// 获取属于特定记录的所有图片元数据
   ///
   /// 结果应按 `displayOrder` 正序排列。
-  Future<List<MedicalImage>> getImagesForRecord(String recordId);
+  Future<List<MedicalImage>> getImagesForRecord(
+    String recordId, {
+    DatabaseExecutor? executor,
+  });
 
   /// 批量保存图片元数据（通常在一条记录创建时触发）
-  Future<void> saveImages(List<MedicalImage> images);
+  Future<void> saveImages(
+    List<MedicalImage> images, {
+    DatabaseExecutor? executor,
+  });
 
   /// 给特定图片更新标签关联
   ///
   /// 实现类需负责在 `image_tags` 表中执行增删，并可选地触发 Record 表的 `tags_cache` 更新。
-  Future<void> updateImageTags(String imageId, List<String> tagIds);
+  Future<void> updateImageTags(
+    String imageId,
+    List<String> tagIds, {
+    DatabaseExecutor? executor,
+  });
 
   /// 删除单张图片元数据
-  Future<void> deleteImage(String id);
+  Future<void> deleteImage(String id, {DatabaseExecutor? executor});
 
   /// 更新单张图片的元数据 (医院、日期)
   Future<void> updateImageMetadata(
     String imageId, {
     String? hospitalName,
     DateTime? visitDate,
+    DatabaseExecutor? executor,
   });
 
   /// 获取单张图片元数据
-  Future<MedicalImage?> getImageById(String id);
+  Future<MedicalImage?> getImageById(String id, {DatabaseExecutor? executor});
 
   /// 更新图片 OCR 识别结果
   Future<void> updateOCRData(
@@ -48,5 +60,6 @@ abstract class IImageRepository {
     String text, {
     String? rawJson,
     double confidence = 0.0,
+    DatabaseExecutor? executor,
   });
 }

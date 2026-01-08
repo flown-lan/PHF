@@ -64,6 +64,14 @@ class TestDatabaseService extends SQLCipherDatabaseService {
     _cachedDb = db;
     return _cachedDb!;
   }
+
+  @override
+  Future<void> close() async {
+    if (_cachedDb != null) {
+      await _cachedDb!.close();
+      _cachedDb = null;
+    }
+  }
 }
 
 void main() {
@@ -87,7 +95,7 @@ void main() {
   });
 
   tearDown(() async {
-    // await dbService.close(); // FFI might have issues closing on fast tests, let's try
+    await dbService.close();
   });
 
   test('Should sync image tags to record tags_cache', () async {

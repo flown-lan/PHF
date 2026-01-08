@@ -54,10 +54,13 @@ class SearchRepository extends BaseRepository implements ISearchRepository {
   }
 
   @override
-  Future<void> updateIndex(String recordId, String content) async {
-    // Deprecated: Needs full context for person_id.
-    final database = await dbService.database;
-    final List<Map<String, dynamic>> records = await database.query(
+  Future<void> updateIndex(
+    String recordId,
+    String content, {
+    DatabaseExecutor? executor,
+  }) async {
+    final exec = await getExecutor(executor);
+    final List<Map<String, dynamic>> records = await exec.query(
       'records',
       columns: ['person_id'],
       where: 'id = ?',
@@ -66,27 +69,36 @@ class SearchRepository extends BaseRepository implements ISearchRepository {
     if (records.isEmpty) return;
     final personId = records.first['person_id'] as String;
 
-    await database.transaction((txn) async {
-      await txn.delete(
+    Future<void> logic(DatabaseExecutor e) async {
+      await e.delete(
         'ocr_search_index',
         where: 'record_id = ?',
         whereArgs: [recordId],
       );
-      await txn.insert('ocr_search_index', {
+      await e.insert('ocr_search_index', {
         'record_id': recordId,
         'person_id': personId,
         'content': FtsHelper.segmentCJK(content),
       });
-    });
+    }
+
+    if (executor == null && exec is Database) {
+      await exec.transaction((txn) => logic(txn));
+    } else {
+      await logic(exec);
+    }
   }
 
   @override
-  Future<void> syncRecordIndex(String recordId) async {
-    final database = await dbService.database;
+  Future<void> syncRecordIndex(
+    String recordId, {
+    DatabaseExecutor? executor,
+  }) async {
+    final exec = await getExecutor(executor);
 
-    await database.transaction((txn) async {
+    Future<void> logic(DatabaseExecutor e) async {
       // 1. Fetch Record Info
-      final List<Map<String, dynamic>> recordRows = await txn.query(
+      final List<Map<String, dynamic>> recordRows = await e.query(
         'records',
         columns: ['hospital_name', 'notes', 'person_id'],
         where: 'id = ?',
@@ -94,7 +106,7 @@ class SearchRepository extends BaseRepository implements ISearchRepository {
       );
 
       if (recordRows.isEmpty) {
-        await txn.delete(
+        await e.delete(
           'ocr_search_index',
           where: 'record_id = ?',
           whereArgs: [recordId],
@@ -108,7 +120,7 @@ class SearchRepository extends BaseRepository implements ISearchRepository {
       final personId = recordRow['person_id'] as String;
 
       // 2. Fetch Images Info (OCR Text & Tags)
-      final List<Map<String, dynamic>> imageRows = await txn.query(
+      final List<Map<String, dynamic>> imageRows = await e.query(
         'images',
         columns: ['ocr_text', 'tags'],
         where: 'record_id = ?',
@@ -139,7 +151,7 @@ class SearchRepository extends BaseRepository implements ISearchRepository {
       final StringBuffer tagNamesBuffer = StringBuffer();
       if (tagIds.isNotEmpty) {
         final placeholder = List.filled(tagIds.length, '?').join(',');
-        final List<Map<String, dynamic>> tagRows = await txn.query(
+        final List<Map<String, dynamic>> tagRows = await e.query(
           'tags',
           columns: ['name'],
           where: 'id IN ($placeholder)',
@@ -157,13 +169,13 @@ class SearchRepository extends BaseRepository implements ISearchRepository {
       final content = [hospitalName, tagNames, notes, ocrText].join('\n');
 
       // 5. Update FTS Index with CJK segmentation
-      await txn.delete(
+      await e.delete(
         'ocr_search_index',
         where: 'record_id = ?',
         whereArgs: [recordId],
       );
 
-      await txn.insert('ocr_search_index', {
+      await e.insert('ocr_search_index', {
         'record_id': recordId,
         'person_id': personId,
         'hospital_name': FtsHelper.segmentCJK(hospitalName),
@@ -172,13 +184,22 @@ class SearchRepository extends BaseRepository implements ISearchRepository {
         'notes': FtsHelper.segmentCJK(notes),
         'content': FtsHelper.segmentCJK(content),
       });
-    });
+    }
+
+    if (executor == null && exec is Database) {
+      await exec.transaction((txn) => logic(txn));
+    } else {
+      await logic(exec);
+    }
   }
 
   @override
-  Future<void> deleteIndex(String recordId) async {
-    final database = await dbService.database;
-    await database.delete(
+  Future<void> deleteIndex(
+    String recordId, {
+    DatabaseExecutor? executor,
+  }) async {
+    final exec = await getExecutor(executor);
+    await exec.delete(
       'ocr_search_index',
       where: 'record_id = ?',
       whereArgs: [recordId],
@@ -200,7 +221,7 @@ class SearchRepository extends BaseRepository implements ISearchRepository {
   }
 
   Future<List<Map<String, dynamic>>> _executeSearchQuery(
-    Database database,
+    DatabaseExecutor exec,
     String personId,
     String sanitizedQuery,
   ) async {
@@ -218,15 +239,15 @@ class SearchRepository extends BaseRepository implements ISearchRepository {
         LIMIT 100
       ''';
 
-    return database.rawQuery(sql, [personId, personId, sanitizedQuery]);
+    return exec.rawQuery(sql, [personId, personId, sanitizedQuery]);
   }
 
   Future<Map<String, List<MedicalImage>>> _fetchImagesForRecords(
-    Database database,
+    DatabaseExecutor exec,
     List<String> recordIds,
   ) async {
     final String placeholders = List.filled(recordIds.length, '?').join(',');
-    final List<Map<String, dynamic>> imageMaps = await database.query(
+    final List<Map<String, dynamic>> imageMaps = await exec.query(
       'images',
       where: 'record_id IN ($placeholders)',
       whereArgs: recordIds,

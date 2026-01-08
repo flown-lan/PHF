@@ -11,6 +11,9 @@
     - **Schema**: 确保 `ocr_search_index` 虚拟表包含 `person_id` 列 (UNINDEXED)。
     - **Logic**: 在 `RecordRepository.searchRecords` 和 `SearchRepository.search` 中强制执行 `fts.person_id = ?` 过滤。
     - **Testing**: 补全了 `repository_test.dart` 中的 FTS 架构定义，并增加了跨用户搜索隔离的安全性测试。
+- [x] **Issue #124**: 修复高频录入时的 `database is locked` 错误及 Riverpod 状态访问冲突。
+    - **Database**: 引入了 `DatabaseExecutor` 模式，使所有 Repository 支持在顶级事务中运行。重构了 `submit` 和 `processNextItem` 以使用单一事务，彻底消除了事务竞争导致的锁定。
+    - **Riverpod**: 修复了 `IngestionController` 在 `onDispose` 中访问已销毁状态导致的断言错误。改用局部 `_pathsToCleanup` 集合安全追踪临时文件。
 - [x] **Issue #121**: 修复“立即锁定”设置在非首页路由下失效的问题。
     - **Architecture**: 将锁屏拦截逻辑从 `AppLoader` 移动至 `MaterialApp.builder`。
     - **Logic**: 通过全局 Builder 包装 `Navigator`，确保无论当前处于哪个路由（如：设置页、详情页），只要 `isLocked` 为真，都会强制显示 `LockScreen` 覆盖层。

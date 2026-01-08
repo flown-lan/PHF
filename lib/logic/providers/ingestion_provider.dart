@@ -35,13 +35,20 @@ part 'ingestion_provider.g.dart';
 
 @riverpod
 class IngestionController extends _$IngestionController {
+  final Set<String> _pathsToCleanup = {};
+
   @override
   IngestionState build() {
-    // 确保在 Provider 销毁时清理所有未提交的临时文件
-    // 注意：必须通过闭包捕获当时的列表，不能在 onDispose 内部访问 state
     ref.onDispose(() {
-      final imagesToCleanup = state.rawImages;
-      _cleanupFiles(imagesToCleanup);
+      try {
+        if (_pathsToCleanup.isEmpty) return;
+        for (final path in _pathsToCleanup) {
+          SecureWipeHelper.wipe(File(path)).catchError((_) {});
+        }
+        _pathsToCleanup.clear();
+      } catch (_) {
+        // Ignore potential assertion errors during dispose to prevent crash
+      }
     });
     return const IngestionState();
   }
@@ -84,6 +91,9 @@ class IngestionController extends _$IngestionController {
 
   void _addFiles(List<XFile> files) {
     if (files.isNotEmpty) {
+      for (final f in files) {
+        _pathsToCleanup.add(f.path);
+      }
       state = state.copyWith(
         rawImages: [...state.rawImages, ...files],
         rotations: [...state.rotations, ...List.filled(files.length, 0)],
@@ -108,6 +118,7 @@ class IngestionController extends _$IngestionController {
   /// 移除选中的图片
   void removeImage(int index) {
     final xFile = state.rawImages[index];
+    _pathsToCleanup.remove(xFile.path);
     // 立即物理擦除被移除的图片，防止隐私泄漏
     SecureWipeHelper.wipe(File(xFile.path)).catchError((_) {});
 
@@ -160,6 +171,7 @@ class IngestionController extends _$IngestionController {
       final fileSecurity = ref.read(fileSecurityHelperProvider);
       final imageProcessing = ref.read(imageProcessingServiceProvider);
       final pathService = ref.read(pathProviderServiceProvider);
+      final dbService = ref.read(databaseServiceProvider);
 
       final currentPersonId = await ref.read(
         currentPersonIdControllerProvider.future,
@@ -173,7 +185,7 @@ class IngestionController extends _$IngestionController {
 
       final List<MedicalImage> medicalImages = [];
 
-      // Process images concurrently
+      // Process images concurrently (IO intensive)
       await Future.wait(
         state.rawImages.asMap().entries.map((entry) async {
           final index = entry.key;
@@ -221,7 +233,8 @@ class IngestionController extends _$IngestionController {
             ),
           );
 
-          // 5. 关键优化：一旦完成处理并安全存入加密沙盒，立即擦除原始临时文件
+          // 5. 一旦完成处理并安全存入加密沙盒，立即擦除原始临时文件
+          _pathsToCleanup.remove(xFile.path);
           await SecureWipeHelper.wipe(File(xFile.path)).catchError((_) {});
         }),
       );
@@ -235,23 +248,24 @@ class IngestionController extends _$IngestionController {
         notedAt: defaultDate,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
-        // Phase 2 Change: Default status is processing
         status: RecordStatus.processing,
       );
 
-      // 7. Transactional Save
-      await recordRepo.saveRecord(record);
-      await imageRepo.saveImages(medicalImages);
+      // 7. 关键修复：将所有数据库写入操作整合进单一顶级事务，避免锁竞争 (Issue #124)
+      final db = await dbService.database;
+      await db.transaction((txn) async {
+        // 显式传递 txn 以确保使用同一连接且不触发死锁
+        await recordRepo.saveRecord(record, executor: txn);
+        await imageRepo.saveImages(medicalImages, executor: txn);
+        await recordRepo.syncRecordMetadata(recordId, executor: txn);
 
-      // 8. Sync Aggregated Metadata
-      await recordRepo.syncRecordMetadata(recordId);
+        await ocrQueueRepo.enqueueBatch(
+          medicalImages.map((e) => e.id).toList(),
+          executor: txn,
+        );
+      });
 
-      // 9. Phase 2: Enqueue OCR Jobs
-      for (final img in medicalImages) {
-        await ocrQueueRepo.enqueue(img.id);
-      }
-
-      // 10. Phase 2: Trigger Background Worker & Foreground processing
+      // 8. Phase 2: Trigger Background Worker & Foreground processing
       await BackgroundWorkerService().triggerProcessing();
       // Start foreground processing immediately (fire-and-forget)
       // ignore: unawaited_futures
@@ -259,14 +273,14 @@ class IngestionController extends _$IngestionController {
         talker: ref.read(talkerProvider),
       );
 
-      // 10. Refresh Timeline & Reset State
+      // 9. Refresh Timeline & Reset State
       ref.invalidate(timelineControllerProvider);
       ref.invalidate(ocrPendingCountProvider); // 强制立即重新开始轮询探测
 
-      // 11. Secure Wipe raw images
-      await _cleanupFiles(state.rawImages);
-
+      // 10. Secure Wipe remaining raw images
+      final remaining = [...state.rawImages];
       state = const IngestionState(status: IngestionStatus.success);
+      await _cleanupFiles(remaining);
     } catch (e) {
       state = state.copyWith(
         status: IngestionStatus.error,
@@ -280,6 +294,7 @@ class IngestionController extends _$IngestionController {
   /// 物理擦除所有已加载的原始临时图片
   Future<void> _cleanupFiles(List<XFile> images) async {
     for (final xFile in images) {
+      _pathsToCleanup.remove(xFile.path);
       try {
         await SecureWipeHelper.wipe(File(xFile.path));
       } catch (_) {
