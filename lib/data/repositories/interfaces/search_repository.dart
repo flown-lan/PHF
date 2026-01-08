@@ -10,6 +10,7 @@
 /// - `syncRecordIndex`: 聚合 Record 下所有图片的 OCR 文本并更新索引.
 library;
 
+import 'package:sqflite_sqlcipher/sqflite.dart';
 import '../../models/search_result.dart';
 
 abstract interface class ISearchRepository {
@@ -18,13 +19,17 @@ abstract interface class ISearchRepository {
   Future<List<SearchResult>> search(String query, String personId);
 
   /// 更新或插入 OCR 索引
-  Future<void> updateIndex(String recordId, String content);
+  Future<void> updateIndex(
+    String recordId,
+    String content, {
+    DatabaseExecutor? executor,
+  });
 
   /// 聚合 Record 下所有图片的 OCR 文本并更新索引
-  Future<void> syncRecordIndex(String recordId);
+  Future<void> syncRecordIndex(String recordId, {DatabaseExecutor? executor});
 
   /// 删除索引
-  Future<void> deleteIndex(String recordId);
+  Future<void> deleteIndex(String recordId, {DatabaseExecutor? executor});
 
   /// 全量重索引
   Future<void> reindexAll();

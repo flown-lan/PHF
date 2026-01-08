@@ -32,6 +32,7 @@ import '../../data/models/image.dart';
 import '../../data/models/ocr_queue_item.dart';
 import '../../data/models/ocr_result.dart';
 import '../../data/models/record.dart';
+import '../../data/datasources/local/database_service.dart';
 import '../../data/repositories/interfaces/ocr_queue_repository.dart';
 
 import '../../data/repositories/interfaces/image_repository.dart';
@@ -51,6 +52,7 @@ class OCRProcessor {
   final IOCRService _ocrService;
   final FileSecurityHelper _securityHelper;
   final PathProviderService _pathService;
+  final SQLCipherDatabaseService _dbService;
   final Talker? _talker;
 
   static const double _highConfidenceThreshold = 0.9;
@@ -63,6 +65,7 @@ class OCRProcessor {
     required IOCRService ocrService,
     required FileSecurityHelper securityHelper,
     required PathProviderService pathService,
+    required SQLCipherDatabaseService dbService,
     Talker? talker,
   }) : _queueRepository = queueRepository,
        _imageRepository = imageRepository,
@@ -71,6 +74,7 @@ class OCRProcessor {
        _ocrService = ocrService,
        _securityHelper = securityHelper,
        _pathService = pathService,
+       _dbService = dbService,
        _talker = talker;
 
   /// 处理队列中的下一个任务
@@ -95,35 +99,61 @@ class OCRProcessor {
       );
 
       // --- Optimized Persistence Start ---
-      // 1. Update Image OCR Data & Metadata (without individual syncs if possible)
-      await _imageRepository.updateOCRData(
-        image.id,
-        fullText,
-        rawJson: jsonEncode(ocrResult.toJson()),
-        confidence: extracted.confidenceScore,
-      );
+      final db = await _dbService.database;
 
-      if (extracted.visitDate != null || extracted.hospitalName != null) {
-        // Warning: updateImageMetadata currently triggers syncRecordIndex.
-        // In a perfect world, we'd have a 'silent' version or a transactional way.
-        await _imageRepository.updateImageMetadata(
+      await db.transaction((txn) async {
+        // 1. Update Image OCR Data & Metadata
+        await _imageRepository.updateOCRData(
           image.id,
-          hospitalName: extracted.hospitalName,
-          visitDate: extracted.visitDate,
+          fullText,
+          rawJson: jsonEncode(ocrResult.toJson()),
+          confidence: extracted.confidenceScore,
+          executor: txn,
         );
-      }
 
-      // 2. Update Record Status
-      await _updateRecordStatus(image.recordId, extracted.confidenceScore);
+        if (extracted.visitDate != null || extracted.hospitalName != null) {
+          await _imageRepository.updateImageMetadata(
+            image.id,
+            hospitalName: extracted.hospitalName,
+            visitDate: extracted.visitDate,
+            executor: txn,
+          );
+        }
 
-      // 3. Final single sync for the whole record
-      // This is now redundant because updateImageMetadata and updateStatus already did it,
-      // but let's keep it if those are modified to be silent.
-      // Actually, to fix the lock, we should ideally move all this into a single transaction.
-      await _searchRepository.syncRecordIndex(image.recordId);
+        // 2. Update Record Status
+        final record = await _recordRepository.getRecordById(
+          image.recordId,
+          executor: txn,
+        );
+        if (record != null) {
+          RecordStatus newStatus = record.status;
+          if (extracted.confidenceScore > _highConfidenceThreshold) {
+            if (newStatus == RecordStatus.processing) {
+              newStatus = RecordStatus.archived;
+            }
+          } else {
+            newStatus = RecordStatus.review;
+          }
 
-      // 4. Mark job as completed
-      await _queueRepository.updateStatus(item.id, OCRJobStatus.completed);
+          if (newStatus != record.status) {
+            await _recordRepository.updateStatus(
+              record.id,
+              newStatus,
+              executor: txn,
+            );
+          }
+        }
+
+        // 3. Final single sync for the whole record (includes FTS)
+        await _searchRepository.syncRecordIndex(image.recordId, executor: txn);
+
+        // 4. Mark job as completed
+        await _queueRepository.updateStatus(
+          item.id,
+          OCRJobStatus.completed,
+          executor: txn,
+        );
+      });
       // --- Optimized Persistence End ---
 
       _log('Processing Completed: ${item.id}');
@@ -183,23 +213,5 @@ class OCRProcessor {
       );
     }
     return text;
-  }
-
-  Future<void> _updateRecordStatus(String recordId, double confidence) async {
-    final record = await _recordRepository.getRecordById(recordId);
-    if (record == null) return;
-
-    RecordStatus newStatus = record.status;
-    if (confidence > _highConfidenceThreshold) {
-      if (newStatus == RecordStatus.processing) {
-        newStatus = RecordStatus.archived;
-      }
-    } else {
-      newStatus = RecordStatus.review;
-    }
-
-    if (newStatus != record.status) {
-      await _recordRepository.updateStatus(record.id, newStatus);
-    }
   }
 }

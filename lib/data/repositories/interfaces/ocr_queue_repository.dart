@@ -10,29 +10,39 @@
 /// - `getPendingCount`: 获取待处理任务总数.
 library;
 
+import 'package:sqflite_sqlcipher/sqflite.dart';
 import '../../models/ocr_queue_item.dart';
 
 abstract interface class IOCRQueueRepository {
-  /// 将图片识别任务入队
-  Future<void> enqueue(String imageId);
+  /// 加入队列
+  Future<void> enqueue(String imageId, {DatabaseExecutor? executor});
 
-  /// 获取下一个待处理的任务
-  Future<OCRQueueItem?> dequeue();
+  /// 批量加入队列
+  Future<void> enqueueBatch(
+    List<String> imageIds, {
+    DatabaseExecutor? executor,
+  });
 
-  /// 更新任务状态及错误信息
-  Future<void> updateStatus(String id, OCRJobStatus status, {String? error});
+  /// 获取下一个待处理任务
+  Future<OCRQueueItem?> dequeue({DatabaseExecutor? executor});
+
+  /// 更新任务状态
+  Future<void> updateStatus(
+    String id,
+    OCRJobStatus status, {
+    String? error,
+    DatabaseExecutor? executor,
+  });
 
   /// 增加重试次数
-  Future<void> incrementRetry(String id);
+  Future<void> incrementRetry(String id, {DatabaseExecutor? executor});
 
-  /// 获取所有挂起的任务数量
-  ///
-  /// 如果提供 [personId]，则仅统计该用户的任务。
-  Future<int> getPendingCount({String? personId});
+  /// 获取待处理任务数
+  Future<int> getPendingCount({String? personId, DatabaseExecutor? executor});
 
   /// 删除任务
-  Future<void> deleteJob(String id);
+  Future<void> deleteJob(String id, {DatabaseExecutor? executor});
 
-  /// 根据图片 ID 删除关联的任务
-  Future<void> deleteByImageId(String imageId);
+  /// 根据图片 ID 删除任务
+  Future<void> deleteByImageId(String imageId, {DatabaseExecutor? executor});
 }

@@ -20,13 +20,13 @@ class OCRQueueRepository extends BaseRepository implements IOCRQueueRepository {
   OCRQueueRepository(super.dbService);
 
   @override
-  Future<void> enqueue(String imageId) async {
-    final db = await dbService.database;
+  Future<void> enqueue(String imageId, {DatabaseExecutor? executor}) async {
+    final exec = await getExecutor(executor);
     final now = DateTime.now().millisecondsSinceEpoch;
 
-    await db.transaction((txn) async {
+    Future<void> logic(DatabaseExecutor e) async {
       // Check if a job already exists for this image
-      final existing = await txn.query(
+      final existing = await e.query(
         'ocr_queue',
         where: 'image_id = ?',
         whereArgs: [imageId],
@@ -35,7 +35,7 @@ class OCRQueueRepository extends BaseRepository implements IOCRQueueRepository {
 
       if (existing.isNotEmpty) {
         // Reset existing job to pending
-        await txn.update(
+        await e.update(
           'ocr_queue',
           {
             'status': OCRJobStatus.pending.name,
@@ -48,7 +48,7 @@ class OCRQueueRepository extends BaseRepository implements IOCRQueueRepository {
         );
       } else {
         // Create new job
-        await txn.insert('ocr_queue', {
+        await e.insert('ocr_queue', {
           'id': const Uuid().v4(),
           'image_id': imageId,
           'status': OCRJobStatus.pending.name,
@@ -57,15 +57,87 @@ class OCRQueueRepository extends BaseRepository implements IOCRQueueRepository {
           'updated_at_ms': now,
         });
       }
-    });
+    }
+
+    if (executor == null && exec is Database) {
+      await exec.transaction((txn) => logic(txn));
+    } else {
+      await logic(exec);
+    }
   }
 
   @override
-  Future<OCRQueueItem?> dequeue() async {
-    final db = await dbService.database;
+  Future<void> enqueueBatch(
+    List<String> imageIds, {
+    DatabaseExecutor? executor,
+  }) async {
+    final exec = await getExecutor(executor);
+    final now = DateTime.now().millisecondsSinceEpoch;
+
+    Future<void> logic(DatabaseExecutor e) async {
+      if (imageIds.isEmpty) return;
+
+      // 1. Bulk Query to find existing jobs
+      final placeholder = List.filled(imageIds.length, '?').join(',');
+      final existingRows = await e.query(
+        'ocr_queue',
+        columns: ['image_id'],
+        where: 'image_id IN ($placeholder)',
+        whereArgs: imageIds,
+      );
+
+      final existingImageIds = existingRows
+          .map((r) => r['image_id'] as String)
+          .toSet();
+      final newImageIds = imageIds
+          .where((id) => !existingImageIds.contains(id))
+          .toList();
+
+      final batch = e.batch();
+
+      // 2. Batch Update existing
+      for (final id in existingImageIds) {
+        batch.update(
+          'ocr_queue',
+          {
+            'status': OCRJobStatus.pending.name,
+            'retry_count': 0,
+            'last_error': null,
+            'updated_at_ms': now,
+          },
+          where: 'image_id = ?',
+          whereArgs: [id],
+        );
+      }
+
+      // 3. Batch Insert new
+      for (final id in newImageIds) {
+        batch.insert('ocr_queue', {
+          'id': const Uuid().v4(),
+          'image_id': id,
+          'status': OCRJobStatus.pending.name,
+          'retry_count': 0,
+          'created_at_ms': now,
+          'updated_at_ms': now,
+        });
+      }
+
+      await batch.commit(noResult: true);
+    }
+
+    if (executor == null && exec is Database) {
+      await exec.transaction((txn) => logic(txn));
+    } else {
+      await logic(exec);
+    }
+  }
+
+  @override
+  Future<OCRQueueItem?> dequeue({DatabaseExecutor? executor}) async {
+    final exec = await getExecutor(executor);
 
     // 获取一个 pending 状态的任务
-    final maps = await db.query(
+    final maps = await exec.query(
       'ocr_queue',
       where: 'status = ?',
       whereArgs: [OCRJobStatus.pending.name],
@@ -96,9 +168,10 @@ class OCRQueueRepository extends BaseRepository implements IOCRQueueRepository {
     String id,
     OCRJobStatus status, {
     String? error,
+    DatabaseExecutor? executor,
   }) async {
-    final db = await dbService.database;
-    await db.update(
+    final exec = await getExecutor(executor);
+    await exec.update(
       'ocr_queue',
       {
         'status': status.name,
@@ -111,28 +184,31 @@ class OCRQueueRepository extends BaseRepository implements IOCRQueueRepository {
   }
 
   @override
-  Future<void> incrementRetry(String id) async {
-    final db = await dbService.database;
-    await db.execute(
+  Future<void> incrementRetry(String id, {DatabaseExecutor? executor}) async {
+    final exec = await getExecutor(executor);
+    await exec.execute(
       'UPDATE ocr_queue SET retry_count = retry_count + 1, updated_at_ms = ? WHERE id = ?',
       [DateTime.now().millisecondsSinceEpoch, id],
     );
   }
 
   @override
-  Future<int> getPendingCount({String? personId}) async {
-    final db = await dbService.database;
+  Future<int> getPendingCount({
+    String? personId,
+    DatabaseExecutor? executor,
+  }) async {
+    final exec = await getExecutor(executor);
 
     if (personId == null) {
       final count = Sqflite.firstIntValue(
-        await db.rawQuery('SELECT COUNT(*) FROM ocr_queue WHERE status = ?', [
+        await exec.rawQuery('SELECT COUNT(*) FROM ocr_queue WHERE status = ?', [
           OCRJobStatus.pending.name,
         ]),
       );
       return count ?? 0;
     } else {
       final count = Sqflite.firstIntValue(
-        await db.rawQuery(
+        await exec.rawQuery(
           '''
           SELECT COUNT(*) 
           FROM ocr_queue q
@@ -148,14 +224,17 @@ class OCRQueueRepository extends BaseRepository implements IOCRQueueRepository {
   }
 
   @override
-  Future<void> deleteJob(String id) async {
-    final db = await dbService.database;
-    await db.delete('ocr_queue', where: 'id = ?', whereArgs: [id]);
+  Future<void> deleteJob(String id, {DatabaseExecutor? executor}) async {
+    final exec = await getExecutor(executor);
+    await exec.delete('ocr_queue', where: 'id = ?', whereArgs: [id]);
   }
 
   @override
-  Future<void> deleteByImageId(String imageId) async {
-    final db = await dbService.database;
-    await db.delete('ocr_queue', where: 'image_id = ?', whereArgs: [imageId]);
+  Future<void> deleteByImageId(
+    String imageId, {
+    DatabaseExecutor? executor,
+  }) async {
+    final exec = await getExecutor(executor);
+    await exec.delete('ocr_queue', where: 'image_id = ?', whereArgs: [imageId]);
   }
 }

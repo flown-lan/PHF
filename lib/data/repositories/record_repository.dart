@@ -32,8 +32,11 @@ class RecordRepository extends BaseRepository implements IRecordRepository {
     : _searchRepository = searchRepository;
 
   @override
-  Future<void> saveRecord(MedicalRecord record) async {
-    final db = await dbService.database;
+  Future<void> saveRecord(
+    MedicalRecord record, {
+    DatabaseExecutor? executor,
+  }) async {
+    final exec = await getExecutor(executor);
 
     // 手动映射字段以匹配数据库 Schema (snake_case)
     final dbMap = <String, dynamic>{
@@ -53,22 +56,25 @@ class RecordRepository extends BaseRepository implements IRecordRepository {
     // images 不存入 records 表
 
     // 执行插入或更新
-    await db.insert(
+    await exec.insert(
       'records',
       dbMap,
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
 
     // 同步 FTS 索引
-    await _searchRepository?.syncRecordIndex(record.id);
+    await _searchRepository?.syncRecordIndex(record.id, executor: exec);
   }
 
   @override
-  Future<MedicalRecord?> getRecordById(String id) async {
-    final db = await dbService.database;
+  Future<MedicalRecord?> getRecordById(
+    String id, {
+    DatabaseExecutor? executor,
+  }) async {
+    final exec = await getExecutor(executor);
 
     // 1. Fetch Record
-    final List<Map<String, dynamic>> maps = await db.query(
+    final List<Map<String, dynamic>> maps = await exec.query(
       'records',
       where: 'id = ?',
       whereArgs: [id],
@@ -80,7 +86,7 @@ class RecordRepository extends BaseRepository implements IRecordRepository {
 
     // 2. Fetch Associated Images
     // 按 page_index 排序
-    final List<Map<String, dynamic>> imageMaps = await db.query(
+    final List<Map<String, dynamic>> imageMaps = await exec.query(
       'images',
       where: 'record_id = ?',
       whereArgs: [id],
@@ -93,10 +99,13 @@ class RecordRepository extends BaseRepository implements IRecordRepository {
   }
 
   @override
-  Future<List<MedicalRecord>> getRecordsByPerson(String personId) async {
-    final db = await dbService.database;
+  Future<List<MedicalRecord>> getRecordsByPerson(
+    String personId, {
+    DatabaseExecutor? executor,
+  }) async {
+    final exec = await getExecutor(executor);
 
-    final List<Map<String, dynamic>> maps = await db.query(
+    final List<Map<String, dynamic>> maps = await exec.query(
       'records',
       where: 'person_id = ? AND status != ?',
       whereArgs: [personId, 'deleted'], // 默认不显示已删除
@@ -109,7 +118,7 @@ class RecordRepository extends BaseRepository implements IRecordRepository {
 
     // 优化：一次性获取所有相关的图片元数据，避免 N+1 查询
     final String placeholders = List.filled(recordIds.length, '?').join(',');
-    final List<Map<String, dynamic>> imageMaps = await db.query(
+    final List<Map<String, dynamic>> imageMaps = await exec.query(
       'images',
       where: 'record_id IN ($placeholders)',
       whereArgs: recordIds,
@@ -131,9 +140,13 @@ class RecordRepository extends BaseRepository implements IRecordRepository {
   }
 
   @override
-  Future<void> updateStatus(String id, RecordStatus status) async {
-    final db = await dbService.database;
-    await db.update(
+  Future<void> updateStatus(
+    String id,
+    RecordStatus status, {
+    DatabaseExecutor? executor,
+  }) async {
+    final exec = await getExecutor(executor);
+    await exec.update(
       'records',
       {
         'status': status.name,
@@ -143,7 +156,7 @@ class RecordRepository extends BaseRepository implements IRecordRepository {
       whereArgs: [id],
     );
     // 状态变更可能影响搜索可见性，建议同步
-    await _searchRepository?.syncRecordIndex(id);
+    await _searchRepository?.syncRecordIndex(id, executor: exec);
   }
 
   @override
@@ -152,10 +165,11 @@ class RecordRepository extends BaseRepository implements IRecordRepository {
     String? hospitalName,
     DateTime? visitDate,
     String? notes,
+    DatabaseExecutor? executor,
   }) async {
-    final db = await dbService.database;
+    final exec = await getExecutor(executor);
     final now = DateTime.now().millisecondsSinceEpoch;
-    await db.update(
+    await exec.update(
       'records',
       {
         if (hospitalName != null) 'hospital_name': hospitalName,
@@ -170,13 +184,13 @@ class RecordRepository extends BaseRepository implements IRecordRepository {
       whereArgs: [id],
     );
     // 元数据变更需同步 FTS
-    await _searchRepository?.syncRecordIndex(id);
+    await _searchRepository?.syncRecordIndex(id, executor: exec);
   }
 
   @override
-  Future<void> hardDeleteRecord(String id) async {
-    final db = await dbService.database;
-    await db.delete('records', where: 'id = ?', whereArgs: [id]);
+  Future<void> hardDeleteRecord(String id, {DatabaseExecutor? executor}) async {
+    final exec = await getExecutor(executor);
+    await exec.delete('records', where: 'id = ?', whereArgs: [id]);
   }
 
   @override
@@ -186,8 +200,9 @@ class RecordRepository extends BaseRepository implements IRecordRepository {
     List<String>? tags,
     DateTime? startDate,
     DateTime? endDate,
+    DatabaseExecutor? executor,
   }) async {
-    final db = await dbService.database;
+    final exec = await getExecutor(executor);
     String sql;
     final List<dynamic> args = [];
 
@@ -242,16 +257,19 @@ class RecordRepository extends BaseRepository implements IRecordRepository {
           'SELECT r.* FROM records r WHERE $whereClause ORDER BY r.visit_date_ms DESC';
     }
 
-    final List<Map<String, dynamic>> maps = await db.rawQuery(sql, args);
+    final List<Map<String, dynamic>> maps = await exec.rawQuery(sql, args);
     return maps.map((m) => _mapToRecord(m, [])).toList();
   }
 
   @override
-  Future<void> syncRecordMetadata(String recordId) async {
-    final db = await dbService.database;
+  Future<void> syncRecordMetadata(
+    String recordId, {
+    DatabaseExecutor? executor,
+  }) async {
+    final exec = await getExecutor(executor);
 
     // 1. 获取所有属于该 Record 的图片
-    final List<Map<String, dynamic>> images = await db.query(
+    final List<Map<String, dynamic>> images = await exec.query(
       'images',
       columns: ['visit_date_ms', 'hospital_name'],
       where: 'record_id = ?',
@@ -296,7 +314,7 @@ class RecordRepository extends BaseRepository implements IRecordRepository {
 
     if (updates.isNotEmpty) {
       updates['updated_at_ms'] = DateTime.now().millisecondsSinceEpoch;
-      await db.update(
+      await exec.update(
         'records',
         updates,
         where: 'id = ?',
@@ -306,9 +324,12 @@ class RecordRepository extends BaseRepository implements IRecordRepository {
   }
 
   @override
-  Future<int> getPendingCount(String personId) async {
-    final db = await dbService.database;
-    final List<Map<String, dynamic>> result = await db.rawQuery(
+  Future<int> getPendingCount(
+    String personId, {
+    DatabaseExecutor? executor,
+  }) async {
+    final exec = await getExecutor(executor);
+    final List<Map<String, dynamic>> result = await exec.rawQuery(
       'SELECT COUNT(*) as count FROM records WHERE person_id = ? AND status = ?',
       [personId, 'review'],
     );
@@ -316,10 +337,13 @@ class RecordRepository extends BaseRepository implements IRecordRepository {
   }
 
   @override
-  Future<List<MedicalRecord>> getReviewRecords(String personId) async {
-    final db = await dbService.database;
+  Future<List<MedicalRecord>> getReviewRecords(
+    String personId, {
+    DatabaseExecutor? executor,
+  }) async {
+    final exec = await getExecutor(executor);
 
-    final List<Map<String, dynamic>> maps = await db.query(
+    final List<Map<String, dynamic>> maps = await exec.query(
       'records',
       where: 'person_id = ? AND status = ?',
       whereArgs: [personId, 'review'],
@@ -332,7 +356,7 @@ class RecordRepository extends BaseRepository implements IRecordRepository {
 
     // Fetch Images for N+1 optimization
     final String placeholders = List.filled(recordIds.length, '?').join(',');
-    final List<Map<String, dynamic>> imageMaps = await db.query(
+    final List<Map<String, dynamic>> imageMaps = await exec.query(
       'images',
       where: 'record_id IN ($placeholders)',
       whereArgs: recordIds,

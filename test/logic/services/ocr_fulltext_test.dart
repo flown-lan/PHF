@@ -79,6 +79,7 @@ void main() {
       ocrService: mockOcrService,
       securityHelper: mockSecurityHelper,
       pathService: mockPathService,
+      dbService: mockDbService,
     );
 
     // Initial Data
