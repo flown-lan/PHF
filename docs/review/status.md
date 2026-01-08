@@ -1,9 +1,12 @@
 # Project Review Status Summary
 
 **Last Updated**: 2026-01-08
-**Coverage**: T0 - Issue #98 (FTS5 Security Reinforcement)
+**Coverage**: T0 - Issue #96 (Backup/Restore Fix)
 
 ## Approved Features (Highlights)
+- [x] **Issue #96**: 修复数据恢复失效及 UI 刷新延迟。
+    - **Backup**: 修正了备份 ZIP 中的目录结构，确保数据库恢复到 `db/` 子目录而非沙盒根目录。
+    - **Restore**: 增强了恢复后的状态刷新逻辑，显式重置所有核心业务 Provider，确保 UI 立即感知数据变更。
 - [x] **Issue #98**: FTS5 搜索索引多用户隔离加固。
     - **Schema**: 确保 `ocr_search_index` 虚拟表包含 `person_id` 列 (UNINDEXED)。
     - **Logic**: 在 `RecordRepository.searchRecords` 和 `SearchRepository.search` 中强制执行 `fts.person_id = ?` 过滤。

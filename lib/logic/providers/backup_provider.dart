@@ -3,6 +3,9 @@
 /// ## Description
 /// 处理备份导出与导入的高层状态。
 /// 串联 [BackupService] 与 share_plus 插件。
+/// ## Repair Logs
+/// - [2026-01-08] 修复：
+///   1. 增强恢复后的 Provider 重置逻辑：显式重置 `allPersonsProvider`、`currentPersonIdControllerProvider` 与 `timelineControllerProvider`，确保 UI 能够立即感知并展示恢复后的数据（解决 Issue #96）。
 library;
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -11,6 +14,8 @@ import 'package:share_plus/share_plus.dart';
 import '../services/backup_service.dart';
 import 'core_providers.dart';
 import 'logging_provider.dart';
+import 'person_provider.dart';
+import 'timeline_provider.dart';
 
 part 'backup_provider.g.dart';
 
@@ -59,8 +64,11 @@ class BackupController extends _$BackupController {
 
       // 再次重置，确保后续读取获得最新连接
       ref.invalidate(databaseServiceProvider);
-      // 同时可能需要重置其他依赖数据库的 Provider
-      // 简单起见，可以提示用户重启应用或利用 Riverpod 的依赖关系自动传播
+
+      // 显式重置核心业务 Provider，强制 UI 刷新（针对 Issue #96）
+      ref.invalidate(allPersonsProvider);
+      ref.invalidate(currentPersonIdControllerProvider);
+      ref.invalidate(timelineControllerProvider);
     });
   }
 }

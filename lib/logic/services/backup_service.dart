@@ -8,7 +8,10 @@
 ///   1. 增强备份/恢复链路的 Talker 日志细粒度，便于离线排查。
 ///   2. 优化异常描述，确保用户侧错误提示更具引导性。
 /// - [issue#15] 优化内存管理：导入时使用 `InputFileStream` 避免 OOM；增强临时文件清理的可靠性；集成 `Talker` 记录关键链路日志。
-/// - [issue#16] 优化恢复逻辑：导入前先行关闭数据库连接 (T3.3.3)；使用 `extractFileToDisk` 实现流式解压，彻底解决 OOM 隐患。
+  /// - [issue#16] 优化恢复逻辑：导入前先行关闭数据库连接 (T3.3.3)；使用 `extractFileToDisk` 实现流式解压，彻底解决 OOM 隐患。
+  /// - [2026-01-08] 修复：
+  ///   1. 修正备份/恢复路径不匹配问题：将数据库文件以 `db/` 目录结构打包，确保恢复到正确的沙盒位置。
+  ///   2. 统一使用 `addDirectory` 以支持备份可能存在的 WAL/SHM 文件。
 library;
 
 import 'dart:io';
@@ -62,18 +65,17 @@ class BackupService implements IBackupService {
       final encoder = ZipFileEncoder();
       encoder.create(zipPath);
 
-      // 添加数据库文件
-      final dbPath = _pathService.getDatabasePath('phf_encrypted.db');
-      final dbFile = File(dbPath);
-      if (await dbFile.exists()) {
-        await encoder.addFile(dbFile);
+      // 添加数据库目录 (保持 db/ 结构)
+      final dbDir = Directory(_pathService.dbDirPath);
+      if (await dbDir.exists()) {
+        await encoder.addDirectory(dbDir);
       } else {
         _talker?.warning(
-          '[BackupService] Database file not found during backup',
+          '[BackupService] Database directory not found during backup',
         );
       }
 
-      // 添加图片目录
+      // 添加图片目录 (保持 images/ 结构)
       final imagesDir = Directory(_pathService.imagesDirPath);
       if (await imagesDir.exists()) {
         await encoder.addDirectory(imagesDir);
@@ -102,7 +104,6 @@ class BackupService implements IBackupService {
       }
     }
   }
-
   @override
   Future<void> importBackup(String backupFilePath, String pin) async {
     _talker?.info('[BackupService] Starting backup import sequence...');

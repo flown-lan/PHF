@@ -46,6 +46,9 @@ void main() {
     when(
       mockPathService.imagesDirPath,
     ).thenReturn(p.join(tempTestDir.path, 'images'));
+    when(
+      mockPathService.dbDirPath,
+    ).thenReturn(p.join(tempTestDir.path, 'db'));
     when(mockPathService.sandboxRoot).thenReturn(tempTestDir.path);
 
     // Mock methods
@@ -143,8 +146,71 @@ void main() {
         ),
       ).called(1);
 
-      // Verify files would be extracted (Mock logic doesn't fully simulate extraction overwrites unless we check the fs,
-      // but here we trust the loop logic given the zip is valid)
+      // 5. Verify the files are extracted to the correct subdirectories
+      // (The actual extraction is done by archive_io, which we use in the mock above)
+      // Actually, my mock above manually created a ZIP. Let's make the mock zip more realistic.
+    });
+
+    test('Full cycle simulation: directory structure check', () async {
+      // 1. Setup source files in correct dirs
+      final dbFile = File(p.join(tempTestDir.path, 'db', 'phf_encrypted.db'));
+      await dbFile.writeAsString('db content');
+      final imgFile = File(p.join(tempTestDir.path, 'images', 'img.png'));
+      await imgFile.writeAsString('img content');
+
+      // 2. Mock crypto to just copy files
+      when(
+        mockCryptoService.encryptFile(
+          sourcePath: anyNamed('sourcePath'),
+          destPath: anyNamed('destPath'),
+          key: anyNamed('key'),
+        ),
+      ).thenAnswer((invocation) async {
+        final src =
+            invocation.namedArguments[const Symbol('sourcePath')] as String;
+        final dst =
+            invocation.namedArguments[const Symbol('destPath')] as String;
+        await File(src).copy(dst);
+      });
+
+      when(
+        mockCryptoService.decryptFile(
+          sourcePath: anyNamed('sourcePath'),
+          destPath: anyNamed('destPath'),
+          key: anyNamed('key'),
+        ),
+      ).thenAnswer((invocation) async {
+        final src =
+            invocation.namedArguments[const Symbol('sourcePath')] as String;
+        final dst =
+            invocation.namedArguments[const Symbol('destPath')] as String;
+        await File(src).copy(dst);
+      });
+
+      // 3. Export
+      final backupPath = await backupService.exportBackup('123456');
+
+      // 4. Clear the sandbox to simulate a fresh install or deletion
+      await Directory(p.join(tempTestDir.path, 'db')).delete(recursive: true);
+      await Directory(p.join(tempTestDir.path, 'images'))
+          .delete(recursive: true);
+      await Directory(p.join(tempTestDir.path, 'db')).create();
+      await Directory(p.join(tempTestDir.path, 'images')).create();
+
+      // 5. Import
+      await backupService.importBackup(backupPath, '123456');
+
+      // 6. Verify restoration to correct paths
+      expect(
+        await File(p.join(tempTestDir.path, 'db', 'phf_encrypted.db')).exists(),
+        isTrue,
+        reason: 'Database should be in db/ subdir',
+      );
+      expect(
+        await File(p.join(tempTestDir.path, 'images', 'img.png')).exists(),
+        isTrue,
+        reason: 'Images should be in images/ subdir',
+      );
     });
   });
 }
