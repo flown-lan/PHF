@@ -78,4 +78,97 @@ class AppLocalizationsZh extends AppLocalizations {
   String review_edit_page_indicator(int current, int total) {
     return '图片 $current / $total (请核对每页信息)';
   }
+
+  @override
+  String get settings_title => '设置';
+
+  @override
+  String get settings_section_profiles => '档案与分类';
+
+  @override
+  String get settings_manage_profiles => '管理档案';
+
+  @override
+  String get settings_manage_profiles_desc => '添加或编辑人员档案';
+
+  @override
+  String get settings_tag_library => '标签库管理';
+
+  @override
+  String get settings_tag_library_desc => '维护病历分类标签';
+
+  @override
+  String get settings_language => '语言设置';
+
+  @override
+  String get settings_language_desc => '切换应用显示语言';
+
+  @override
+  String get settings_section_security => '数据安全';
+
+  @override
+  String get settings_privacy_security => '隐私与安全';
+
+  @override
+  String get settings_privacy_security_desc => '修改 PIN 码及生物识别';
+
+  @override
+  String get settings_backup_restore => '备份与恢复';
+
+  @override
+  String get settings_backup_restore_desc => '导出加密备份文件';
+
+  @override
+  String get settings_section_support => '帮助与支持';
+
+  @override
+  String get settings_feedback => '问题反馈';
+
+  @override
+  String get settings_feedback_desc => '报告问题或提交建议';
+
+  @override
+  String get settings_section_about => '关于';
+
+  @override
+  String get settings_privacy_policy => '隐私政策';
+
+  @override
+  String get settings_privacy_policy_desc => '查看应用隐私保护声明';
+
+  @override
+  String get settings_version => '版本信息';
+
+  @override
+  String get detail_title => '病历详情';
+
+  @override
+  String get detail_edit_title => '编辑详情';
+
+  @override
+  String get detail_retrigger_ocr => '重新识别';
+
+  @override
+  String get detail_delete_page => '删除此页';
+
+  @override
+  String get detail_edit_page => '编辑此页';
+
+  @override
+  String get detail_save => '保存';
+
+  @override
+  String get detail_ocr_text => '查看识别文本';
+
+  @override
+  String get detail_cancel_edit => '取消编辑';
+
+  @override
+  String get detail_ocr_result => 'OCR 识别结果';
+
+  @override
+  String get detail_view_raw => '查看原文';
+
+  @override
+  String get detail_view_enhanced => '智能增强';
 }

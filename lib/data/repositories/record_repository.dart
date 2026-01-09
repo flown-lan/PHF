@@ -165,7 +165,7 @@ class RecordRepository extends BaseRepository implements IRecordRepository {
           'visit_date_iso': visitDate.toIso8601String(),
         },
         if (notes != null) 'notes': notes,
-        'group_id': groupId,
+        'is_verified': 1,
         'updated_at_ms': now,
       },
       where: 'id = ?',

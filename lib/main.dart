@@ -20,6 +20,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:phf/generated/l10n/app_localizations.dart';
 import 'package:phf/logic/providers/core_providers.dart';
+import 'package:phf/logic/providers/locale_provider.dart';
 import 'logic/providers/auth_provider.dart';
 import 'logic/services/background_worker_service.dart';
 import 'package:phf/logic/providers/logging_provider.dart';
@@ -65,10 +66,13 @@ class PaperHealthApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final localeAsync = ref.watch(localeControllerProvider);
+
     return MaterialApp(
       onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
       theme: AppTheme.lightTheme,
       debugShowCheckedModeBanner: false,
+      locale: localeAsync.value,
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,

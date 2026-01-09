@@ -80,4 +80,97 @@ class AppLocalizationsPt extends AppLocalizations {
   String review_edit_page_indicator(int current, int total) {
     return 'Image $current / $total (Please verify each page)';
   }
+
+  @override
+  String get settings_title => 'Settings';
+
+  @override
+  String get settings_section_profiles => 'Profiles & Categories';
+
+  @override
+  String get settings_manage_profiles => 'Manage Profiles';
+
+  @override
+  String get settings_manage_profiles_desc => 'Add or edit personnel profiles';
+
+  @override
+  String get settings_tag_library => 'Tag Library';
+
+  @override
+  String get settings_tag_library_desc => 'Maintain medical record tags';
+
+  @override
+  String get settings_language => 'Language';
+
+  @override
+  String get settings_language_desc => 'Switch application display language';
+
+  @override
+  String get settings_section_security => 'Data Security';
+
+  @override
+  String get settings_privacy_security => 'Privacy & Security';
+
+  @override
+  String get settings_privacy_security_desc => 'Modify PIN and biometrics';
+
+  @override
+  String get settings_backup_restore => 'Backup & Restore';
+
+  @override
+  String get settings_backup_restore_desc => 'Export encrypted backup files';
+
+  @override
+  String get settings_section_support => 'Help & Support';
+
+  @override
+  String get settings_feedback => 'Feedback';
+
+  @override
+  String get settings_feedback_desc => 'Report issues or suggestions';
+
+  @override
+  String get settings_section_about => 'About';
+
+  @override
+  String get settings_privacy_policy => 'Privacy Policy';
+
+  @override
+  String get settings_privacy_policy_desc => 'View application privacy policy';
+
+  @override
+  String get settings_version => 'Version';
+
+  @override
+  String get detail_title => 'Medical Record Details';
+
+  @override
+  String get detail_edit_title => 'Edit Details';
+
+  @override
+  String get detail_retrigger_ocr => 'Retrigger OCR';
+
+  @override
+  String get detail_delete_page => 'Delete Page';
+
+  @override
+  String get detail_edit_page => 'Edit Page';
+
+  @override
+  String get detail_save => 'Save';
+
+  @override
+  String get detail_ocr_text => 'View OCR Text';
+
+  @override
+  String get detail_cancel_edit => 'Cancel Edit';
+
+  @override
+  String get detail_ocr_result => 'OCR Recognition Result';
+
+  @override
+  String get detail_view_raw => 'View Raw';
+
+  @override
+  String get detail_view_enhanced => 'Smart Enhance';
 }

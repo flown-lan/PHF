@@ -1,17 +1,21 @@
 /// # Record Detail Page
 ///
 /// ## Description
-/// 展示病历详情，支持图片轮播、OCR 结果查看及编辑。
+/// 展示病历详情，支持图片轮播、OCR 结果查看及增强型编辑模式。
 ///
-/// ## Repair Logs
-/// - [2025-12-31] 修复：自动刷新数据后，保持当前的图片索引（原先会跳回第 0 张）；优化 OCR 监听逻辑，支持中间任务状态更新刷新；修复 Future.delayed 类型推导。
-/// - [2025-12-31] T21.4 详情页编辑闭环：优化保存逻辑，确保标签修改和元数据更新后立即同步 Timeline 状态；增加保存前的数据变更检查，避免无效更新。
+/// ## Features (Phase 4)
+/// - **Enhanced Edit**: 点击编辑字段时显示 FocusZoomOverlay 放大预览。
+/// - **i18n**: 全面支持多语言动态切换。
+/// - **Confidence Highlighting**: 置信度低于 0.8 的字段应用橙色高亮。
+/// - **Verification Status**: 保存修改后自动标记记录为已校验 (is_verified).
 library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:convert';
 import 'package:intl/intl.dart';
+import 'package:phf/generated/l10n/app_localizations.dart';
+import 'package:phf/presentation/widgets/focus_zoom_overlay.dart';
 import 'package:uuid/uuid.dart';
 import '../../../data/models/image.dart';
 import '../../../data/models/ocr_result.dart';
@@ -47,8 +51,10 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
   bool _isEditing = false;
   late PageController _pageController;
 
-  // Edit controllers
+  // Edit controllers & focus nodes
   late TextEditingController _hospitalController;
+  final FocusNode _hospitalFocus = FocusNode();
+  final FocusNode _dateFocus = FocusNode();
   DateTime? _visitDate;
 
   @override
@@ -56,12 +62,16 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
     super.initState();
     _hospitalController = TextEditingController();
     _pageController = PageController();
+    _hospitalFocus.addListener(() => setState(() {}));
+    _dateFocus.addListener(() => setState(() {}));
     _loadData();
   }
 
   @override
   void dispose() {
     _hospitalController.dispose();
+    _hospitalFocus.dispose();
+    _dateFocus.dispose();
     _pageController.dispose();
     super.dispose();
   }
@@ -91,7 +101,7 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(20),
               child: _isEditing
-                  ? _buildEditView()
+                  ? _buildEditView(currentImage)
                   : _buildInfoView(currentImage),
             ),
           ),
@@ -169,7 +179,7 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
         visitDate: _visitDate,
       );
 
-      // 2. Also update Record metadata (User might expect global change)
+      // 2. Also update Record metadata (Mark verified automatically in Repository)
       await recordRepo.updateRecordMetadata(
         widget.recordId,
         hospitalName: _hospitalController.text,
@@ -187,9 +197,9 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
       await ref.read(timelineControllerProvider.notifier).refresh();
 
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('保存成功')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(AppLocalizations.of(context)!.common_save)),
+        );
       }
     } catch (e) {
       if (mounted) {
@@ -359,8 +369,9 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
   }
 
   PreferredSizeWidget _buildAppBar() {
+    final l10n = AppLocalizations.of(context)!;
     return AppBar(
-      title: Text(_isEditing ? '编辑详情' : '病历详情'),
+      title: Text(_isEditing ? l10n.detail_edit_title : l10n.detail_title),
       backgroundColor: AppTheme.bgWhite,
       foregroundColor: AppTheme.textPrimary,
       elevation: 0,
@@ -368,14 +379,14 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
         if (_isEditing)
           TextButton(
             onPressed: _saveChanges,
-            child: const Text(
-              '保存',
-              style: TextStyle(fontWeight: FontWeight.bold),
+            child: Text(
+              l10n.detail_save,
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
         IconButton(
           icon: const Icon(Icons.description_outlined),
-          tooltip: '查看识别文本',
+          tooltip: l10n.detail_ocr_text,
           onPressed: () => _showOCRText(),
         ),
         const SizedBox(width: 8),
@@ -578,6 +589,7 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
   }
 
   Widget _buildActionButtons() {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       children: [
         Row(
@@ -586,7 +598,7 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
               child: OutlinedButton.icon(
                 onPressed: () => setState(() => _isEditing = true),
                 icon: const Icon(Icons.edit_outlined, size: 18),
-                label: const Text('编辑此页'),
+                label: Text(l10n.detail_edit_page),
               ),
             ),
             const SizedBox(width: 12),
@@ -594,7 +606,7 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
               child: OutlinedButton.icon(
                 onPressed: _retriggerOCR,
                 icon: const Icon(Icons.refresh, size: 18),
-                label: const Text('重新识别'),
+                label: Text(l10n.detail_retrigger_ocr),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: AppTheme.primaryTeal,
                   side: const BorderSide(color: AppTheme.primaryTeal),
@@ -609,7 +621,7 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
           child: OutlinedButton.icon(
             onPressed: _deleteCurrentImage,
             icon: const Icon(Icons.delete_outline, size: 18),
-            label: const Text('删除此页'),
+            label: Text(l10n.detail_delete_page),
             style: OutlinedButton.styleFrom(
               foregroundColor: AppTheme.errorRed,
               side: const BorderSide(color: AppTheme.errorRed),
@@ -620,16 +632,43 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
     );
   }
 
-  Widget _buildEditView() {
+  Widget _buildZoomOverlay(MedicalImage currentImage) {
+    if (!_hospitalFocus.hasFocus && !_dateFocus.hasFocus) {
+      return const SizedBox(height: 8);
+    }
+    const rect = [0.0, 0.0, 1.0, 0.25];
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: FocusZoomOverlay(
+        imagePath: currentImage.filePath,
+        encryptionKey: currentImage.encryptionKey,
+        normalizedRect: rect,
+      ),
+    );
+  }
+
+  Widget _buildEditView(MedicalImage currentImage) {
+    final l10n = AppLocalizations.of(context)!;
+    final isLowConfidence =
+        currentImage.ocrConfidence != null && currentImage.ocrConfidence! < 0.8;
+    final warningColor = Colors.orange.shade50;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        _buildZoomOverlay(currentImage),
         TextField(
           controller: _hospitalController,
-          decoration: const InputDecoration(labelText: '医院名称'),
+          focusNode: _hospitalFocus,
+          decoration: InputDecoration(
+            labelText: l10n.review_edit_hospital_label,
+            filled: isLowConfidence,
+            fillColor: isLowConfidence ? warningColor : null,
+            border: const OutlineInputBorder(),
+          ),
         ),
         const SizedBox(height: 16),
-        _buildDatePicker(),
+        _buildDatePicker(currentImage, isLowConfidence, warningColor),
         const SizedBox(height: 24),
         const Text('管理标签', style: TextStyle(fontWeight: FontWeight.bold)),
         const SizedBox(height: 12),
@@ -641,17 +680,11 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
     );
   }
 
-  Widget _buildDatePicker() {
-    return ListTile(
-      contentPadding: EdgeInsets.zero,
-      title: const Text('就诊日期'),
-      subtitle: Text(
-        _visitDate != null
-            ? DateFormat('yyyy-MM-dd').format(_visitDate!)
-            : '选择日期',
-      ),
-      trailing: const Icon(Icons.calendar_today),
+  Widget _buildDatePicker(MedicalImage img, bool isLow, Color? warnColor) {
+    final l10n = AppLocalizations.of(context)!;
+    return GestureDetector(
       onTap: () async {
+        _dateFocus.requestFocus();
         final picked = await showDatePicker(
           context: context,
           initialDate: _visitDate ?? DateTime.now(),
@@ -660,6 +693,23 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
         );
         if (picked != null) setState(() => _visitDate = picked);
       },
+      child: AbsorbPointer(
+        child: TextField(
+          controller: TextEditingController(
+            text: _visitDate != null
+                ? DateFormat('yyyy-MM-dd').format(_visitDate!)
+                : '',
+          ),
+          focusNode: _dateFocus,
+          decoration: InputDecoration(
+            labelText: l10n.review_edit_date_label,
+            filled: isLow,
+            fillColor: isLow ? warnColor : null,
+            border: const OutlineInputBorder(),
+            suffixIcon: const Icon(Icons.calendar_today),
+          ),
+        ),
+      ),
     );
   }
 
@@ -732,6 +782,7 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
   }
 
   Widget _buildCancelEditButton() {
+    final l10n = AppLocalizations.of(context)!;
     return SizedBox(
       width: double.infinity,
       child: TextButton(
@@ -741,7 +792,10 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
             _updateControllersForIndex(_currentIndex);
           });
         },
-        child: const Text('取消编辑', style: TextStyle(color: AppTheme.textGrey)),
+        child: Text(
+          l10n.detail_cancel_edit,
+          style: const TextStyle(color: AppTheme.textGrey),
+        ),
       ),
     );
   }
@@ -797,6 +851,7 @@ class _OcrResultSheetState extends State<_OcrResultSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -809,9 +864,12 @@ class _OcrResultSheetState extends State<_OcrResultSheet> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'OCR 识别结果',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              Text(
+                l10n.detail_ocr_result,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               Row(
                 children: [
@@ -823,7 +881,11 @@ class _OcrResultSheetState extends State<_OcrResultSheet> {
                         _isEnhanced ? Icons.text_fields : Icons.auto_awesome,
                         size: 18,
                       ),
-                      label: Text(_isEnhanced ? '查看原文' : '智能增强'),
+                      label: Text(
+                        _isEnhanced
+                            ? l10n.detail_view_raw
+                            : l10n.detail_view_enhanced,
+                      ),
                     ),
                   IconButton(
                     onPressed: () => Navigator.pop(context),

@@ -247,6 +247,192 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Image {current} / {total} (Please verify each page)'**
   String review_edit_page_indicator(int current, int total);
+
+  /// No description provided for @settings_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settings_title;
+
+  /// No description provided for @settings_section_profiles.
+  ///
+  /// In en, this message translates to:
+  /// **'Profiles & Categories'**
+  String get settings_section_profiles;
+
+  /// No description provided for @settings_manage_profiles.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage Profiles'**
+  String get settings_manage_profiles;
+
+  /// No description provided for @settings_manage_profiles_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Add or edit personnel profiles'**
+  String get settings_manage_profiles_desc;
+
+  /// No description provided for @settings_tag_library.
+  ///
+  /// In en, this message translates to:
+  /// **'Tag Library'**
+  String get settings_tag_library;
+
+  /// No description provided for @settings_tag_library_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Maintain medical record tags'**
+  String get settings_tag_library_desc;
+
+  /// No description provided for @settings_language.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get settings_language;
+
+  /// No description provided for @settings_language_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch application display language'**
+  String get settings_language_desc;
+
+  /// No description provided for @settings_section_security.
+  ///
+  /// In en, this message translates to:
+  /// **'Data Security'**
+  String get settings_section_security;
+
+  /// No description provided for @settings_privacy_security.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy & Security'**
+  String get settings_privacy_security;
+
+  /// No description provided for @settings_privacy_security_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Modify PIN and biometrics'**
+  String get settings_privacy_security_desc;
+
+  /// No description provided for @settings_backup_restore.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup & Restore'**
+  String get settings_backup_restore;
+
+  /// No description provided for @settings_backup_restore_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Export encrypted backup files'**
+  String get settings_backup_restore_desc;
+
+  /// No description provided for @settings_section_support.
+  ///
+  /// In en, this message translates to:
+  /// **'Help & Support'**
+  String get settings_section_support;
+
+  /// No description provided for @settings_feedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Feedback'**
+  String get settings_feedback;
+
+  /// No description provided for @settings_feedback_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Report issues or suggestions'**
+  String get settings_feedback_desc;
+
+  /// No description provided for @settings_section_about.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get settings_section_about;
+
+  /// No description provided for @settings_privacy_policy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get settings_privacy_policy;
+
+  /// No description provided for @settings_privacy_policy_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'View application privacy policy'**
+  String get settings_privacy_policy_desc;
+
+  /// No description provided for @settings_version.
+  ///
+  /// In en, this message translates to:
+  /// **'Version'**
+  String get settings_version;
+
+  /// No description provided for @detail_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Medical Record Details'**
+  String get detail_title;
+
+  /// No description provided for @detail_edit_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Details'**
+  String get detail_edit_title;
+
+  /// No description provided for @detail_retrigger_ocr.
+  ///
+  /// In en, this message translates to:
+  /// **'Retrigger OCR'**
+  String get detail_retrigger_ocr;
+
+  /// No description provided for @detail_delete_page.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Page'**
+  String get detail_delete_page;
+
+  /// No description provided for @detail_edit_page.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Page'**
+  String get detail_edit_page;
+
+  /// No description provided for @detail_save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get detail_save;
+
+  /// No description provided for @detail_ocr_text.
+  ///
+  /// In en, this message translates to:
+  /// **'View OCR Text'**
+  String get detail_ocr_text;
+
+  /// No description provided for @detail_cancel_edit.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel Edit'**
+  String get detail_cancel_edit;
+
+  /// No description provided for @detail_ocr_result.
+  ///
+  /// In en, this message translates to:
+  /// **'OCR Recognition Result'**
+  String get detail_ocr_result;
+
+  /// No description provided for @detail_view_raw.
+  ///
+  /// In en, this message translates to:
+  /// **'View Raw'**
+  String get detail_view_raw;
+
+  /// No description provided for @detail_view_enhanced.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart Enhance'**
+  String get detail_view_enhanced;
 }
 
 class _AppLocalizationsDelegate

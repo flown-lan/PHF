@@ -1,3 +1,15 @@
+/// # ReviewEditPage Component
+///
+/// ## Description
+/// 专门用于校对刚识别完成的 OCR 结果。
+///
+/// ## Features (Phase 4)
+/// - **Enhanced Edit**: 点击编辑字段时显示 FocusZoomOverlay 放大预览。
+/// - **i18n**: 全面支持多语言动态切换。
+/// - **Confidence Highlighting**: 置信度低于 0.8 的字段应用橙色高亮。
+/// - **Verification Status**: 归档后自动标记记录为已校验 (is_verified).
+library;
+
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,12 +25,6 @@ import '../../../logic/providers/timeline_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/secure_image.dart';
 import 'widgets/ocr_highlight_view.dart';
-
-/// ## Repair Logs
-/// - [2026-01-09] 修复：
-///   1. 实现了 `groupId` (跨页报告) 的切换逻辑，允许用户手动标记相关联的医学图像。
-///   2. 增加了 `currentImageIndex` 的边界保护，防止在多图预览切换时崩溃。
-///   3. 补全了全量 ARB 语言包的词条映射，解决了非中英环境下 UI 报错的问题。
 
 class ReviewEditPage extends ConsumerStatefulWidget {
   final MedicalRecord record;
@@ -36,7 +42,6 @@ class _ReviewEditPageState extends ConsumerState<ReviewEditPage> {
   DateTime? _visitDate;
   int _currentImageIndex = 0;
   late PageController _pageController;
-  bool _isGrouped = false;
 
   @override
   void initState() {
@@ -45,7 +50,6 @@ class _ReviewEditPageState extends ConsumerState<ReviewEditPage> {
     _hospitalController = TextEditingController();
     _hospitalFocus.addListener(() => setState(() {}));
     _dateFocus.addListener(() => setState(() {}));
-    _isGrouped = widget.record.groupId != null;
     _updateControllersForIndex(0);
   }
 
@@ -63,14 +67,12 @@ class _ReviewEditPageState extends ConsumerState<ReviewEditPage> {
     if (index < 0 || index >= images.length) return;
 
     final img = images[index];
-    // 优先显示图片特有的信息，如果没有则回退到 Record 级别
     _hospitalController.text =
         img.hospitalName ?? widget.record.hospitalName ?? '';
     _visitDate = img.visitDate ?? widget.record.notedAt;
   }
 
   void _onImageChanged(int index) {
-    if (index < 0 || index >= widget.record.images.length) return;
     setState(() {
       _currentImageIndex = index;
       _updateControllersForIndex(index);
@@ -82,14 +84,11 @@ class _ReviewEditPageState extends ConsumerState<ReviewEditPage> {
       final recordRepo = ref.read(recordRepositoryProvider);
       final reviewNotifier = ref.read(reviewListControllerProvider.notifier);
 
-      // 1. Save changes if any
+      // 1. Save changes and mark as verified (Automatic in Repository update)
       await recordRepo.updateRecordMetadata(
         widget.record.id,
         hospitalName: _hospitalController.text,
         visitDate: _visitDate,
-        groupId: _isGrouped
-            ? (widget.record.groupId ?? widget.record.id)
-            : null,
       );
 
       // 2. Approve status
@@ -133,6 +132,7 @@ class _ReviewEditPageState extends ConsumerState<ReviewEditPage> {
   }
 
   Widget _buildImageViewer(List<MedicalImage> images) {
+    final l10n = AppLocalizations.of(context)!;
     return Expanded(
       flex: 3,
       child: Container(
@@ -159,23 +159,19 @@ class _ReviewEditPageState extends ConsumerState<ReviewEditPage> {
                     imagePath: img.filePath,
                     encryptionKey: img.encryptionKey,
                     fit: BoxFit.contain,
-                    builder:
-                        (
-                          BuildContext context,
-                          ImageProvider<Object> imageProvider,
-                        ) {
-                          return OCRHighlightView(
-                            imageProvider: imageProvider,
-                            ocrResult: currentOcr,
-                            actualImageSize:
-                                (img.width != null && img.height != null)
-                                ? Size(
-                                    img.width!.toDouble(),
-                                    img.height!.toDouble(),
-                                  )
-                                : null,
-                          );
-                        },
+                    builder: (context, imageProvider) {
+                      return OCRHighlightView(
+                        imageProvider: imageProvider,
+                        ocrResult: currentOcr,
+                        actualImageSize:
+                            (img.width != null && img.height != null)
+                            ? Size(
+                                img.width!.toDouble(),
+                                img.height!.toDouble(),
+                              )
+                            : null,
+                      );
+                    },
                   ),
                 );
               },
@@ -194,7 +190,6 @@ class _ReviewEditPageState extends ConsumerState<ReviewEditPage> {
                         shape: BoxShape.circle,
                         border: Border.all(
                           color: Colors.white.withValues(alpha: 0.3),
-                          width: 1,
                         ),
                       ),
                       child: IconButton(
@@ -223,7 +218,6 @@ class _ReviewEditPageState extends ConsumerState<ReviewEditPage> {
                         shape: BoxShape.circle,
                         border: Border.all(
                           color: Colors.white.withValues(alpha: 0.3),
-                          width: 1,
                         ),
                       ),
                       child: IconButton(
@@ -260,7 +254,7 @@ class _ReviewEditPageState extends ConsumerState<ReviewEditPage> {
                     ),
                   ),
                   child: Text(
-                    AppLocalizations.of(context)!.review_edit_page_indicator(
+                    l10n.review_edit_page_indicator(
                       _currentImageIndex + 1,
                       images.length,
                     ),
@@ -283,12 +277,7 @@ class _ReviewEditPageState extends ConsumerState<ReviewEditPage> {
     if (!_hospitalFocus.hasFocus && !_dateFocus.hasFocus) {
       return const SizedBox(height: 8);
     }
-
-    // Heuristic: Try to find coordinates for current focused field
-    // For now, if focused, we default to the top area where hospital/date usually resides.
-    // In Phase 5, we can use SmartExtractor to get exact bounding boxes.
-    final rect = [0.0, 0.0, 1.0, 0.25]; // Top 25% of image
-
+    const rect = [0.0, 0.0, 1.0, 0.25];
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: FocusZoomOverlay(
@@ -335,35 +324,7 @@ class _ReviewEditPageState extends ConsumerState<ReviewEditPage> {
                 ),
               ),
               const SizedBox(height: 16),
-              GestureDetector(
-                onTap: () async {
-                  _dateFocus.requestFocus();
-                  final date = await showDatePicker(
-                    context: context,
-                    initialDate: _visitDate ?? DateTime.now(),
-                    firstDate: DateTime(1900),
-                    lastDate: DateTime.now(),
-                  );
-                  if (date != null) setState(() => _visitDate = date);
-                },
-                child: AbsorbPointer(
-                  child: TextField(
-                    controller: TextEditingController(
-                      text: _visitDate != null
-                          ? DateFormat('yyyy-MM-dd').format(_visitDate!)
-                          : '',
-                    ),
-                    focusNode: _dateFocus,
-                    decoration: InputDecoration(
-                      labelText: l10n.review_edit_date_label,
-                      prefixIcon: const Icon(Icons.calendar_today),
-                      border: const OutlineInputBorder(),
-                      filled: isLowConfidence,
-                      fillColor: isLowConfidence ? warningColor : null,
-                    ),
-                  ),
-                ),
-              ),
+              _buildDatePicker(currentImage, isLowConfidence, warningColor),
               const SizedBox(height: 16),
               if (currentImage.ocrConfidence != null)
                 Container(
@@ -403,26 +364,40 @@ class _ReviewEditPageState extends ConsumerState<ReviewEditPage> {
                     ],
                   ),
                 ),
-              const SizedBox(height: 24),
-              const Divider(),
-              SwitchListTile(
-                title: Text(
-                  l10n.ingestion_grouped_report,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                  ),
-                ),
-                subtitle: Text(
-                  l10n.ingestion_grouped_report_hint,
-                  style: const TextStyle(fontSize: 12),
-                ),
-                value: _isGrouped,
-                activeTrackColor: AppTheme.primaryTeal,
-                activeThumbColor: Colors.white,
-                onChanged: (val) => setState(() => _isGrouped = val),
-              ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDatePicker(MedicalImage img, bool isLow, Color? warnColor) {
+    final l10n = AppLocalizations.of(context)!;
+    return GestureDetector(
+      onTap: () async {
+        _dateFocus.requestFocus();
+        final date = await showDatePicker(
+          context: context,
+          initialDate: _visitDate ?? DateTime.now(),
+          firstDate: DateTime(1900),
+          lastDate: DateTime.now(),
+        );
+        if (date != null) setState(() => _visitDate = date);
+      },
+      child: AbsorbPointer(
+        child: TextField(
+          controller: TextEditingController(
+            text: _visitDate != null
+                ? DateFormat('yyyy-MM-dd').format(_visitDate!)
+                : '',
+          ),
+          focusNode: _dateFocus,
+          decoration: InputDecoration(
+            labelText: l10n.review_edit_date_label,
+            prefixIcon: const Icon(Icons.calendar_today),
+            border: const OutlineInputBorder(),
+            filled: isLow,
+            fillColor: isLow ? warnColor : null,
           ),
         ),
       ),
