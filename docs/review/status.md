@@ -104,6 +104,15 @@ Phase 3 (Governance & Store Readiness) is now complete.
     - Developed `EnhancedOcrView` with dual-mode support and `ListView` performance optimization.
     - **Fix (2026-01-06)**: Resolved `RenderFlex` overflow in `CollapsibleOcrCard`.
 
+## 🟡 Phase 4 In Progress
+Phase 4 (SLM Data Pipeline & Internationalization).
+
+### Completed (Phase 4)
+- [x] **T22**: Internationalization Infrastructure & Language Packs.
+    - Implemented `flutter_localizations` and `intl` integration.
+    - Configured `l10n.yaml` and ARB files (EN/ZH).
+    - Database Schema V10 Migration (added `is_verified`, `group_id`).
+
 ## 🟡 Pending Issues / Technical Debt (New for Phase 4)
 - **Robustness**: `SearchRepository.search` requires refactoring due to structural logic issues.
 - None.
