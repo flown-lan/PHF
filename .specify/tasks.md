@@ -263,14 +263,14 @@
 
 ## Phase 4: SLM Data Pipeline & Internationalization (P4)
 
-### T22: 国际化基础设施与语言包 (Phase 4.1)
-- [ ] **Implement (T22.1)**: 在 `pubspec.yaml` 中添加 `flutter_localizations` 和 `intl: ^0.18.1`。配置 `generate: true`。(Ref: Constitution#XI. Internationalization)
-- [ ] **Implement (T22.2)**: 创建 `lib/l10n` 目录，并初始化 `app_en.arb` 和 `app_zh.arb`。定义基础 Key（如 `common_save`, `common_edit`）。
-- [ ] **Implement (T22.3)**: 编写数据库迁移脚本 `migration_v8.sql`。
+### T22: 国际化基础设施与语言包 (Phase 4.1) [x]
+- [x] **Implement (T22.1)**: 在 `pubspec.yaml` 中添加 `flutter_localizations` 和 `intl: ^0.18.1`。配置 `generate: true`。(Ref: Constitution#XI. Internationalization)
+- [x] **Implement (T22.2)**: 创建 `lib/l10n` 目录，并初始化 `app_en.arb` 和 `app_zh.arb`。定义基础 Key（如 `common_save`, `common_edit`）。
+- [x] **Implement (T22.3)**: 编写数据库迁移脚本 `migration_v8.sql`。
     - `ALTER TABLE records ADD COLUMN is_verified INTEGER DEFAULT 0;`
     - `ALTER TABLE records ADD COLUMN group_id TEXT;`
-- [ ] **Test**: 运行 `flutter gen-l10n` 验证代码生成；验证数据库升级后 `is_verified` 字段默认值为 0。(Ref: Constitution#VI. Security)
-- [ ] **Commit**: `feat(i18n): initialize localization scaffolding and update database schema v8`
+- [x] **Test**: 运行 `flutter gen-l10n` 验证代码生成；验证数据库升级后 `is_verified` 字段默认值为 0。(Ref: Constitution#VI. Security)
+- [x] **Commit**: `feat(i18n): initialize localization scaffolding and update database schema v8`
 
 ### T23: SLM 数据预处理管道 (Phase 4.2)
 - [ ] **Implement (T23.1)**: 定义 `SLMDataBlock` 实体类，包含坐标信息、置信度以及脱敏标记字段。(Ref: Constitution#VII. Coding Standards)
