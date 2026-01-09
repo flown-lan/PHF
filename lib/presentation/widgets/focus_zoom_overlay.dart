@@ -7,6 +7,9 @@
 /// - **Secure**: 继承 `SecureImage` 的内存解密逻辑，不留磁盘痕迹。
 /// - **Layout-Aware**: 接收归一化坐标 [x, y, w, h]，自动计算裁剪区域。
 /// - **Visual Aid**: 提供高亮边框和阴影，增强层级感。
+///
+/// ## Repair Logs
+/// - [2026-01-09] 修复：增加了裁剪比例的边界保护 (clamp)，并完善了裁剪计算逻辑。
 library;
 
 import 'package:flutter/material.dart';
@@ -31,18 +34,19 @@ class FocusZoomOverlay extends StatelessWidget {
   Widget build(BuildContext context) {
     if (normalizedRect.length < 4) return const SizedBox();
 
-    final x = normalizedRect[0];
-    final y = normalizedRect[1];
-    final w = normalizedRect[2];
-    final h = normalizedRect[3];
+    // 边界检查与规范化
+    final w = normalizedRect[2].clamp(0.01, 1.0);
+    final h = normalizedRect[3].clamp(0.01, 1.0);
+    final x = normalizedRect[0].clamp(0.0, 1.0 - w);
+    final y = normalizedRect[1].clamp(0.0, 1.0 - h);
 
     return Container(
-      height: 120, // 固定的预览高度
+      height: 140, // 稍微增加预览高度
       width: double.infinity,
       decoration: BoxDecoration(
         color: Colors.black,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppTheme.primary, width: 2),
+        border: Border.all(color: AppTheme.primaryTeal, width: 2),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.3),
@@ -62,15 +66,23 @@ class FocusZoomOverlay extends StatelessWidget {
               // 计算 Alignment:
               // Alignment(x, y) 范围是 -1 到 1.
               // 0.0 -> -1.0, 0.5 -> 0.0, 1.0 -> 1.0
+              // 使用裁剪区域的中心点
               final alignmentX = (x + w / 2) * 2 - 1;
               final alignmentY = (y + h / 2) * 2 - 1;
 
               return FractionallySizedBox(
-                widthFactor: scale / w.clamp(0.01, 1.0),
-                heightFactor: scale / h.clamp(0.01, 1.0),
+                // 根据 scale 放大
+                widthFactor: scale / w,
+                heightFactor: scale / h,
                 child: Container(
                   alignment: Alignment(alignmentX, alignmentY),
-                  child: Image(image: imageProvider, fit: BoxFit.contain),
+                  child: Image(
+                    image: imageProvider,
+                    fit: BoxFit.contain,
+                    errorBuilder: (context, error, stackTrace) => const Center(
+                      child: Icon(Icons.broken_image, color: Colors.white54),
+                    ),
+                  ),
                 ),
               );
             },

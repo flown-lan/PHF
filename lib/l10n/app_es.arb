@@ -8,5 +8,19 @@
   "common_confirm": "Confirmar",
   "lock_screen_title": "Por favor, ingrese el PIN para desbloquear",
   "lock_screen_error": "PIN incorrecto, por favor intente de nuevo",
-  "lock_screen_biometric_tooltip": "Desbloquear con biometría"
+  "lock_screen_biometric_tooltip": "Desbloquear con biometría",
+  "ingestion_title": "Vista previa y procesamiento",
+  "ingestion_empty_hint": "Por favor, añada fotos de registros médicos",
+  "ingestion_add_now": "Añadir ahora",
+  "ingestion_ocr_hint": "Los metadatos serán reconocidos por el OCR en segundo plano después de guardar",
+  "ingestion_submit_button": "Iniciar procesamiento y archivar",
+  "ingestion_grouped_report": "Marcar como informe de varias páginas",
+  "ingestion_grouped_report_hint": "SLM tratará estas imágenes como un único documento continuo",
+  "review_edit_title": "Verificar información",
+  "review_edit_confirm": "Confirmar y archivar",
+  "review_edit_basic_info": "Información básica (Toque para editar)",
+  "review_edit_hospital_label": "Hospital/Institución",
+  "review_edit_date_label": "Fecha de visita",
+  "review_edit_confidence": "Confianza de OCR",
+  "review_edit_page_indicator": "Imagen {current} / {total} (Por favor, verifique cada página)"
 }
