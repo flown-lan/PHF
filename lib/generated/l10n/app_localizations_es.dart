@@ -36,48 +36,50 @@ class AppLocalizationsEs extends AppLocalizations {
   String get lock_screen_biometric_tooltip => 'Desbloquear con biometría';
 
   @override
-  String get ingestion_title => 'Preview & Processing';
+  String get ingestion_title => 'Vista previa y procesamiento';
 
   @override
-  String get ingestion_empty_hint => 'Please add medical record photos';
+  String get ingestion_empty_hint =>
+      'Por favor, añada fotos de registros médicos';
 
   @override
-  String get ingestion_add_now => 'Add Now';
+  String get ingestion_add_now => 'Añadir ahora';
 
   @override
   String get ingestion_ocr_hint =>
-      'Metadata will be recognized by background OCR after saving';
+      'Los metadatos serán reconocidos por el OCR en segundo plano después de guardar';
 
   @override
-  String get ingestion_submit_button => 'Start Processing & Archive';
+  String get ingestion_submit_button => 'Iniciar procesamiento y archivar';
 
   @override
-  String get ingestion_grouped_report => 'Mark as a multi-page report';
+  String get ingestion_grouped_report =>
+      'Marcar como informe de varias páginas';
 
   @override
   String get ingestion_grouped_report_hint =>
-      'SLM will treat these images as a single continuous document';
+      'SLM tratará estas imágenes como un único documento continuo';
 
   @override
-  String get review_edit_title => 'Verify Information';
+  String get review_edit_title => 'Verificar información';
 
   @override
-  String get review_edit_confirm => 'Confirm & Archive';
+  String get review_edit_confirm => 'Confirmar y archivar';
 
   @override
-  String get review_edit_basic_info => 'Basic Info (Tap to Edit)';
+  String get review_edit_basic_info => 'Información básica (Toque para editar)';
 
   @override
-  String get review_edit_hospital_label => 'Hospital/Institution';
+  String get review_edit_hospital_label => 'Hospital/Institución';
 
   @override
-  String get review_edit_date_label => 'Visit Date';
+  String get review_edit_date_label => 'Fecha de visita';
 
   @override
-  String get review_edit_confidence => 'OCR Confidence';
+  String get review_edit_confidence => 'Confianza de OCR';
 
   @override
   String review_edit_page_indicator(int current, int total) {
-    return 'Image $current / $total (Please verify each page)';
+    return 'Imagen $current / $total (Por favor, verifique cada página)';
   }
 }

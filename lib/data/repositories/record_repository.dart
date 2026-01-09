@@ -42,6 +42,7 @@ class RecordRepository extends BaseRepository implements IRecordRepository {
     final dbMap = <String, dynamic>{
       'id': record.id,
       'person_id': record.personId,
+      'group_id': record.groupId,
       'hospital_name': record.hospitalName,
       'notes': record.notes,
       'visit_date_ms': record.notedAt.millisecondsSinceEpoch,
@@ -165,6 +166,7 @@ class RecordRepository extends BaseRepository implements IRecordRepository {
     String? hospitalName,
     DateTime? visitDate,
     String? notes,
+    String? groupId,
     DatabaseExecutor? executor,
   }) async {
     final exec = await getExecutor(executor);
@@ -178,6 +180,7 @@ class RecordRepository extends BaseRepository implements IRecordRepository {
           'visit_date_iso': visitDate.toIso8601String(),
         },
         if (notes != null) 'notes': notes,
+        'group_id': groupId,
         'updated_at_ms': now,
       },
       where: 'id = ?',
@@ -409,6 +412,7 @@ class RecordRepository extends BaseRepository implements IRecordRepository {
     return MedicalRecord(
       id: row['id'] as String,
       personId: row['person_id'] as String,
+      groupId: row['group_id'] as String?,
       hospitalName: row['hospital_name'] as String?,
       notes: row['notes'] as String?,
       notedAt: notedAt,

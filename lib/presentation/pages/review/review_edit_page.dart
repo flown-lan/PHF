@@ -14,6 +14,12 @@ import '../../theme/app_theme.dart';
 import '../../widgets/secure_image.dart';
 import 'widgets/ocr_highlight_view.dart';
 
+/// ## Repair Logs
+/// - [2026-01-09] 修复：
+///   1. 实现了 `groupId` (跨页报告) 的切换逻辑，允许用户手动标记相关联的医学图像。
+///   2. 增加了 `currentImageIndex` 的边界保护，防止在多图预览切换时崩溃。
+///   3. 补全了全量 ARB 语言包的词条映射，解决了非中英环境下 UI 报错的问题。
+
 class ReviewEditPage extends ConsumerStatefulWidget {
   final MedicalRecord record;
 
@@ -30,6 +36,7 @@ class _ReviewEditPageState extends ConsumerState<ReviewEditPage> {
   DateTime? _visitDate;
   int _currentImageIndex = 0;
   late PageController _pageController;
+  bool _isGrouped = false;
 
   @override
   void initState() {
@@ -38,6 +45,7 @@ class _ReviewEditPageState extends ConsumerState<ReviewEditPage> {
     _hospitalController = TextEditingController();
     _hospitalFocus.addListener(() => setState(() {}));
     _dateFocus.addListener(() => setState(() {}));
+    _isGrouped = widget.record.groupId != null;
     _updateControllersForIndex(0);
   }
 
@@ -62,6 +70,7 @@ class _ReviewEditPageState extends ConsumerState<ReviewEditPage> {
   }
 
   void _onImageChanged(int index) {
+    if (index < 0 || index >= widget.record.images.length) return;
     setState(() {
       _currentImageIndex = index;
       _updateControllersForIndex(index);
@@ -78,6 +87,9 @@ class _ReviewEditPageState extends ConsumerState<ReviewEditPage> {
         widget.record.id,
         hospitalName: _hospitalController.text,
         visitDate: _visitDate,
+        groupId: _isGrouped
+            ? (widget.record.groupId ?? widget.record.id)
+            : null,
       );
 
       // 2. Approve status
@@ -391,6 +403,25 @@ class _ReviewEditPageState extends ConsumerState<ReviewEditPage> {
                     ],
                   ),
                 ),
+              const SizedBox(height: 24),
+              const Divider(),
+              SwitchListTile(
+                title: Text(
+                  l10n.ingestion_grouped_report,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
+                subtitle: Text(
+                  l10n.ingestion_grouped_report_hint,
+                  style: const TextStyle(fontSize: 12),
+                ),
+                value: _isGrouped,
+                activeTrackColor: AppTheme.primaryTeal,
+                activeThumbColor: Colors.white,
+                onChanged: (val) => setState(() => _isGrouped = val),
+              ),
             ],
           ),
         ),
