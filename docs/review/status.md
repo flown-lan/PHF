@@ -108,10 +108,15 @@ Phase 3 (Governance & Store Readiness) is now complete.
 Phase 4 (SLM Data Pipeline & Internationalization).
 
 ### Completed (Phase 4)
-- [x] **T22**: Internationalization Infrastructure & Language Packs.
-    - Implemented `flutter_localizations` and `intl` integration.
-    - Configured `l10n.yaml` and ARB files (EN/ZH).
-    - Database Schema V10 Migration (added `is_verified`, `group_id`).
+- [x] **T22**: 国际化基础设施与数据库 V10 升级。
+    - **i18n**: 集成 `flutter_localizations`，建立 `lib/l10n` 及非合成包生成模式 (`lib/generated/l10n`)，支持多语言动态切换。
+    - **Schema (V10)**: `records` 表新增 `is_verified` (用于 SLM 校验) 和 `group_id` (用于跨页文档关联) 字段。
+    - **Refinement**: 将 `LockScreen` 关键 UI 文本迁移至国际化资源包。
+- [x] **T23**: SLM 数据预处理管道。
+    - **LayoutParser**: 基于 Y 轴聚类和 X 轴排序的启发式算法，重组 OCR Lines 为符合阅读顺序的数据块。
+    - **PrivacyMasker**: 本地 PII 脱敏服务，基于正则表达式过滤手机号和身份证号。
+    - **UnitNormalizer**: 医学单位归一化工具，统一不同写法的单位格式。
+    - **MarkdownConverter**: 将结构化数据块序列化为 Markdown 表格格式，优化 SLM 输入 Token。
 
 ## 🟡 Pending Issues / Technical Debt (New for Phase 4)
 - **Robustness**: `SearchRepository.search` requires refactoring due to structural logic issues.

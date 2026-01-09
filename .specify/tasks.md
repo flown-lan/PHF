@@ -272,14 +272,14 @@
 - [x] **Test**: 运行 `flutter gen-l10n` 验证代码生成；验证数据库升级后 `is_verified` 字段默认值为 0。(Ref: Constitution#VI. Security)
 - [x] **Commit**: `feat(i18n): initialize localization scaffolding and update database schema v8`
 
-### T23: SLM 数据预处理管道 (Phase 4.2)
-- [ ] **Implement (T23.1)**: 定义 `SLMDataBlock` 实体类，包含坐标信息、置信度以及脱敏标记字段。(Ref: Constitution#VII. Coding Standards)
-- [ ] **Implement (T23.2)**: 实现 `LayoutParser` 工具类。使用启发式聚类算法，将分散的 OCR Blocks 按 y 轴坐标重组成“行”。(Ref: Constitution#II. Local-First)
-- [ ] **Implement (T23.3)**: 实现 `PrivacyMasker` 服务。使用正则表达式自动识别并掩盖姓名、手机号等 PII 信息。(Ref: Constitution#IV. Security & Privacy)
-- [ ] **Implement (T23.4)**: 实现 `MedicalUnitNormalizer`。建立映射表，将 `g/L`, `G/L` 等变体统一为标准格式。
-- [ ] **Implement (T23.5)**: 实现 `MarkdownConverter`。将处理后的 `SLMDataBlock` 序列化为 Markdown 表格字符串。(Ref: Constitution#X. Performance)
-- [ ] **Test**: 为 `LayoutParser` 编写单元测试，输入带有错位坐标的 JSON，验证输出的 Markdown 文本顺序正确。
-- [ ] **Commit**: `feat(slm): implement layout-aware parser and privacy masking pipeline`
+### T23: SLM 数据预处理管道 (Phase 4.2) [x]
+- [x] **Implement (T23.1)**: 定义 `SLMDataBlock` 实体类，包含坐标信息、置信度以及脱敏标记字段。(Ref: Constitution#VII. Coding Standards)
+- [x] **Implement (T23.2)**: 实现 `LayoutParser` 工具类。使用启发式聚类算法，将分散的 OCR Blocks 按 y 轴坐标重组成“行”。(Ref: Constitution#II. Local-First)
+- [x] **Implement (T23.3)**: 实现 `PrivacyMasker` 服务。使用正则表达式自动识别并掩盖姓名、手机号等 PII 信息。(Ref: Constitution#IV. Security & Privacy)
+- [x] **Implement (T23.4)**: 实现 `MedicalUnitNormalizer`。建立映射表，将 `g/L`, `G/L` 等变体统一为标准格式。
+- [x] **Implement (T23.5)**: 实现 `MarkdownConverter`。将处理后的 `SLMDataBlock` 序列化为 Markdown 表格字符串。(Ref: Constitution#X. Performance)
+- [x] **Test**: 为 `LayoutParser` 编写单元测试，输入带有错位坐标的 JSON，验证输出的 Markdown 文本顺序正确。
+- [x] **Commit**: `feat(slm): implement layout-aware parser and privacy masking pipeline`
 
 ### T24: UI 交互增强与全球化适配 (Phase 4.3)
 - [ ] **Implement (T24.1)**: 开发 `FocusZoomOverlay` 组件。通过裁剪 `SecureImage` 的特定 `Rect` 区域，实现编辑时的局部放大预览。(Ref: Constitution#I. Privacy)
