@@ -233,7 +233,9 @@ class _ReviewEditPageState extends ConsumerState<ReviewEditPage> {
     final l10n = AppLocalizations.of(context)!;
     return GestureDetector(
       onTap: () async {
-        _dateFocus.requestFocus();
+        setState(() {
+          _dateFocus.requestFocus();
+        });
         final date = await showDatePicker(
           context: context,
           initialDate: _visitDate ?? DateTime.now(),
@@ -296,6 +298,7 @@ class _ReviewEditPageState extends ConsumerState<ReviewEditPage> {
                   TextField(
                     controller: _hospitalController,
                     focusNode: _hospitalFocus,
+                    onTap: () => setState(() {}),
                     decoration: InputDecoration(
                       labelText: l10n.review_edit_hospital_label,
                       prefixIcon: const Icon(Icons.local_hospital_outlined),
@@ -334,6 +337,7 @@ class _ReviewEditPageState extends ConsumerState<ReviewEditPage> {
                         return TextField(
                           controller: _blockControllers[index],
                           focusNode: _blockFocusNodes[index],
+                          onTap: () => setState(() {}),
                           maxLines: null,
                           style: AppTheme.monoStyle.copyWith(fontSize: 14),
                           decoration: InputDecoration(
@@ -352,6 +356,7 @@ class _ReviewEditPageState extends ConsumerState<ReviewEditPage> {
                       },
                     ),
                   ],
+
                   const SizedBox(height: 24),
                 ],
               ),
