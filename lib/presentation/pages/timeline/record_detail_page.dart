@@ -156,62 +156,62 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                                TextField(
-                                  controller: _hospitalController,
-                                  focusNode: _hospitalFocus,
-                                  onTap: () => setState(() {}),
-                                  decoration: InputDecoration(
-                                    labelText: l10n.review_edit_hospital_label,
-                                    border: const OutlineInputBorder(),
-                                    filled: isLowConfidence,
-                                    fillColor: isLowConfidence ? warningColor : null,
-                                  ),
-                                ),
-                                const SizedBox(height: 16),
-                                _buildDatePicker(currentImage, isLowConfidence, warningColor),
-                                const SizedBox(height: 32),
-                                if (_blockControllers.isNotEmpty) ...[
-                                  const Text(
-                                    '识别内容 (可点击逐行校对)',
-                                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  const Text(
-                                    '点击下方文字，上方将自动放大对应图片区域',
-                                    style: TextStyle(fontSize: 11, color: AppTheme.textHint),
-                                  ),
-                                  const SizedBox(height: 16),
-                                  ListView.separated(
-                                    shrinkWrap: true,
-                                    physics: const NeverScrollableScrollPhysics(),
-                                    itemCount: _blockControllers.length,
-                                    separatorBuilder: (context, index) =>
-                                        const SizedBox(height: 12),
-                                    itemBuilder: (context, index) {
-                                      final block = _currentBlocks[index];
-                                      final isBlockLow = block.confidence < 0.8;
-                                      return TextField(
-                                        controller: _blockControllers[index],
-                                        focusNode: _blockFocusNodes[index],
-                                        onTap: () => setState(() {}),
-                                        maxLines: null,
-                                        style: AppTheme.monoStyle.copyWith(fontSize: 14),
-                                        decoration: InputDecoration(
-                                          filled: isBlockLow,
-                                          fillColor: isBlockLow
-                                              ? warningColor
-                                              : Colors.grey.shade50,
-                                          border: const OutlineInputBorder(),
-                                          contentPadding: const EdgeInsets.symmetric(
-                                            horizontal: 12,
-                                            vertical: 8,
-                                          ),
-                                          isDense: true,
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ],
+                TextField(
+                  controller: _hospitalController,
+                  focusNode: _hospitalFocus,
+                  onTap: () => setState(() {}),
+                  decoration: InputDecoration(
+                    labelText: l10n.review_edit_hospital_label,
+                    border: const OutlineInputBorder(),
+                    filled: isLowConfidence,
+                    fillColor: isLowConfidence ? warningColor : null,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                _buildDatePicker(currentImage, isLowConfidence, warningColor),
+                const SizedBox(height: 32),
+                if (_blockControllers.isNotEmpty) ...[
+                  const Text(
+                    '识别内容 (可点击逐行校对)',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    '点击下方文字，上方将自动放大对应图片区域',
+                    style: TextStyle(fontSize: 11, color: AppTheme.textHint),
+                  ),
+                  const SizedBox(height: 16),
+                  ListView.separated(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: _blockControllers.length,
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(height: 12),
+                    itemBuilder: (context, index) {
+                      final block = _currentBlocks[index];
+                      final isBlockLow = block.confidence < 0.8;
+                      return TextField(
+                        controller: _blockControllers[index],
+                        focusNode: _blockFocusNodes[index],
+                        onTap: () => setState(() {}),
+                        maxLines: null,
+                        style: AppTheme.monoStyle.copyWith(fontSize: 14),
+                        decoration: InputDecoration(
+                          filled: isBlockLow,
+                          fillColor: isBlockLow
+                              ? warningColor
+                              : Colors.grey.shade50,
+                          border: const OutlineInputBorder(),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 8,
+                          ),
+                          isDense: true,
+                        ),
+                      );
+                    },
+                  ),
+                ],
                 const SizedBox(height: 32),
                 const Text(
                   '管理标签',

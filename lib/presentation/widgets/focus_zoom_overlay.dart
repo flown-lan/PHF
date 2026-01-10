@@ -59,10 +59,13 @@ class _FocusZoomOverlayState extends ConsumerState<FocusZoomOverlay> {
           ? widget.imagePath
           : '${pathService.sandboxRoot}/${widget.imagePath}';
 
-      final bytes = await helper.decryptDataFromFile(fullPath, widget.encryptionKey);
+      final bytes = await helper.decryptDataFromFile(
+        fullPath,
+        widget.encryptionKey,
+      );
       final codec = await ui.instantiateImageCodec(bytes);
       final frame = await codec.getNextFrame();
-      
+
       if (mounted) {
         setState(() {
           _decodedImage = frame.image;
