@@ -4,16 +4,15 @@
 /// 展示病历详情，支持图片轮播、OCR 结果查看及增强型结构化编辑模式。
 ///
 /// ## Features (Phase 4)
-/// - **Structured Edit**: 自动解析 OCR 为可编辑块，支持逐行校对。
-/// - **Focus Zoom**: 点击任意编辑字段，上方预览区自动精准对焦至原图相应位置。
-/// - **i18n**: 全面支持多语言动态切换。
-/// - **Confidence Highlighting**: 置信度低于 0.8 的字段应用橙色高亮。
+/// - **Sticky Magnifier**: 编辑模式下，预览浮层固定在顶部，不随内容滚动。
+/// - **Immersive Edit Mode**: 编辑时隐藏原图大窗口，腾出全屏空间进行逐行校对。
+/// - **Precise Targeting**: 点击不同字段，预览区精准对焦。
 library;
 
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:phf/generated/l10n/app_localizations.dart';
 import 'package:phf/presentation/widgets/focus_zoom_overlay.dart';
@@ -86,10 +85,10 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
   }
 
   void _disposeBlockResources() {
-    for (var c in _blockControllers) {
+    for (final c in _blockControllers) {
       c.dispose();
     }
-    for (var f in _blockFocusNodes) {
+    for (final f in _blockFocusNodes) {
       f.dispose();
     }
     _blockControllers.clear();
@@ -112,20 +111,123 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
     return Scaffold(
       backgroundColor: AppTheme.bgWhite,
       appBar: _buildAppBar(),
-      body: Column(
-        children: [
-          Expanded(flex: 4, child: _buildImageSection()),
-          const Divider(height: 1),
-          Expanded(
-            flex: 6,
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(20),
-              child: _isEditing
-                  ? _buildEditView(currentImage)
-                  : _buildInfoView(currentImage),
+      body: _isEditing 
+          ? _buildImmersiveEditView(currentImage)
+          : _buildStandardDetailView(currentImage),
+    );
+  }
+
+  Widget _buildStandardDetailView(MedicalImage currentImage) {
+    return Column(
+      children: [
+        Expanded(flex: 4, child: _buildImageSection()),
+        const Divider(height: 1),
+        Expanded(
+          flex: 6,
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(20),
+            child: _buildInfoView(currentImage),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildImmersiveEditView(MedicalImage currentImage) {
+    final l10n = AppLocalizations.of(context)!;
+    final isLowConfidence = currentImage.ocrConfidence != null && currentImage.ocrConfidence! < 0.8;
+    final warningColor = Colors.orange.shade50;
+
+    return Column(
+      children: [
+        _buildMagnifier(currentImage),
+        Expanded(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(l10n.review_edit_basic_info, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: _hospitalController,
+                  focusNode: _hospitalFocus,
+                  decoration: InputDecoration(
+                    labelText: l10n.review_edit_hospital_label,
+                    border: const OutlineInputBorder(),
+                    filled: isLowConfidence,
+                    fillColor: isLowConfidence ? warningColor : null,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                _buildDatePicker(currentImage, isLowConfidence, warningColor),
+                
+                const SizedBox(height: 32),
+                if (_blockControllers.isNotEmpty) ...[
+                  const Text('识别内容 (可点击逐行校对)', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                  const SizedBox(height: 8),
+                  const Text('点击下方文字，上方将自动放大对应图片区域', style: TextStyle(fontSize: 11, color: AppTheme.textHint)),
+                  const SizedBox(height: 16),
+                  ListView.separated(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: _blockControllers.length,
+                    separatorBuilder: (context, index) => const SizedBox(height: 12),
+                    itemBuilder: (context, index) {
+                      final block = _currentBlocks[index];
+                      final isBlockLow = block.confidence < 0.8;
+                      return TextField(
+                        controller: _blockControllers[index],
+                        focusNode: _blockFocusNodes[index],
+                        maxLines: null,
+                        style: AppTheme.monoStyle.copyWith(fontSize: 14),
+                        decoration: InputDecoration(
+                          filled: isBlockLow,
+                          fillColor: isBlockLow ? warningColor : Colors.grey.shade50,
+                          border: const OutlineInputBorder(),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          isDense: true,
+                        ),
+                      );
+                    },
+                  ),
+                ],
+                const SizedBox(height: 32),
+                const Text('管理标签', style: TextStyle(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 12),
+                _buildTagSelector(),
+                const SizedBox(height: 32),
+                _buildCancelEditButton(),
+                const SizedBox(height: 24),
+              ],
             ),
           ),
-        ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMagnifier(MedicalImage currentImage) {
+    List<double>? rect;
+    if (_hospitalFocus.hasFocus) {
+      rect = LayoutParser().findFieldCoordinates(_currentBlocks, 'hospital');
+    } else if (_dateFocus.hasFocus) {
+      rect = LayoutParser().findFieldCoordinates(_currentBlocks, 'date');
+    } else {
+      final idx = _blockFocusNodes.indexWhere((f) => f.hasFocus);
+      if (idx != -1) rect = _currentBlocks[idx].boundingBox;
+    }
+
+    if (rect == null) return const SizedBox.shrink();
+
+    return Container(
+      height: 160,
+      width: double.infinity,
+      color: Colors.black,
+      child: FocusZoomOverlay(
+        imagePath: currentImage.filePath,
+        encryptionKey: currentImage.encryptionKey,
+        normalizedRect: rect,
       ),
     );
   }
@@ -160,7 +262,6 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
     _hospitalController.text = img.hospitalName ?? _record?.hospitalName ?? '';
     _visitDate = img.visitDate ?? _record?.notedAt;
 
-    // Initialize block controllers for structured editing
     _disposeBlockResources();
     OcrResult? ocr;
     if (img.ocrRawJson != null) {
@@ -171,7 +272,7 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
 
     if (ocr != null) {
       _currentBlocks = LayoutParser().parse(ocr);
-      for (var block in _currentBlocks) {
+      for (final block in _currentBlocks) {
         final controller = TextEditingController(text: block.rawText);
         final focusNode = FocusNode();
         focusNode.addListener(() => setState(() {}));
@@ -198,20 +299,17 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
     final recordRepo = ref.read(recordRepositoryProvider);
 
     try {
-      // 1. Aggregated OCR text if edited
       if (_blockControllers.isNotEmpty) {
         final newFullText = _blockControllers.map((c) => c.text).join('\n');
         await imageRepo.updateOCRData(currentImage.id, newFullText);
       }
 
-      // 2. Update Image specific metadata
       await imageRepo.updateImageMetadata(
         currentImage.id,
         hospitalName: _hospitalController.text,
         visitDate: _visitDate,
       );
 
-      // 3. Update Record metadata
       await recordRepo.updateRecordMetadata(
         widget.recordId,
         hospitalName: _hospitalController.text,
@@ -512,85 +610,6 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
             ),
           ),
         ),
-      ],
-    );
-  }
-
-  Widget _buildZoomOverlay(MedicalImage currentImage) {
-    final finalRect = (_hospitalFocus.hasFocus || _dateFocus.hasFocus)
-        ? const [0.0, 0.0, 1.0, 0.25]
-        : (() {
-            final idx = _blockFocusNodes.indexWhere((f) => f.hasFocus);
-            return idx != -1 ? _currentBlocks[idx].boundingBox : null;
-          })();
-
-    if (finalRect == null) return const SizedBox(height: 8);
-
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-      child: FocusZoomOverlay(imagePath: currentImage.filePath, encryptionKey: currentImage.encryptionKey, normalizedRect: finalRect),
-    );
-  }
-
-  Widget _buildEditView(MedicalImage currentImage) {
-    final l10n = AppLocalizations.of(context)!;
-    final isLowConfidence = currentImage.ocrConfidence != null && currentImage.ocrConfidence! < 0.8;
-    final warningColor = Colors.orange.shade50;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildZoomOverlay(currentImage),
-        Text(l10n.review_edit_basic_info, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-        const SizedBox(height: 16),
-        TextField(
-          controller: _hospitalController,
-          focusNode: _hospitalFocus,
-          decoration: InputDecoration(
-            labelText: l10n.review_edit_hospital_label,
-            filled: isLowConfidence,
-            fillColor: isLowConfidence ? warningColor : null,
-            border: const OutlineInputBorder(),
-          ),
-        ),
-        const SizedBox(height: 16),
-        _buildDatePicker(currentImage, isLowConfidence, warningColor),
-        const SizedBox(height: 32),
-        
-        if (_blockControllers.isNotEmpty) ...[
-          const Text('识别内容 (可点击逐行校对)', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-          const SizedBox(height: 16),
-          ListView.separated(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: _blockControllers.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 12),
-            itemBuilder: (context, index) {
-              final block = _currentBlocks[index];
-              final isBlockLow = block.confidence < 0.8;
-              return TextField(
-                controller: _blockControllers[index],
-                focusNode: _blockFocusNodes[index],
-                maxLines: null,
-                style: AppTheme.monoStyle.copyWith(fontSize: 14),
-                decoration: InputDecoration(
-                  filled: isBlockLow,
-                  fillColor: isBlockLow ? warningColor : Colors.grey.shade50,
-                  border: const OutlineInputBorder(),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  isDense: true,
-                ),
-              );
-            },
-          ),
-        ],
-        const SizedBox(height: 32),
-        const Text('管理标签', style: TextStyle(fontWeight: FontWeight.bold)),
-        const SizedBox(height: 12),
-        _buildTagSelector(),
-        const SizedBox(height: 32),
-        _buildCancelEditButton(),
-        const SizedBox(height: 24),
       ],
     );
   }

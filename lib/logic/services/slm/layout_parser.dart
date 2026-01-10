@@ -85,6 +85,36 @@ class LayoutParser {
     return result;
   }
 
+  /// 智能查找关键字段的坐标
+  /// 用于编辑模式下的精准对焦
+  List<double>? findFieldCoordinates(List<SLMDataBlock> blocks, String fieldType) {
+    if (blocks.isEmpty) return null;
+
+    final hospitalKeywords = ['医院', '中心', '诊所', 'Health', 'Hospital', 'Medical'];
+    final dateKeywords = ['日期', '时间', 'Date', 'Time', '20', '19'];
+
+    for (var block in blocks) {
+      final text = block.rawText.toLowerCase();
+      
+      if (fieldType == 'hospital') {
+        if (hospitalKeywords.any((k) => text.contains(k.toLowerCase()))) {
+          return block.boundingBox;
+        }
+      } else if (fieldType == 'date') {
+        // 简单的日期正则检查: YYYY-MM-DD 或类似
+        if (dateKeywords.any((k) => text.contains(k.toLowerCase())) ||
+            RegExp(r'\d{4}[\-\/\.年]\d{1,2}[\-\/\.月]\d{1,2}').hasMatch(text)) {
+          return block.boundingBox;
+        }
+      }
+    }
+
+    // Fallback: 医院通常在顶部，日期通常在顶部或底部
+    if (fieldType == 'hospital') return blocks.first.boundingBox;
+    
+    return null;
+  }
+
   double _calculateRowY(List<OcrLine> row) {
     if (row.isEmpty) return 0.0;
     double sum = 0.0;
