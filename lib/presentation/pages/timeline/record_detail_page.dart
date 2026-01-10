@@ -654,11 +654,12 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
   }
 
   Widget _buildTagList(MedicalImage img) {
-    if (img.tagIds.isEmpty)
+    if (img.tagIds.isEmpty) {
       return const Text(
         '无标签',
         style: TextStyle(color: AppTheme.textHint, fontSize: 14),
       );
+    }
     return Wrap(
       spacing: 8,
       runSpacing: 8,

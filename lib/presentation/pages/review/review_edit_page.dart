@@ -131,12 +131,15 @@ class _ReviewEditPageState extends ConsumerState<ReviewEditPage> {
       await reviewNotifier.approveRecord(widget.record.id);
       ref.invalidate(timelineControllerProvider);
 
-      if (mounted) Navigator.pop(context, true);
+      if (mounted) {
+        Navigator.pop(context, true);
+      }
     } catch (e) {
-      if (mounted)
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('归档失败: $e')));
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('归档失败: $e')),
+        );
+      }
     }
   }
 
