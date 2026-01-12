@@ -287,17 +287,17 @@
 - [x] **Implement (T24.3)**: 扩充 ARB 文件，完整覆盖西、葡、印尼、越、泰、印地语。重点检查泰语、印地语在长文本下的 UI 截断问题。
 - [x] **Implement (T24.4)**: 在录入流程中增加 `PageGroupSelector`，允许用户将多张图片标记为同一 `group_id`，为 SLM 多页上下文分析提供支持。
 
-### T26: 国际化深度覆盖与硬化 (Phase 4.5)
-- [ ] **Implement (T26.1) 全站硬编码清理**: 遍历 `lib/presentation` 下的所有页面和组件，将所有硬编码中文迁移至 ARB 文件。
-- [ ] **Implement (T26.2) 补全多国语言包**: 确保西、葡、印尼、越、泰、印地语 ARB 文件包含与 `app_en.arb` 100% 同步的 Key。
-- [ ] **Implement (T26.3) 初始种子数据国际化**: 针对 `DatabaseSeeder` 产生的“本人”等默认数据，实现基于系统语言的动态生成。
-- [ ] **Test (T26.4) 长文本溢出测试**: 在泰语、印地语环境下对详情页、卡片页执行布局压力测试，修复文字截断问题。
+### T26: 国际化深度覆盖与硬化 (Phase 4.5) [x]
+- [x] **Implement (T26.1) 全站硬编码清理**: 遍历 `lib/presentation` 下的所有页面和组件，将所有硬编码中文迁移至 ARB 文件。
+- [x] **Implement (T26.2) 补全多国语言包**: 确保西、葡、印尼、越、泰、印地语 ARB 文件包含与 `app_en.arb` 100% 同步的 Key。
+- [x] **Implement (T26.3) 初始种子数据国际化**: 针对 `DatabaseSeeder` 产生的“本人”等默认数据，实现基于系统语言的动态生成。
+- [x] **Test (T26.4) 长文本溢出测试**: 在泰语、印地语环境下对详情页、卡片页执行布局压力测试，修复文字截断问题。
 
-### T25: SLM 启动前的数据微调 (Phase 4.4 Refinements)
-- [ ] **Implement (T25.1)**: 升级数据库至 V11。在 `records` 表中增加 `ai_interpretation` (TEXT) 和 `interpreted_at` (DATETIME) 字段。
-- [ ] **Implement (T25.2)**: 建立 `analysis_results` 表，用于存储 SLM 提取的结构化 JSON（含分类、异常项、摘要）。
-- [ ] **Implement (T25.3)**: 优化 `BackgroundWorker` 调度算法。确保在 OCR 任务完成后，自动检测电量及充电状态，低优先级触发 SLM 预提取逻辑。
-- [ ] **Implement (T25.4)**: 实现“上下文压缩算法”。在将 OCR 文本送入 SLM 之前，剔除页眉页脚、冗余免责声明，仅保留指标、诊断结论等核心 Context。
+### T25: SLM 启动前的数据微调 (Phase 4.4 Refinements) [x]
+- [x] **Implement (T25.1)**: 升级数据库至 V11。在 `records` 表中增加 `ai_interpretation` (TEXT) 和 `interpreted_at` (DATETIME) 字段。
+- [x] **Implement (T25.2)**: 建立 `analysis_results` 表，用于存储 SLM 提取的结构化 JSON（含分类、异常项、摘要）。
+- [x] **Implement (T25.3)**: 优化 `BackgroundWorker` 调度算法。确保在 OCR 任务完成后，自动检测电量及充电状态，低优先级触发 SLM 预提取逻辑。
+- [x] **Implement (T25.4)**: 实现“上下文压缩算法”。在将 OCR 文本送入 SLM 之前，剔除页眉页脚、冗余免责声明，仅保留指标、诊断结论等核心 Context。
 
 ---
 
