@@ -141,7 +141,7 @@ jobs:
     needs: 'dispatch'
     if: |-
       ${{ needs.dispatch.outputs.command == 'triage' }}
-    uses: './.github/workflows/qwen-triage.yml'
+    uses: './.github/workflows/qwen-invoke.yml'
     permissions:
       contents: 'read'
       id-token: 'write'
