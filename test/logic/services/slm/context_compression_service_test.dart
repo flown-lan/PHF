@@ -54,7 +54,7 @@ WBC: 6.0
       expect(result, isEmpty);
     });
 
-     test('should handle input with only noise', () {
+    test('should handle input with only noise', () {
       const input = '''
 Page 1
 Reference only
