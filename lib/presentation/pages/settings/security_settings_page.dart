@@ -255,9 +255,11 @@ class _SecuritySettingsPageState extends ConsumerState<SecuritySettingsPage> {
     if (!success && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(enabled
-              ? l10n.settings_security_biometrics_enabled_failed
-              : l10n.settings_security_biometrics_disabled_failed),
+          content: Text(
+            enabled
+                ? l10n.settings_security_biometrics_enabled_failed
+                : l10n.settings_security_biometrics_disabled_failed,
+          ),
           backgroundColor: AppTheme.errorRed,
         ),
       );
@@ -378,7 +380,8 @@ class _PinInputDialogState extends State<_PinInputDialog> {
                       color: filled ? AppTheme.primaryTeal : AppTheme.textHint,
                       width: 1,
                     ),
-                  );
+                  ),
+                );
               }),
             ),
             const SizedBox(height: 48),
