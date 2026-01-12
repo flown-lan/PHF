@@ -158,6 +158,12 @@ abstract class AppLocalizations {
   /// **'Refresh'**
   String get common_refresh;
 
+  /// No description provided for @common_reset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get common_reset;
+
   /// No description provided for @common_image_count.
   ///
   /// In en, this message translates to:
@@ -686,6 +692,12 @@ abstract class AppLocalizations {
   /// **'e.g., Lab Result, X-Ray'**
   String get tag_field_name_hint;
 
+  /// No description provided for @tag_reorder_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Reorder Tags'**
+  String get tag_reorder_title;
+
   /// No description provided for @tag_create_new.
   ///
   /// In en, this message translates to:
@@ -890,6 +902,24 @@ abstract class AppLocalizations {
   /// **'Record not found'**
   String get detail_record_not_found;
 
+  /// No description provided for @detail_manage_tags.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage Tags'**
+  String get detail_manage_tags;
+
+  /// No description provided for @detail_no_tags.
+  ///
+  /// In en, this message translates to:
+  /// **'No Tags'**
+  String get detail_no_tags;
+
+  /// No description provided for @detail_save_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Save failed: {error}'**
+  String detail_save_error(String error);
+
   /// No description provided for @home_empty_records.
   ///
   /// In en, this message translates to:
@@ -1033,6 +1063,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Prescription'**
   String get seed_tag_prescription;
+
+  /// No description provided for @filter_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Filters'**
+  String get filter_title;
+
+  /// No description provided for @filter_date_range.
+  ///
+  /// In en, this message translates to:
+  /// **'Date Range'**
+  String get filter_date_range;
+
+  /// No description provided for @filter_select_date_range.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Date Range'**
+  String get filter_select_date_range;
+
+  /// No description provided for @filter_date_to.
+  ///
+  /// In en, this message translates to:
+  /// **'to'**
+  String get filter_date_to;
+
+  /// No description provided for @filter_tags_multi.
+  ///
+  /// In en, this message translates to:
+  /// **'Tags (Multi-select)'**
+  String get filter_tags_multi;
 
   /// No description provided for @search_hint.
   ///

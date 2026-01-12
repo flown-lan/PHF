@@ -1,10 +1,13 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:phf/generated/l10n/app_localizations.dart';
 import '../../../data/models/person.dart';
 import '../../../data/models/search_result.dart';
+import '../../../data/models/tag.dart';
+import '../../../logic/providers/core_providers.dart';
 import '../../../logic/providers/search_provider.dart';
 import '../../../logic/providers/person_provider.dart';
 import '../../theme/app_theme.dart';
@@ -415,42 +418,6 @@ class _SearchResultCard extends StatelessWidget {
       ),
     );
   }
-}
-
-class _SearchTagChip extends ConsumerWidget {
-  final String tagId;
-  const _SearchTagChip({required this.tagId});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final allTagsAsync = ref.watch(allTagsProvider);
-    return allTagsAsync.when(
-      data: (allTags) {
-        final tag = allTags.firstWhere(
-          (t) => t.id == tagId,
-          orElse: () =>
-              Tag(id: tagId, name: tagId, createdAt: DateTime(0), color: ''),
-        );
-        final displayName = L10nHelper.getTagName(context, tag);
-        return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-          decoration: BoxDecoration(
-            color: AppTheme.bgGrey,
-            borderRadius: BorderRadius.circular(4),
-          ),
-          child: Text(
-            '#$displayName',
-            style: const TextStyle(
-              fontSize: 10,
-              color: AppTheme.textSecondary,
-            ),
-          ),
-        );
-      },
-      loading: () => const SizedBox.shrink(),
-      error: (_, __) => const SizedBox.shrink(),
-    );
-  }
 
   TextSpan _parseSnippet(String snippet) {
     final List<TextSpan> spans = [];
@@ -501,5 +468,41 @@ class _SearchTagChip extends ConsumerWidget {
     }
 
     return TextSpan(children: spans);
+  }
+}
+
+class _SearchTagChip extends ConsumerWidget {
+  final String tagId;
+  const _SearchTagChip({required this.tagId});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final allTagsAsync = ref.watch(allTagsProvider);
+    return allTagsAsync.when(
+      data: (allTags) {
+        final tag = allTags.firstWhere(
+          (t) => t.id == tagId,
+          orElse: () =>
+              Tag(id: tagId, name: tagId, createdAt: DateTime(0), color: ''),
+        );
+        final displayName = L10nHelper.getTagName(context, tag);
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+          decoration: BoxDecoration(
+            color: AppTheme.bgGrey,
+            borderRadius: BorderRadius.circular(4),
+          ),
+          child: Text(
+            '#$displayName',
+            style: const TextStyle(
+              fontSize: 10,
+              color: AppTheme.textSecondary,
+            ),
+          ),
+        );
+      },
+      loading: () => const SizedBox.shrink(),
+      error: (_, __) => const SizedBox.shrink(),
+    );
   }
 }

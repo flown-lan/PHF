@@ -33,6 +33,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get common_refresh => '刷新';
 
   @override
+  String get common_reset => '重置';
+
+  @override
   String common_image_count(int count) {
     return '共 $count 张图片';
   }
@@ -314,6 +317,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get tag_field_name_hint => '例：化验单、胸透';
 
   @override
+  String get tag_reorder_title => '调整排序';
+
+  @override
   String tag_create_new(String query) {
     return '创建新标签: $query';
   }
@@ -420,6 +426,17 @@ class AppLocalizationsZh extends AppLocalizations {
   String get detail_record_not_found => '记录不存在';
 
   @override
+  String get detail_manage_tags => '管理标签';
+
+  @override
+  String get detail_no_tags => '无标签';
+
+  @override
+  String detail_save_error(String error) {
+    return '保存失败: $error';
+  }
+
+  @override
   String get home_empty_records => '暂无记录';
 
   @override
@@ -497,6 +514,21 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get seed_tag_prescription => '处方';
+
+  @override
+  String get filter_title => '筛选条件';
+
+  @override
+  String get filter_date_range => '日期范围';
+
+  @override
+  String get filter_select_date_range => '选择日期范围';
+
+  @override
+  String get filter_date_to => '至';
+
+  @override
+  String get filter_tags_multi => '标签 (多选)';
 
   @override
   String get search_hint => '搜索 OCR 内容、医院或备注...';

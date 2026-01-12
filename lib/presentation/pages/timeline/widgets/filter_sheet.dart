@@ -11,10 +11,12 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:phf/generated/l10n/app_localizations.dart';
 import 'package:phf/logic/providers/core_providers.dart';
 import 'package:phf/logic/providers/timeline_provider.dart';
 import 'package:phf/data/models/tag.dart';
 import 'package:phf/presentation/theme/app_theme.dart';
+import '../../../utils/l10n_helper.dart';
 
 class TimelineFilterSheet extends ConsumerStatefulWidget {
   const TimelineFilterSheet({super.key});
@@ -63,7 +65,6 @@ class _TimelineFilterSheetState extends ConsumerState<TimelineFilterSheet> {
   }
 
   Future<void> _selectDateRange() async {
-    final l10n = AppLocalizations.of(context)!;
     final picked = await showDateRangePicker(
       context: context,
       firstDate: DateTime(2000),

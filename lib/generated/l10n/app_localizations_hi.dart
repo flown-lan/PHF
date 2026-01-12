@@ -33,6 +33,9 @@ class AppLocalizationsHi extends AppLocalizations {
   String get common_refresh => 'रीफ्रेश करें';
 
   @override
+  String get common_reset => 'Reset';
+
+  @override
   String common_image_count(int count) {
     return '$count images';
   }
@@ -328,6 +331,9 @@ class AppLocalizationsHi extends AppLocalizations {
   String get tag_field_name_hint => 'उदा. लैब परिणाम, एक्स-रे';
 
   @override
+  String get tag_reorder_title => 'Reorder Tags';
+
+  @override
   String tag_create_new(String query) {
     return 'नया टैग बनाएं: $query';
   }
@@ -438,6 +444,17 @@ class AppLocalizationsHi extends AppLocalizations {
   String get detail_record_not_found => 'रिकॉर्ड नहीं मिला';
 
   @override
+  String get detail_manage_tags => 'Manage Tags';
+
+  @override
+  String get detail_no_tags => 'No Tags';
+
+  @override
+  String detail_save_error(String error) {
+    return 'Save failed: $error';
+  }
+
+  @override
   String get home_empty_records => 'अभी तक कोई रिकॉर्ड नहीं';
 
   @override
@@ -519,6 +536,21 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get seed_tag_prescription => 'Prescription';
+
+  @override
+  String get filter_title => 'Filters';
+
+  @override
+  String get filter_date_range => 'Date Range';
+
+  @override
+  String get filter_select_date_range => 'Select Date Range';
+
+  @override
+  String get filter_date_to => 'to';
+
+  @override
+  String get filter_tags_multi => 'Tags (Multi-select)';
 
   @override
   String get search_hint => 'OCR, अस्पताल या नोट्स खोजें...';

@@ -33,6 +33,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get common_refresh => 'Làm mới';
 
   @override
+  String get common_reset => 'Reset';
+
+  @override
   String common_image_count(int count) {
     return '$count images';
   }
@@ -325,6 +328,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get tag_field_name_hint => 'VD: Xét nghiệm, X-Quang';
 
   @override
+  String get tag_reorder_title => 'Reorder Tags';
+
+  @override
   String tag_create_new(String query) {
     return 'Tạo nhãn mới: $query';
   }
@@ -434,6 +440,17 @@ class AppLocalizationsVi extends AppLocalizations {
   String get detail_record_not_found => 'Không tìm thấy hồ sơ';
 
   @override
+  String get detail_manage_tags => 'Manage Tags';
+
+  @override
+  String get detail_no_tags => 'No Tags';
+
+  @override
+  String detail_save_error(String error) {
+    return 'Save failed: $error';
+  }
+
+  @override
   String get home_empty_records => 'Chưa có hồ sơ nào';
 
   @override
@@ -514,6 +531,21 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get seed_tag_prescription => 'Prescription';
+
+  @override
+  String get filter_title => 'Filters';
+
+  @override
+  String get filter_date_range => 'Date Range';
+
+  @override
+  String get filter_select_date_range => 'Select Date Range';
+
+  @override
+  String get filter_date_to => 'to';
+
+  @override
+  String get filter_tags_multi => 'Tags (Multi-select)';
 
   @override
   String get search_hint => 'Tìm OCR, bệnh viện hoặc ghi chú...';
