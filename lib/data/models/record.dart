@@ -15,6 +15,8 @@
 /// - `updatedAt`: 最后修改时间.
 /// - `status`: 状态 (`processing`, `archived`, `deleted`).
 /// - `tagsCache`: 聚合标签的 JSON 缓存字串，用于 Timeline 快速渲染.
+/// - `aiInterpretation`: SLM 生成的纯文本解读 (Phase 4.4).
+/// - `interpretedAt`: AI 解读生成时间 (Phase 4.4).
 /// - `images`: 该记录包含的所有图片 (非数据库字段, 内存聚合).
 ///
 /// ## Implementation Rules
@@ -54,6 +56,10 @@ abstract class MedicalRecord with _$MedicalRecord {
     required DateTime updatedAt,
     @Default(RecordStatus.processing) RecordStatus status,
     String? tagsCache,
+
+    /// Phase 4.4: AI Interpretation
+    String? aiInterpretation,
+    DateTime? interpretedAt,
 
     /// 内存关联字段
     @JsonKey(includeFromJson: false, includeToJson: false)

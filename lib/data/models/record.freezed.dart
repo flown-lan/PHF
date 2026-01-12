@@ -15,7 +15,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$MedicalRecord {
 
- String get id; String get personId; bool get isVerified; String? get groupId; String? get hospitalName; String? get notes; DateTime get notedAt; DateTime? get visitEndDate; DateTime get createdAt; DateTime get updatedAt; RecordStatus get status; String? get tagsCache;/// 内存关联字段
+ String get id; String get personId; bool get isVerified; String? get groupId; String? get hospitalName; String? get notes; DateTime get notedAt; DateTime? get visitEndDate; DateTime get createdAt; DateTime get updatedAt; RecordStatus get status; String? get tagsCache;/// Phase 4.4: AI Interpretation
+ String? get aiInterpretation; DateTime? get interpretedAt;/// 内存关联字段
 @JsonKey(includeFromJson: false, includeToJson: false) List<MedicalImage> get images;
 /// Create a copy of MedicalRecord
 /// with the given fields replaced by the non-null parameter values.
@@ -29,16 +30,16 @@ $MedicalRecordCopyWith<MedicalRecord> get copyWith => _$MedicalRecordCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MedicalRecord&&(identical(other.id, id) || other.id == id)&&(identical(other.personId, personId) || other.personId == personId)&&(identical(other.isVerified, isVerified) || other.isVerified == isVerified)&&(identical(other.groupId, groupId) || other.groupId == groupId)&&(identical(other.hospitalName, hospitalName) || other.hospitalName == hospitalName)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.notedAt, notedAt) || other.notedAt == notedAt)&&(identical(other.visitEndDate, visitEndDate) || other.visitEndDate == visitEndDate)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.status, status) || other.status == status)&&(identical(other.tagsCache, tagsCache) || other.tagsCache == tagsCache)&&const DeepCollectionEquality().equals(other.images, images));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MedicalRecord&&(identical(other.id, id) || other.id == id)&&(identical(other.personId, personId) || other.personId == personId)&&(identical(other.isVerified, isVerified) || other.isVerified == isVerified)&&(identical(other.groupId, groupId) || other.groupId == groupId)&&(identical(other.hospitalName, hospitalName) || other.hospitalName == hospitalName)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.notedAt, notedAt) || other.notedAt == notedAt)&&(identical(other.visitEndDate, visitEndDate) || other.visitEndDate == visitEndDate)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.status, status) || other.status == status)&&(identical(other.tagsCache, tagsCache) || other.tagsCache == tagsCache)&&(identical(other.aiInterpretation, aiInterpretation) || other.aiInterpretation == aiInterpretation)&&(identical(other.interpretedAt, interpretedAt) || other.interpretedAt == interpretedAt)&&const DeepCollectionEquality().equals(other.images, images));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,personId,isVerified,groupId,hospitalName,notes,notedAt,visitEndDate,createdAt,updatedAt,status,tagsCache,const DeepCollectionEquality().hash(images));
+int get hashCode => Object.hash(runtimeType,id,personId,isVerified,groupId,hospitalName,notes,notedAt,visitEndDate,createdAt,updatedAt,status,tagsCache,aiInterpretation,interpretedAt,const DeepCollectionEquality().hash(images));
 
 @override
 String toString() {
-  return 'MedicalRecord(id: $id, personId: $personId, isVerified: $isVerified, groupId: $groupId, hospitalName: $hospitalName, notes: $notes, notedAt: $notedAt, visitEndDate: $visitEndDate, createdAt: $createdAt, updatedAt: $updatedAt, status: $status, tagsCache: $tagsCache, images: $images)';
+  return 'MedicalRecord(id: $id, personId: $personId, isVerified: $isVerified, groupId: $groupId, hospitalName: $hospitalName, notes: $notes, notedAt: $notedAt, visitEndDate: $visitEndDate, createdAt: $createdAt, updatedAt: $updatedAt, status: $status, tagsCache: $tagsCache, aiInterpretation: $aiInterpretation, interpretedAt: $interpretedAt, images: $images)';
 }
 
 
@@ -49,7 +50,7 @@ abstract mixin class $MedicalRecordCopyWith<$Res>  {
   factory $MedicalRecordCopyWith(MedicalRecord value, $Res Function(MedicalRecord) _then) = _$MedicalRecordCopyWithImpl;
 @useResult
 $Res call({
- String id, String personId, bool isVerified, String? groupId, String? hospitalName, String? notes, DateTime notedAt, DateTime? visitEndDate, DateTime createdAt, DateTime updatedAt, RecordStatus status, String? tagsCache,@JsonKey(includeFromJson: false, includeToJson: false) List<MedicalImage> images
+ String id, String personId, bool isVerified, String? groupId, String? hospitalName, String? notes, DateTime notedAt, DateTime? visitEndDate, DateTime createdAt, DateTime updatedAt, RecordStatus status, String? tagsCache, String? aiInterpretation, DateTime? interpretedAt,@JsonKey(includeFromJson: false, includeToJson: false) List<MedicalImage> images
 });
 
 
@@ -66,7 +67,7 @@ class _$MedicalRecordCopyWithImpl<$Res>
 
 /// Create a copy of MedicalRecord
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? personId = null,Object? isVerified = null,Object? groupId = freezed,Object? hospitalName = freezed,Object? notes = freezed,Object? notedAt = null,Object? visitEndDate = freezed,Object? createdAt = null,Object? updatedAt = null,Object? status = null,Object? tagsCache = freezed,Object? images = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? personId = null,Object? isVerified = null,Object? groupId = freezed,Object? hospitalName = freezed,Object? notes = freezed,Object? notedAt = null,Object? visitEndDate = freezed,Object? createdAt = null,Object? updatedAt = null,Object? status = null,Object? tagsCache = freezed,Object? aiInterpretation = freezed,Object? interpretedAt = freezed,Object? images = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,personId: null == personId ? _self.personId : personId // ignore: cast_nullable_to_non_nullable
@@ -80,7 +81,9 @@ as DateTime?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignor
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as RecordStatus,tagsCache: freezed == tagsCache ? _self.tagsCache : tagsCache // ignore: cast_nullable_to_non_nullable
-as String?,images: null == images ? _self.images : images // ignore: cast_nullable_to_non_nullable
+as String?,aiInterpretation: freezed == aiInterpretation ? _self.aiInterpretation : aiInterpretation // ignore: cast_nullable_to_non_nullable
+as String?,interpretedAt: freezed == interpretedAt ? _self.interpretedAt : interpretedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,images: null == images ? _self.images : images // ignore: cast_nullable_to_non_nullable
 as List<MedicalImage>,
   ));
 }
@@ -166,10 +169,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String personId,  bool isVerified,  String? groupId,  String? hospitalName,  String? notes,  DateTime notedAt,  DateTime? visitEndDate,  DateTime createdAt,  DateTime updatedAt,  RecordStatus status,  String? tagsCache, @JsonKey(includeFromJson: false, includeToJson: false)  List<MedicalImage> images)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String personId,  bool isVerified,  String? groupId,  String? hospitalName,  String? notes,  DateTime notedAt,  DateTime? visitEndDate,  DateTime createdAt,  DateTime updatedAt,  RecordStatus status,  String? tagsCache,  String? aiInterpretation,  DateTime? interpretedAt, @JsonKey(includeFromJson: false, includeToJson: false)  List<MedicalImage> images)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MedicalRecord() when $default != null:
-return $default(_that.id,_that.personId,_that.isVerified,_that.groupId,_that.hospitalName,_that.notes,_that.notedAt,_that.visitEndDate,_that.createdAt,_that.updatedAt,_that.status,_that.tagsCache,_that.images);case _:
+return $default(_that.id,_that.personId,_that.isVerified,_that.groupId,_that.hospitalName,_that.notes,_that.notedAt,_that.visitEndDate,_that.createdAt,_that.updatedAt,_that.status,_that.tagsCache,_that.aiInterpretation,_that.interpretedAt,_that.images);case _:
   return orElse();
 
 }
@@ -187,10 +190,10 @@ return $default(_that.id,_that.personId,_that.isVerified,_that.groupId,_that.hos
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String personId,  bool isVerified,  String? groupId,  String? hospitalName,  String? notes,  DateTime notedAt,  DateTime? visitEndDate,  DateTime createdAt,  DateTime updatedAt,  RecordStatus status,  String? tagsCache, @JsonKey(includeFromJson: false, includeToJson: false)  List<MedicalImage> images)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String personId,  bool isVerified,  String? groupId,  String? hospitalName,  String? notes,  DateTime notedAt,  DateTime? visitEndDate,  DateTime createdAt,  DateTime updatedAt,  RecordStatus status,  String? tagsCache,  String? aiInterpretation,  DateTime? interpretedAt, @JsonKey(includeFromJson: false, includeToJson: false)  List<MedicalImage> images)  $default,) {final _that = this;
 switch (_that) {
 case _MedicalRecord():
-return $default(_that.id,_that.personId,_that.isVerified,_that.groupId,_that.hospitalName,_that.notes,_that.notedAt,_that.visitEndDate,_that.createdAt,_that.updatedAt,_that.status,_that.tagsCache,_that.images);case _:
+return $default(_that.id,_that.personId,_that.isVerified,_that.groupId,_that.hospitalName,_that.notes,_that.notedAt,_that.visitEndDate,_that.createdAt,_that.updatedAt,_that.status,_that.tagsCache,_that.aiInterpretation,_that.interpretedAt,_that.images);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -207,10 +210,10 @@ return $default(_that.id,_that.personId,_that.isVerified,_that.groupId,_that.hos
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String personId,  bool isVerified,  String? groupId,  String? hospitalName,  String? notes,  DateTime notedAt,  DateTime? visitEndDate,  DateTime createdAt,  DateTime updatedAt,  RecordStatus status,  String? tagsCache, @JsonKey(includeFromJson: false, includeToJson: false)  List<MedicalImage> images)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String personId,  bool isVerified,  String? groupId,  String? hospitalName,  String? notes,  DateTime notedAt,  DateTime? visitEndDate,  DateTime createdAt,  DateTime updatedAt,  RecordStatus status,  String? tagsCache,  String? aiInterpretation,  DateTime? interpretedAt, @JsonKey(includeFromJson: false, includeToJson: false)  List<MedicalImage> images)?  $default,) {final _that = this;
 switch (_that) {
 case _MedicalRecord() when $default != null:
-return $default(_that.id,_that.personId,_that.isVerified,_that.groupId,_that.hospitalName,_that.notes,_that.notedAt,_that.visitEndDate,_that.createdAt,_that.updatedAt,_that.status,_that.tagsCache,_that.images);case _:
+return $default(_that.id,_that.personId,_that.isVerified,_that.groupId,_that.hospitalName,_that.notes,_that.notedAt,_that.visitEndDate,_that.createdAt,_that.updatedAt,_that.status,_that.tagsCache,_that.aiInterpretation,_that.interpretedAt,_that.images);case _:
   return null;
 
 }
@@ -222,7 +225,7 @@ return $default(_that.id,_that.personId,_that.isVerified,_that.groupId,_that.hos
 @JsonSerializable()
 
 class _MedicalRecord implements MedicalRecord {
-  const _MedicalRecord({required this.id, required this.personId, this.isVerified = false, this.groupId, this.hospitalName, this.notes, required this.notedAt, this.visitEndDate, required this.createdAt, required this.updatedAt, this.status = RecordStatus.processing, this.tagsCache, @JsonKey(includeFromJson: false, includeToJson: false) final  List<MedicalImage> images = const []}): _images = images;
+  const _MedicalRecord({required this.id, required this.personId, this.isVerified = false, this.groupId, this.hospitalName, this.notes, required this.notedAt, this.visitEndDate, required this.createdAt, required this.updatedAt, this.status = RecordStatus.processing, this.tagsCache, this.aiInterpretation, this.interpretedAt, @JsonKey(includeFromJson: false, includeToJson: false) final  List<MedicalImage> images = const []}): _images = images;
   factory _MedicalRecord.fromJson(Map<String, dynamic> json) => _$MedicalRecordFromJson(json);
 
 @override final  String id;
@@ -237,6 +240,9 @@ class _MedicalRecord implements MedicalRecord {
 @override final  DateTime updatedAt;
 @override@JsonKey() final  RecordStatus status;
 @override final  String? tagsCache;
+/// Phase 4.4: AI Interpretation
+@override final  String? aiInterpretation;
+@override final  DateTime? interpretedAt;
 /// 内存关联字段
  final  List<MedicalImage> _images;
 /// 内存关联字段
@@ -260,16 +266,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MedicalRecord&&(identical(other.id, id) || other.id == id)&&(identical(other.personId, personId) || other.personId == personId)&&(identical(other.isVerified, isVerified) || other.isVerified == isVerified)&&(identical(other.groupId, groupId) || other.groupId == groupId)&&(identical(other.hospitalName, hospitalName) || other.hospitalName == hospitalName)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.notedAt, notedAt) || other.notedAt == notedAt)&&(identical(other.visitEndDate, visitEndDate) || other.visitEndDate == visitEndDate)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.status, status) || other.status == status)&&(identical(other.tagsCache, tagsCache) || other.tagsCache == tagsCache)&&const DeepCollectionEquality().equals(other._images, _images));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MedicalRecord&&(identical(other.id, id) || other.id == id)&&(identical(other.personId, personId) || other.personId == personId)&&(identical(other.isVerified, isVerified) || other.isVerified == isVerified)&&(identical(other.groupId, groupId) || other.groupId == groupId)&&(identical(other.hospitalName, hospitalName) || other.hospitalName == hospitalName)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.notedAt, notedAt) || other.notedAt == notedAt)&&(identical(other.visitEndDate, visitEndDate) || other.visitEndDate == visitEndDate)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.status, status) || other.status == status)&&(identical(other.tagsCache, tagsCache) || other.tagsCache == tagsCache)&&(identical(other.aiInterpretation, aiInterpretation) || other.aiInterpretation == aiInterpretation)&&(identical(other.interpretedAt, interpretedAt) || other.interpretedAt == interpretedAt)&&const DeepCollectionEquality().equals(other._images, _images));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,personId,isVerified,groupId,hospitalName,notes,notedAt,visitEndDate,createdAt,updatedAt,status,tagsCache,const DeepCollectionEquality().hash(_images));
+int get hashCode => Object.hash(runtimeType,id,personId,isVerified,groupId,hospitalName,notes,notedAt,visitEndDate,createdAt,updatedAt,status,tagsCache,aiInterpretation,interpretedAt,const DeepCollectionEquality().hash(_images));
 
 @override
 String toString() {
-  return 'MedicalRecord(id: $id, personId: $personId, isVerified: $isVerified, groupId: $groupId, hospitalName: $hospitalName, notes: $notes, notedAt: $notedAt, visitEndDate: $visitEndDate, createdAt: $createdAt, updatedAt: $updatedAt, status: $status, tagsCache: $tagsCache, images: $images)';
+  return 'MedicalRecord(id: $id, personId: $personId, isVerified: $isVerified, groupId: $groupId, hospitalName: $hospitalName, notes: $notes, notedAt: $notedAt, visitEndDate: $visitEndDate, createdAt: $createdAt, updatedAt: $updatedAt, status: $status, tagsCache: $tagsCache, aiInterpretation: $aiInterpretation, interpretedAt: $interpretedAt, images: $images)';
 }
 
 
@@ -280,7 +286,7 @@ abstract mixin class _$MedicalRecordCopyWith<$Res> implements $MedicalRecordCopy
   factory _$MedicalRecordCopyWith(_MedicalRecord value, $Res Function(_MedicalRecord) _then) = __$MedicalRecordCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String personId, bool isVerified, String? groupId, String? hospitalName, String? notes, DateTime notedAt, DateTime? visitEndDate, DateTime createdAt, DateTime updatedAt, RecordStatus status, String? tagsCache,@JsonKey(includeFromJson: false, includeToJson: false) List<MedicalImage> images
+ String id, String personId, bool isVerified, String? groupId, String? hospitalName, String? notes, DateTime notedAt, DateTime? visitEndDate, DateTime createdAt, DateTime updatedAt, RecordStatus status, String? tagsCache, String? aiInterpretation, DateTime? interpretedAt,@JsonKey(includeFromJson: false, includeToJson: false) List<MedicalImage> images
 });
 
 
@@ -297,7 +303,7 @@ class __$MedicalRecordCopyWithImpl<$Res>
 
 /// Create a copy of MedicalRecord
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? personId = null,Object? isVerified = null,Object? groupId = freezed,Object? hospitalName = freezed,Object? notes = freezed,Object? notedAt = null,Object? visitEndDate = freezed,Object? createdAt = null,Object? updatedAt = null,Object? status = null,Object? tagsCache = freezed,Object? images = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? personId = null,Object? isVerified = null,Object? groupId = freezed,Object? hospitalName = freezed,Object? notes = freezed,Object? notedAt = null,Object? visitEndDate = freezed,Object? createdAt = null,Object? updatedAt = null,Object? status = null,Object? tagsCache = freezed,Object? aiInterpretation = freezed,Object? interpretedAt = freezed,Object? images = null,}) {
   return _then(_MedicalRecord(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,personId: null == personId ? _self.personId : personId // ignore: cast_nullable_to_non_nullable
@@ -311,7 +317,9 @@ as DateTime?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignor
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as RecordStatus,tagsCache: freezed == tagsCache ? _self.tagsCache : tagsCache // ignore: cast_nullable_to_non_nullable
-as String?,images: null == images ? _self._images : images // ignore: cast_nullable_to_non_nullable
+as String?,aiInterpretation: freezed == aiInterpretation ? _self.aiInterpretation : aiInterpretation // ignore: cast_nullable_to_non_nullable
+as String?,interpretedAt: freezed == interpretedAt ? _self.interpretedAt : interpretedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,images: null == images ? _self._images : images // ignore: cast_nullable_to_non_nullable
 as List<MedicalImage>,
   ));
 }
