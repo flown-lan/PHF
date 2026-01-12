@@ -126,6 +126,10 @@ Phase 4 (SLM Data Pipeline & Internationalization) is now complete.
     - **Architecture**: 引入 `EntityMapper` Mixin，统一全站数据库行至领域实体的解析逻辑，代码量减少 ~40%。
     - **Performance**: 沉淀 `fetchImagesForRecords` 通用逻辑至 `BaseRepository`，彻底消除 N+1 查询隐患。
     - **Robustness**: 重写 FTS5 搜索流，实现 SQL 构建、结果抓取与数据组装的职责分离。
+- [x] **T25: Phase 4.4 Refinements (SLM Prep)**.
+    - **Schema (V11)**: Added `ai_interpretation` and `interpreted_at_ms` to `records`. Created `analysis_results` table for structured SLM output.
+    - **Context Compression**: Implemented `ContextCompressionService` to strip noise (page numbers, disclaimers) before SLM analysis.
+    - **Background Scheduling**: Integrated `battery_plus` in `BackgroundWorkerService` to trigger SLM pre-extraction (simulated) only when charging or battery > 50%.
 
 ## 🟡 Pending Issues / Technical Debt (New for Phase 4)
 - None.

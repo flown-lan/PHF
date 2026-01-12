@@ -16,6 +16,7 @@ library;
 import 'package:flutter/foundation.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:talker_flutter/talker_flutter.dart';
+import 'package:battery_plus/battery_plus.dart';
 
 // Imports for DI reconstruction
 import '../../core/security/master_key_manager.dart';
@@ -30,6 +31,7 @@ import '../services/android_ocr_service.dart';
 import '../services/ios_ocr_service.dart';
 import '../services/interfaces/ocr_service.dart';
 import '../services/ocr_processor.dart';
+import 'slm/context_compression_service.dart';
 
 // CryptoService implementation for DI
 import '../services/crypto_service.dart';
@@ -59,7 +61,42 @@ void callbackDispatcher() {
           if (hasMore) processedCount++;
         }
 
-        talker.info('[BackgroundWorker] Finished. Processed: $processedCount');
+        talker.info(
+          '[BackgroundWorker] OCR Finished. Processed: $processedCount',
+        );
+
+        // 3. T25.3: SLM Pre-extraction Check (Low Priority)
+        try {
+          if (defaultTargetPlatform == TargetPlatform.android ||
+              defaultTargetPlatform == TargetPlatform.iOS) {
+            final battery = Battery();
+            // Note: Battery calls might fail in some background contexts or simulators
+            final int level = await battery.batteryLevel;
+            final BatteryState state = await battery.batteryState;
+
+            talker.info('[BackgroundWorker] Battery Status: $level%, $state');
+
+            if (state == BatteryState.charging || level > 50) {
+              talker.info(
+                '[BackgroundWorker] Power sufficient. Triggering SLM Pre-extraction (Stub).',
+              );
+
+                             // T25.4: Context Compression Service Check
+                             final compression = ContextCompressionService();
+                             talker.info('[BackgroundWorker] Compression Service ready: ${compression.hashCode}');
+                             // Placeholder: In Phase 5, we will fetch 'archived' records              // and run compression.compress(record.ocrText) here.
+            } else {
+              talker.info(
+                '[BackgroundWorker] Power low/discharging. Skipping SLM.',
+              );
+            }
+          }
+        } catch (e) {
+          // Swallow battery errors to not fail the worker
+          talker.warning(
+            '[BackgroundWorker] Battery check failed (likely no hardware): $e',
+          );
+        }
       }
       return Future.value(true);
     } catch (err, stack) {

@@ -22,8 +22,13 @@
 /// - `app_meta`: 应用元数据
 /// - `ocr_search_index`: FTS5 全文索引
 /// - `ocr_queue`: OCR 任务队列
+/// - `analysis_results`: SLM 分析结果 (v11+)
 ///
 /// ## Fix Record
+/// - **2026-01-12**:
+///   1. 执行 v11 版本迁移：Phase 4.4 Refinements。
+///      - 增加 `records.ai_interpretation`, `records.interpreted_at_ms`。
+///      - 新增 `analysis_results` 表。
 /// - **2026-01-06**:
 ///   1. 执行 v9 版本迁移：为 FTS5 搜索索引启用 `unicode61` 分词器，以支持中文搜索。
 /// - **2026-01-04**:
@@ -43,7 +48,7 @@ import 'seeds/database_seeder.dart';
 
 class SQLCipherDatabaseService {
   static const String _dbName = 'phf_encrypted.db';
-  static const int _dbVersion = 10;
+  static const int _dbVersion = 11;
 
   final MasterKeyManager keyManager;
   final PathProviderService pathService;
@@ -166,6 +171,7 @@ class SQLCipherDatabaseService {
 
     // 3. Records (就诊事件)
     // 状态管理: 'processing' (待OCR), 'archived' (已归档/OCR完成), 'deleted'
+    // v11+: 增加 ai_interpretation, interpreted_at_ms
     batch.execute('''
       CREATE TABLE records (
         id              TEXT PRIMARY KEY,
@@ -179,6 +185,8 @@ class SQLCipherDatabaseService {
         hospital_id     TEXT REFERENCES hospitals(id),
         notes           TEXT,
         tags_cache      TEXT,
+        ai_interpretation TEXT,
+        interpreted_at_ms INTEGER,
         visit_end_date_ms INTEGER,
         created_at_ms   INTEGER NOT NULL,
         updated_at_ms   INTEGER NOT NULL
@@ -269,6 +277,17 @@ class SQLCipherDatabaseService {
       )
     ''');
 
+    // 10. Analysis Results (v11+)
+    batch.execute('''
+      CREATE TABLE analysis_results (
+        id              TEXT PRIMARY KEY,
+        record_id       TEXT NOT NULL REFERENCES records(id) ON DELETE CASCADE,
+        raw_json        TEXT NOT NULL,
+        summary         TEXT,
+        created_at_ms   INTEGER NOT NULL
+      )
+    ''');
+
     // 索引优化 (根据查询频率)
     batch.execute(
       'CREATE INDEX idx_records_visit_date ON records(visit_date_ms)',
@@ -280,8 +299,11 @@ class SQLCipherDatabaseService {
       'CREATE INDEX idx_images_record_order ON images(record_id, page_index)',
     );
     batch.execute('CREATE INDEX idx_ocr_queue_status ON ocr_queue(status)');
+    batch.execute(
+      'CREATE INDEX idx_analysis_results_record ON analysis_results(record_id)',
+    );
 
-    // 10. 执行种子数据填充
+    // 11. 执行种子数据填充
     DatabaseSeeder.run(batch, locale: locale);
 
     await batch.commit();
@@ -524,6 +546,32 @@ class SQLCipherDatabaseService {
         );
         await db.execute('ALTER TABLE records ADD COLUMN group_id TEXT');
       } catch (_) {}
+    }
+
+    if (oldVersion < 11) {
+      // Upgrade to v11: Phase 4.4 Refinements (SLM Prep)
+      try {
+        await db.execute(
+          'ALTER TABLE records ADD COLUMN ai_interpretation TEXT',
+        );
+        await db.execute(
+          'ALTER TABLE records ADD COLUMN interpreted_at_ms INTEGER',
+        );
+      } catch (_) {}
+
+      batch.execute('''
+        CREATE TABLE IF NOT EXISTS analysis_results (
+          id              TEXT PRIMARY KEY,
+          record_id       TEXT NOT NULL REFERENCES records(id) ON DELETE CASCADE,
+          raw_json        TEXT NOT NULL,
+          summary         TEXT,
+          created_at_ms   INTEGER NOT NULL
+        )
+      ''');
+
+      batch.execute(
+        'CREATE INDEX IF NOT EXISTS idx_analysis_results_record ON analysis_results(record_id)',
+      );
     }
 
     await batch.commit();
