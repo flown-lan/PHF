@@ -48,27 +48,20 @@ class _GlobalSearchPageState extends ConsumerState<GlobalSearchPage> {
   @override
   Widget build(BuildContext context) {
     final searchAsync = ref.watch(searchControllerProvider);
-
     final currentPerson = ref.watch(currentPersonProvider).value;
-
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: AppTheme.bgGrey,
-
       appBar: _buildAppBar(currentPerson),
-
       body: searchAsync.when(
         data: (results) => _buildSearchResults(results),
-
         loading: () => const Center(
           child: CircularProgressIndicator(color: AppTheme.primaryTeal),
         ),
-
         error: (err, stack) => Center(
           child: Text(
             l10n.common_load_failed(err.toString()),
-
             style: const TextStyle(color: AppTheme.errorRed),
           ),
         ),
@@ -81,34 +74,24 @@ class _GlobalSearchPageState extends ConsumerState<GlobalSearchPage> {
 
     return AppBar(
       titleSpacing: 0,
-
       title: _buildSearchField(),
-
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(30),
-
         child: Container(
           padding: const EdgeInsets.only(left: 16, bottom: 8),
-
           alignment: Alignment.centerLeft,
-
           child: Row(
             children: [
               const Icon(
                 Icons.person_outline,
-
                 size: 14,
-
                 color: AppTheme.textHint,
               ),
-
               const SizedBox(width: 4),
-
               Text(
-                l10n.search_searching_person(
-                  currentPerson != null
-                      ? L10nHelper.getPersonName(context, currentPerson)
-                      : "...",
+                l10n.search_searching_person(currentPerson != null
+                    ? L10nHelper.getPersonName(context, currentPerson)
+                    : "...",
                 ),
                 style: const TextStyle(fontSize: 12, color: AppTheme.textHint),
               ),
@@ -124,72 +107,47 @@ class _GlobalSearchPageState extends ConsumerState<GlobalSearchPage> {
 
     return Container(
       height: 40,
-
       margin: const EdgeInsets.only(right: 16),
-
       decoration: BoxDecoration(
         color: AppTheme.bgGrey,
-
         borderRadius: BorderRadius.circular(AppTheme.radiusButton),
       ),
-
       child: TextField(
         controller: _searchController,
-
         autofocus: true,
-
         decoration: InputDecoration(
           hintText: l10n.search_hint,
-
           hintStyle: const TextStyle(color: AppTheme.textHint, fontSize: 14),
-
           prefixIcon: const Icon(
             Icons.search,
-
             size: 20,
-
             color: AppTheme.textGrey,
           ),
-
           suffixIcon: _searchController.text.isNotEmpty
               ? IconButton(
                   icon: const Icon(
                     Icons.cancel,
-
                     size: 20,
-
                     color: AppTheme.textGrey,
                   ),
-
                   onPressed: () {
                     _searchController.clear();
-
                     setState(() {});
-
                     _onSearchChanged('');
                   },
                 )
               : null,
-
           border: InputBorder.none,
-
           enabledBorder: InputBorder.none,
-
           focusedBorder: InputBorder.none,
-
           contentPadding: const EdgeInsets.symmetric(vertical: 10),
         ),
-
         style: const TextStyle(fontSize: 16),
-
         onChanged: (val) {
           setState(() {});
-
           _onSearchChanged(val);
         },
-
         textInputAction: TextInputAction.search,
-
         onSubmitted: (val) =>
             ref.read(searchControllerProvider.notifier).search(val),
       ),
@@ -209,19 +167,14 @@ class _GlobalSearchPageState extends ConsumerState<GlobalSearchPage> {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-
           child: Text(
             l10n.search_result_count(results.length),
-
             style: AppTheme.monoStyle.copyWith(
               fontSize: 12,
-
               color: AppTheme.textHint,
-
               fontWeight: FontWeight.bold,
             ),
           ),

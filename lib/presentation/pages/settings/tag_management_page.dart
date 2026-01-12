@@ -216,89 +216,63 @@ class _TagManagementPageState extends ConsumerState<TagManagementPage> {
 
   Future<void> _showEditDialog({Tag? tag}) async {
     final isEditing = tag != null;
-
     final nameCtrl = TextEditingController(text: tag?.name ?? '');
-
     final l10n = AppLocalizations.of(context)!;
 
     await showDialog<void>(
       context: context,
-
       builder: (context) => AlertDialog(
         title: Text(isEditing ? l10n.tag_edit_title : l10n.tag_add_title),
-
         content: TextField(
           controller: nameCtrl,
-
           decoration: InputDecoration(
             labelText: l10n.tag_field_name,
-
             hintText: l10n.tag_field_name_hint,
           ),
-
           autofocus: true,
         ),
-
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-
             child: Text(l10n.common_cancel),
           ),
-
           ElevatedButton(
             onPressed: () async {
               final name = nameCtrl.text.trim();
-
               if (name.isEmpty) return;
-
               try {
                 final repo = ref.read(tagRepositoryProvider);
-
                 if (isEditing) {
                   await repo.updateTag(tag.copyWith(name: name));
                 } else {
                   final currentTags = ref.read(allTagsProvider).value ?? [];
-
                   final personId = await ref.read(
                     currentPersonIdControllerProvider.future,
                   );
-
                   final newTag = Tag(
                     id: const Uuid().v4(),
-
                     name: name,
-
                     color: '#008080', // Default Teal
-
                     personId: personId,
-
                     isCustom: true,
-
                     orderIndex: currentTags.length,
-
                     createdAt: DateTime.now(),
                   );
-
                   await repo.createTag(newTag);
                 }
-
                 ref.invalidate(allTagsProvider);
-
                 if (context.mounted) Navigator.pop(context);
               } catch (e) {
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(l10n.common_load_failed(e.toString())),
-
                       backgroundColor: AppTheme.errorRed,
                     ),
                   );
                 }
               }
             },
-
             child: Text(l10n.common_save),
           ),
         ],
