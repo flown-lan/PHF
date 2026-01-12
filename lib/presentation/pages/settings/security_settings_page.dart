@@ -188,8 +188,10 @@ class _SecuritySettingsPageState extends ConsumerState<SecuritySettingsPage> {
     return RadioListTile<int>(
       title: Text(label),
       value: seconds,
+      // ignore: deprecated_member_use
       groupValue: currentTimeout,
       activeColor: AppTheme.primaryTeal,
+      // ignore: deprecated_member_use
       onChanged: (val) {
         if (val != null) {
           ref
