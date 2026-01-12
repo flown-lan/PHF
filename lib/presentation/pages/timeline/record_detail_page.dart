@@ -177,26 +177,12 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
                 if (_blockControllers.isNotEmpty) ...[
                   Text(
                     l10n.review_edit_ocr_section,
-<<<<<<< HEAD
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-=======
                     style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
->>>>>>> 153c78b (feat(l10n): complete T26 full-site internationalization and address review feedback)
                   ),
                   const SizedBox(height: 8),
                   Text(
                     l10n.review_edit_ocr_hint,
-<<<<<<< HEAD
-                    style: const TextStyle(
-                      fontSize: 11,
-                      color: AppTheme.textHint,
-                    ),
-=======
                     style: const TextStyle(fontSize: 11, color: AppTheme.textHint),
->>>>>>> 153c78b (feat(l10n): complete T26 full-site internationalization and address review feedback)
                   ),
                   const SizedBox(height: 16),
                   ListView.separated(
@@ -370,7 +356,6 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
       }
     } catch (e) {
       if (mounted) {
-<<<<<<< HEAD
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
@@ -378,11 +363,6 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
             ),
           ),
         );
-=======
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.detail_save_error(e.toString()))));
->>>>>>> 153c78b (feat(l10n): complete T26 full-site internationalization and address review feedback)
       }
     }
   }
