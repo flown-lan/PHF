@@ -24,7 +24,6 @@ import '../../data/models/image.dart';
 import 'person_provider.dart';
 import '../../data/models/record.dart';
 import '../services/background_worker_service.dart';
-import '../services/image_processing_service.dart';
 import '../utils/secure_wipe_helper.dart';
 import '../providers/logging_provider.dart';
 import 'native_plugins_provider.dart';

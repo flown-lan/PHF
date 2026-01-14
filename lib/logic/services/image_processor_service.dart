@@ -14,9 +14,11 @@ class ImageProcessorService {
   /// 返回增强后的图片路径。
   Future<String> processImage(String path) async {
     try {
-      final String result = await _channel.invokeMethod('processImage', {
-        'path': path,
-      });
+      final String? result = await _channel.invokeMethod<String>(
+        'processImage',
+        {'path': path},
+      );
+      if (result == null) throw Exception('Processing returned null');
       return result;
     } on PlatformException catch (e) {
       throw Exception('Image processing failed: ${e.message}');

@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:phf/l10n/app_localizations.dart';
+import 'package:phf/generated/l10n/app_localizations.dart';
 import '../../../logic/providers/ingestion_provider.dart';
 import '../../../logic/providers/states/ingestion_state.dart';
 import '../../theme/app_theme.dart';
