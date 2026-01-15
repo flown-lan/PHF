@@ -114,8 +114,9 @@ class _ReviewEditPageState extends ConsumerState<ReviewEditPage> {
       final currentImage = widget.record.images[_currentImageIndex];
 
       if (_blockControllers.isNotEmpty) {
-        final List<String> updatedTexts =
-            _blockControllers.map((c) => c.text.trim()).toList();
+        final List<String> updatedTexts = _blockControllers
+            .map((c) => c.text.trim())
+            .toList();
         final newFullText = updatedTexts.where((t) => t.isNotEmpty).join('\n');
 
         // Reconstruct a clean OCR JSON structure based on the current visual order
