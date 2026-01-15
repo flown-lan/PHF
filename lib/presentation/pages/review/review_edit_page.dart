@@ -227,6 +227,12 @@ class _ReviewEditPageState extends ConsumerState<ReviewEditPage> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    if (widget.record.images.isEmpty) {
+      return Scaffold(
+        appBar: _buildAppBar(),
+        body: const Center(child: Text('无图片数据')),
+      );
+    }
     final currentImage = widget.record.images[_currentImageIndex];
 
     return GestureDetector(
@@ -272,10 +278,26 @@ class _ReviewEditPageState extends ConsumerState<ReviewEditPage> {
                   const SizedBox(height: 32),
                   const Divider(),
                   const SizedBox(height: 8),
-                  ...List.generate(
-                    _currentBlocks.length,
-                    (i) => _buildBlockField(i),
-                  ),
+                  if (_currentBlocks.isEmpty)
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 20),
+                      child: Center(
+                        child: Text(
+                          '暂无 OCR 识别结果',
+                          style: TextStyle(color: AppTheme.textHint),
+                        ),
+                      ),
+                    )
+                  else
+                    ...List.generate(
+                      _currentBlocks.length,
+                      (i) {
+                        if (i >= _blockControllers.length) {
+                          return const SizedBox.shrink();
+                        }
+                        return _buildBlockField(i);
+                      },
+                    ),
                   const SizedBox(height: 40),
                 ],
               ),

@@ -123,8 +123,10 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
     final result = await Navigator.push<bool>(
       context,
       MaterialPageRoute(
-        builder: (context) =>
-            ReviewEditPage(record: _record!, isReviewMode: false),
+        builder: (context) => ReviewEditPage(
+          record: _record!.copyWith(images: _images),
+          isReviewMode: false,
+        ),
       ),
     );
     if (result == true && mounted) {
