@@ -71,19 +71,40 @@ class IngestionController extends _$IngestionController {
     try {
       final gallery = ref.read(galleryServiceProvider);
       final files = await gallery.pickImages();
-      _addFiles(files);
+      if (files.isNotEmpty) {
+        final processor = ref.read(imageProcessorServiceProvider);
+        final processedFiles = <XFile>[];
+
+        for (final xFile in files) {
+          try {
+            // 1. Apply OpenCV Enhancement with UPLOAD mode (Contrast only)
+            final processedPath = await processor.processImage(
+              xFile.path,
+              mode: 'UPLOAD',
+            );
+            processedFiles.add(XFile(processedPath));
+
+            _pathsToCleanup.add(xFile.path);
+          } catch (e) {
+            processedFiles.add(xFile);
+          }
+        }
+        _addFiles(processedFiles);
+      }
     } catch (e) {
       _setError(e);
     }
   }
 
-  /// 拍照
+  /// 拍照 (普通拍照模式 - 保留彩色，跳过 OpenCV)
   Future<void> takePhoto() async {
     try {
       final picker = ImagePicker();
       final XFile? photo = await picker.pickImage(source: ImageSource.camera);
       if (photo != null) {
+        // 直接使用原始图片，不接入 OpenCV 增强
         _addFiles([photo]);
+        _pathsToCleanup.add(photo.path);
       }
     } catch (e) {
       _setError(e);
@@ -102,24 +123,30 @@ class IngestionController extends _$IngestionController {
 
         for (final path in paths) {
           try {
-            // 1. OpenCV Enhance
-            final processedPath = await processor.processImage(path);
+            final processedPath = await processor.processImage(
+              path,
+              mode: 'CAMERA',
+            );
             processedFiles.add(XFile(processedPath));
-
-            // 2. Wipe original scan immediately
             await SecureWipeHelper.wipe(File(path)).catchError((_) {});
           } catch (e) {
-            // Fallback: use original if processing fails
             processedFiles.add(XFile(path));
           }
         }
-
         _addFiles(processedFiles);
       }
     } catch (e) {
-      // If cancelled (returns empty list), nothing happens.
-      // If error, show it.
-      _setError(e);
+      // 针对低端安卓设备的 Fallback
+      if (Platform.isAndroid ||
+          e.toString().contains('UNSUPPORTED') ||
+          e.toString().contains('SCAN_ERROR')) {
+        state = state.copyWith(
+          status: IngestionStatus.error,
+          errorMessage: "因手机性能不足，不能使用此功能",
+        );
+      } else {
+        _setError(e);
+      }
     }
   }
 
