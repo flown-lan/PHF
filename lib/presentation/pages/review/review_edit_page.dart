@@ -289,15 +289,12 @@ class _ReviewEditPageState extends ConsumerState<ReviewEditPage> {
                       ),
                     )
                   else
-                    ...List.generate(
-                      _currentBlocks.length,
-                      (i) {
-                        if (i >= _blockControllers.length) {
-                          return const SizedBox.shrink();
-                        }
-                        return _buildBlockField(i);
-                      },
-                    ),
+                    ...List.generate(_currentBlocks.length, (i) {
+                      if (i >= _blockControllers.length) {
+                        return const SizedBox.shrink();
+                      }
+                      return _buildBlockField(i);
+                    }),
                   const SizedBox(height: 40),
                 ],
               ),
