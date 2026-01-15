@@ -325,6 +325,7 @@ class _ReviewEditPageState extends ConsumerState<ReviewEditPage> {
 
   Widget _buildBlockField(int i) {
     final block = _currentBlocks[i];
+    final isLowConfidence = block.confidence < 0.8;
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: TextField(
@@ -334,9 +335,17 @@ class _ReviewEditPageState extends ConsumerState<ReviewEditPage> {
         decoration: InputDecoration(
           labelText: block.semanticLabel ?? 'Block ${i + 1}',
           alignLabelWithHint: true,
+          filled: isLowConfidence,
+          fillColor: isLowConfidence
+              ? AppTheme.warningOrange.withValues(alpha: 0.1)
+              : null,
           border: const OutlineInputBorder(),
           suffixText: '${(block.confidence * 100).toStringAsFixed(0)}%',
-          suffixStyle: const TextStyle(fontSize: 12, color: AppTheme.textHint),
+          suffixStyle: TextStyle(
+            fontSize: 12,
+            color: isLowConfidence ? AppTheme.warningOrange : AppTheme.textHint,
+            fontWeight: isLowConfidence ? FontWeight.bold : null,
+          ),
         ),
       ),
     );
