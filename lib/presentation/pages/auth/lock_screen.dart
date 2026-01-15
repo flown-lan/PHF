@@ -149,7 +149,7 @@ class _LockScreenState extends ConsumerState<LockScreen>
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: List.generate(6, (index) {
-                          bool filled = index < _pin.length;
+                          final bool filled = index < _pin.length;
                           return Container(
                             margin: const EdgeInsets.symmetric(horizontal: 10),
                             width: 16,

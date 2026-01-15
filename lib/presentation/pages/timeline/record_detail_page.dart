@@ -18,12 +18,10 @@ import '../../../data/models/tag.dart';
 import '../../../logic/providers/core_providers.dart';
 import '../../../logic/providers/timeline_provider.dart';
 import '../../../logic/providers/ocr_status_provider.dart';
-import '../../../logic/providers/person_provider.dart';
 import '../../../logic/services/background_worker_service.dart';
 import '../../theme/app_theme.dart';
 import '../../utils/l10n_helper.dart';
 import '../../widgets/secure_image.dart';
-import '../../widgets/tag_selector.dart';
 import '../../widgets/full_image_viewer.dart';
 import '../review/review_edit_page.dart';
 import 'widgets/collapsible_ocr_card.dart';
@@ -204,33 +202,6 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
-  }
-
-  Future<void> _handleCreateTag(String name) async {
-    final tagRepo = ref.read(tagRepositoryProvider);
-    final personId = await ref.read(currentPersonIdControllerProvider.future);
-    final newTag = Tag(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      name: name,
-      personId: personId,
-      color: '#009688',
-      createdAt: DateTime.now(),
-      isCustom: true,
-    );
-    try {
-      await tagRepo.createTag(newTag);
-      ref.invalidate(allTagsProvider);
-      final currentIds = [..._images[_currentIndex].tagIds, newTag.id];
-      setState(() {
-        _images[_currentIndex] = _images[_currentIndex].copyWith(
-          tagIds: currentIds,
-        );
-      });
-      await ref
-          .read(imageRepositoryProvider)
-          .updateImageTags(_images[_currentIndex].id, currentIds);
-      await ref.read(timelineControllerProvider.notifier).refresh();
-    } catch (_) {}
   }
 
   void _setupOcrListener() {
