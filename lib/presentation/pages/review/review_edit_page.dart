@@ -114,54 +114,60 @@ class _ReviewEditPageState extends ConsumerState<ReviewEditPage> {
       final currentImage = widget.record.images[_currentImageIndex];
 
       if (_blockControllers.isNotEmpty) {
-        final List<String> updatedTexts = _blockControllers
-            .map((c) => c.text.trim())
-            .toList();
+        final List<String> updatedTexts =
+            _blockControllers.map((c) => c.text.trim()).toList();
         final newFullText = updatedTexts.where((t) => t.isNotEmpty).join('\n');
 
-        // Sync back to JSON structure to ensure persistence across sessions
+        // Reconstruct a clean OCR JSON structure based on the current visual order
+        // This prevents "data disorganization" caused by sorting/clustering mismatches.
         String? updatedRawJson = currentImage.ocrRawJson;
         if (currentImage.ocrRawJson != null) {
           try {
-            final ocr = OcrResult.fromJson(
+            final oldOcr = OcrResult.fromJson(
               jsonDecode(currentImage.ocrRawJson!) as Map<String, dynamic>,
             );
 
-            // Reconstruct the OCR structure with edited text
-            int controllerIndex = 0;
-            final updatedPages = <OcrPage>[];
+            final List<OcrBlock> newBlocks = [];
+            for (int i = 0; i < _currentBlocks.length; i++) {
+              final block = _currentBlocks[i];
+              final updatedText = _blockControllers[i].text.trim();
+              if (updatedText.isEmpty) continue;
 
-            for (final page in ocr.pages) {
-              final updatedBlocks = <OcrBlock>[];
-              for (final block in page.blocks) {
-                final updatedLines = <OcrLine>[];
-                for (final line in block.lines) {
-                  if (controllerIndex < updatedTexts.length) {
-                    updatedLines.add(
-                      line.copyWith(text: updatedTexts[controllerIndex++]),
-                    );
-                  } else {
-                    updatedLines.add(line);
-                  }
-                }
-                // Update block text based on its lines
-                updatedBlocks.add(
-                  block.copyWith(
-                    lines: updatedLines,
-                    text: updatedLines.map((l) => l.text).join(' '),
-                  ),
-                );
-              }
-              updatedPages.add(page.copyWith(blocks: updatedBlocks));
+              // Create a flat but structurally correct block-line pair
+              newBlocks.add(
+                OcrBlock(
+                  text: updatedText,
+                  x: block.boundingBox[0],
+                  y: block.boundingBox[1],
+                  w: block.boundingBox[2],
+                  h: block.boundingBox[3],
+                  lines: [
+                    OcrLine(
+                      text: updatedText,
+                      x: block.boundingBox[0],
+                      y: block.boundingBox[1],
+                      w: block.boundingBox[2],
+                      h: block.boundingBox[3],
+                      confidence: block.confidence,
+                    ),
+                  ],
+                ),
+              );
             }
 
-            final updatedOcr = ocr.copyWith(
-              pages: updatedPages,
+            final updatedOcr = oldOcr.copyWith(
               text: newFullText,
+              pages: [
+                OcrPage(
+                  pageNumber: 0,
+                  blocks: newBlocks,
+                  confidence: _currentConfidence ?? 0.0,
+                ),
+              ],
             );
             updatedRawJson = jsonEncode(updatedOcr.toJson());
           } catch (_) {
-            // Fallback to original if parsing fails
+            // If reconstruction fails, we'll fall back to just saving text
           }
         }
 

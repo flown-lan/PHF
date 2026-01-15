@@ -126,7 +126,7 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
       context,
       MaterialPageRoute(
         builder: (context) =>
-            ReviewEditPage(record: _record!, isReviewMode: true),
+            ReviewEditPage(record: _record!, isReviewMode: false),
       ),
     );
     if (result == true && mounted) {

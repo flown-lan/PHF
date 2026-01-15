@@ -112,6 +112,7 @@ class IngestionController extends _$IngestionController {
   }
 
   /// 扫描文档 (Native Scanner + OpenCV Enhancer)
+  /// 实现方案 A：自动降级 (Fallback)
   Future<void> scanDocuments() async {
     try {
       final scanner = ref.read(documentScannerServiceProvider);
@@ -136,14 +137,19 @@ class IngestionController extends _$IngestionController {
         _addFiles(processedFiles);
       }
     } catch (e) {
-      // 针对低端安卓设备的 Fallback
+      // 方案 A: 针对任何启动错误（如低端机性能不足、系统库缺失等），自动切换到普通拍照
       if (Platform.isAndroid ||
           e.toString().contains('UNSUPPORTED') ||
           e.toString().contains('SCAN_ERROR')) {
+        // 设置状态为错误以触发 SnackBar 提示用户，然后立即开启拍照
         state = state.copyWith(
           status: IngestionStatus.error,
-          errorMessage: "因手机性能不足，不能使用此功能",
+          errorMessage: "检测到系统扫描器不可用，已为您开启专业相机模式",
         );
+        // 延迟一小会儿执行，确保 UI 能够先响应错误状态（展示 SnackBar）
+        Future.delayed(const Duration(milliseconds: 500), () {
+          takePhoto();
+        });
       } else {
         _setError(e);
       }

@@ -60,8 +60,9 @@ class _IngestionPageState extends ConsumerState<IngestionPage> {
 
   void _showPickerMenu() {
     final l10n = AppLocalizations.of(context)!;
-    // Hide native scanner on simulator OR Android (due to performance issues on low-end devices)
-    final bool showNativeScanner = !_isSimulator && !Platform.isAndroid;
+    // Hide native scanner only on simulator.
+    // Android will use auto-fallback to regular camera if scan fails.
+    final bool showNativeScanner = !_isSimulator;
 
     showModalBottomSheet<void>(
       context: context,
@@ -213,8 +214,7 @@ class _IngestionPageState extends ConsumerState<IngestionPage> {
 
   Widget _buildEmpty(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    // On Simulator or Android, we show a simplified empty state without the "Document Scan" primary action
-    if (_isSimulator || Platform.isAndroid) {
+    if (_isSimulator) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -225,9 +225,9 @@ class _IngestionPageState extends ConsumerState<IngestionPage> {
               color: AppTheme.textHint,
             ),
             const SizedBox(height: 16),
-            Text(
-              _isSimulator ? '模拟器模式：仅支持基础拍照/相册' : '请使用基础拍照或相册导入',
-              style: const TextStyle(color: AppTheme.textHint),
+            const Text(
+              '模拟器模式：仅支持基础拍照/相册',
+              style: TextStyle(color: AppTheme.textHint),
             ),
             const SizedBox(height: 24),
             ElevatedButton(
