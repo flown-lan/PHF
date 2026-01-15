@@ -111,12 +111,19 @@ class _ReviewEditPageState extends ConsumerState<ReviewEditPage> {
     try {
       final recordRepo = ref.read(recordRepositoryProvider);
       final imageRepo = ref.read(imageRepositoryProvider);
+      final currentImage = widget.record.images[_currentImageIndex];
 
       if (_blockControllers.isNotEmpty) {
-        final newFullText = _blockControllers.map((c) => c.text).join('\n');
+        // Filter out empty blocks to keep data clean
+        final newFullText = _blockControllers
+            .map((c) => c.text.trim())
+            .where((text) => text.isNotEmpty)
+            .join('\n');
         await imageRepo.updateOCRData(
-          widget.record.images[_currentImageIndex].id,
+          currentImage.id,
           newFullText,
+          rawJson: currentImage.ocrRawJson,
+          confidence: _currentConfidence ?? 0.0,
         );
       }
 
